@@ -40,15 +40,10 @@ public class ExtendedOAuth2AuthorizationCodeService extends DefaultOAuth2Authori
     // attach the authorization so that we can look it up later
     AuthenticationHolderEntity authHolder = new AuthenticationHolderEntity();
     authHolder.setAuthentication(authentication);
-    Object principal = authentication.getPrincipal();
-    if (principal instanceof ShibbolethUser) {
-      ShibbolethUser shibbolethUser = (ShibbolethUser) principal;
-      Map<String, Serializable> extensions = authHolder.getExtensions();
-      if (extensions == null) {
-        extensions = new HashMap<>();
-      }
-      extensions.put("schac_home", shibbolethUser.getSchacHomeOrganization());
-    }
+
+    Map<String, Serializable> extensions = addExtensions(authentication, authHolder);
+
+    authHolder.setExtensions(extensions);
     authHolder = authenticationHolderRepository.save(authHolder);
 
     // set the auth code to expire
@@ -58,5 +53,18 @@ public class ExtendedOAuth2AuthorizationCodeService extends DefaultOAuth2Authori
     repository.save(entity);
 
     return code;
+  }
+
+  private Map<String, Serializable> addExtensions(OAuth2Authentication authentication, AuthenticationHolderEntity authHolder) {
+    Map<String, Serializable> extensions = authHolder.getExtensions();
+    Object principal = authentication.getPrincipal();
+    if (principal instanceof ShibbolethUser) {
+      ShibbolethUser shibbolethUser = (ShibbolethUser) principal;
+      if (extensions == null) {
+        extensions = new HashMap<>();
+      }
+      extensions.put("schac_home", shibbolethUser.getSchacHomeOrganization());
+    }
+    return extensions;
   }
 }
