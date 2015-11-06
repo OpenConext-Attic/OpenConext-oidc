@@ -24,7 +24,7 @@ grant all on `oidc-server`.* to 'oidc-serverrw'@'localhost';
 
 ## Building and running
 
-The OpemConext-oidc is a maven overlay for OpenID-Connect-Java-Server. Issue a
+The OpenConext-oidc is a maven overlay for OpenID-Connect-Java-Server. Issue a
  
 `git submodule update --init --recursive` 
 
