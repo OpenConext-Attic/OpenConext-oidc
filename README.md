@@ -8,7 +8,7 @@ OpenConext implementation of a OpenID Connect server based on the MITREid Connec
 
 - Java 8
 - Maven 3
-- MySQL 5.5
+- MySQL 5.5+
 
 ### Create database
 
@@ -24,5 +24,10 @@ grant all on `oidc-server`.* to 'oidc-serverrw'@'localhost';
 
 ## Building and running
 
-The OpemConext-oidc is a maven overlay for OpenID-Connect-Java-Server. Issue a `git submodule update --init --recursive` command to set 
-up the git submodules, then you run `mvn package`
+The OpemConext-oidc is a maven overlay for OpenID-Connect-Java-Server. Issue a
+ 
+`git submodule update --init --recursive` 
+
+command to set up the git submodules, then you can run 
+
+`mvn package jetty:run`
