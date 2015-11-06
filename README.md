@@ -31,3 +31,9 @@ The OpenConext-oidc is a maven overlay for OpenID-Connect-Java-Server. Issue a
 command to set up the git submodules, then you can run 
 
 `mvn package jetty:run`
+
+## Extending
+
+See:
+
+`https://github.com/mitreid-connect/OpenID-Connect-Java-Spring-Server/wiki/Maven-Overlay-Project-How-To`
