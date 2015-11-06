@@ -64,6 +64,8 @@ public class ExtendedOAuth2AuthorizationCodeService extends DefaultOAuth2Authori
         extensions = new HashMap<>();
       }
       extensions.put("schac_home", shibbolethUser.getSchacHomeOrganization());
+      extensions.put("display_name", shibbolethUser.getDisplayName());
+      extensions.put("email", shibbolethUser.getEmail());
     }
     return extensions;
   }
