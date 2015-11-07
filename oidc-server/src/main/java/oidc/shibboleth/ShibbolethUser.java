@@ -18,6 +18,7 @@ public class ShibbolethUser extends User {
   private final String email;
 
   public ShibbolethUser(String username, String schacHomeOrganization, String displayName, String authenticatingAuthority, String email) {
+    //TODO move authorities out of this class and inject at level where can be decided what to do
     super(username, "N/A", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN")));
     this.schacHomeOrganization = schacHomeOrganization;
     this.displayName = displayName;
