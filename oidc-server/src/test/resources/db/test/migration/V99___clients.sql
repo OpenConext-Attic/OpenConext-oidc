@@ -21,3 +21,15 @@ INSERT INTO client_grant_type (owner_id, grant_type) VALUES
 	(9999999999, 'authorization_code'),
 	(9999999999, 'implicit'),
 	(9999999999, 'refresh_token');
+
+INSERT INTO whitelisted_site (id, client_id) VALUES
+	(9999999999, 'test_client');
+
+INSERT INTO whitelisted_site_scope (owner_id, scope) VALUES
+	(9999999999, 'read'),
+	(9999999999, 'openid'),
+	(9999999999, 'profile'),
+	(9999999999, 'email'),
+	(9999999999, 'address'),
+	(9999999999, 'phone'),
+	(9999999999, 'offline_access');
