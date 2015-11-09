@@ -18,8 +18,9 @@ public class ExtendedIntrospectionResultAssembler extends DefaultIntrospectionRe
   @Override
   public Map<String, Object> assembleFrom(OAuth2AccessTokenEntity accessToken, UserInfo userInfo, Set<String> authScopes) {
     Map<String, Object> result = super.assembleFrom(accessToken, userInfo, authScopes);
-    Map<String, Serializable> extensions = accessToken.getAuthenticationHolder().getExtensions();
-    result.putAll(extensions);
+    if (userInfo != null && userInfo.getProfile() != null) {
+      result.put("schac_home", userInfo.getProfile());
+    }
     return result;
   }
 }

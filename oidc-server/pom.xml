@@ -49,7 +49,7 @@
           <stopKey>STOP</stopKey>
           <stopPort>9999</stopPort>
           <stopWait>5</stopWait>
-          <scanIntervalSeconds>5</scanIntervalSeconds>
+          <!--<scanIntervalSeconds>5</scanIntervalSeconds>-->
           <webAppConfig>
             <contextPath>/</contextPath>
           </webAppConfig>
