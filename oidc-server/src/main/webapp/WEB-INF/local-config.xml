@@ -33,12 +33,13 @@
 	<context:component-scan annotation-config="true" base-package="oidc" />
 
 	<mvc:interceptors>
-		<bean id="userInfoInterceptor" class="oidc.AuthenticationUserInfoInterceptor" />
     <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
       <property name="paramName" value="lang"/>
     </bean>
 	</mvc:interceptors>
 
   <bean id="localeResolver" primary="true" class="org.springframework.web.servlet.i18n.CookieLocaleResolver "/>
+
+  <import resource="mock-authz-config.xml" />
 
 </beans>

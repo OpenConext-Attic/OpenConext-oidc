@@ -1,4 +1,4 @@
-package oidc.user;
+package oidc;
 
 import org.mitre.oauth2.model.ClientDetailsEntity;
 import org.mitre.openid.connect.model.UserInfo;

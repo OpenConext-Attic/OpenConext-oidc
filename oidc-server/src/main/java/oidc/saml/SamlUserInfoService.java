@@ -1,9 +1,8 @@
-package oidc.user.saml;
+package oidc.saml;
 
-import oidc.user.ExtendedUserInfoRepository;
-import oidc.user.ExtendedUserInfoService;
+import oidc.ExtendedUserInfoRepository;
+import oidc.ExtendedUserInfoService;
 import org.mitre.openid.connect.model.UserInfo;
-import org.mitre.openid.connect.repository.UserInfoRepository;
 import org.mitre.openid.connect.service.impl.DefaultUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;

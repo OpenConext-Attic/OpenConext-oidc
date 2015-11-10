@@ -1,4 +1,4 @@
-package oidc.oauth2;
+package oidc;
 
 import org.mitre.oauth2.model.OAuth2AccessTokenEntity;
 import org.mitre.oauth2.service.impl.DefaultIntrospectionResultAssembler;

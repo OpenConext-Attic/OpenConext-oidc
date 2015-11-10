@@ -1,4 +1,4 @@
-package oidc.user;
+package oidc;
 
 import org.mitre.openid.connect.model.UserInfo;
 import org.mitre.openid.connect.service.UserInfoService;

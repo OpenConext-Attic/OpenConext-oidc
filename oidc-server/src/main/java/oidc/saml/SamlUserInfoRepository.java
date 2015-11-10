@@ -1,6 +1,6 @@
-package oidc.user.saml;
+package oidc.saml;
 
-import oidc.user.ExtendedUserInfoRepository;
+import oidc.ExtendedUserInfoRepository;
 import org.mitre.openid.connect.model.DefaultUserInfo;
 import org.mitre.openid.connect.model.UserInfo;
 import org.mitre.openid.connect.repository.impl.JpaUserInfoRepository;

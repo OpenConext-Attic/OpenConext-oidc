@@ -14,6 +14,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <flyway.version>3.2.1</flyway.version>
     <mysql-jdbc-driver.version>5.1.34</mysql-jdbc-driver.version>
+    <spring-security-saml2-core.version>1.0.2.OPENCONEXT</spring-security-saml2-core.version>
   </properties>
   <build>
     <plugins>
@@ -38,6 +39,28 @@
             </overlay>
           </overlays>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0-alpha-2</version>
+        <executions>
+          <execution>
+            <id>pre-start-jetty</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>set-system-properties</goal>
+            </goals>
+            <configuration>
+              <properties>
+                <property>
+                  <name>spring.profiles.active</name>
+                  <value>local</value>
+                </property>
+              </properties>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.eclipse.jetty</groupId>
@@ -115,6 +138,11 @@
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
       <version>${flyway.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security.extensions</groupId>
+      <artifactId>spring-security-saml2-core</artifactId>
+      <version>${spring-security-saml2-core.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
