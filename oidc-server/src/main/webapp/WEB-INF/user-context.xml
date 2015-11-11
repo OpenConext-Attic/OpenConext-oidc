@@ -23,10 +23,10 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd"
 
-    profile="!local">
+       profile="!local">
 
 
-  <context:property-placeholder location="classpath:application.oidc.properties" />
+  <context:property-placeholder location="classpath:application.oidc.properties"/>
 
   <!-- Enable auto-wiring -->
   <context:annotation-config/>
@@ -43,7 +43,8 @@
   <!-- Security for the administration UI -->
   <security:http pattern="/saml/web/**" use-expressions="false">
     <security:access-denied-handler error-page="/saml/web/metadata/login"/>
-    <security:form-login login-processing-url="/saml/web/login" login-page="/saml/web/metadata/login" default-target-url="/saml/web/metadata"/>
+    <security:form-login login-processing-url="/saml/web/login" login-page="/saml/web/metadata/login"
+                         default-target-url="/saml/web/metadata"/>
     <security:intercept-url pattern="/saml/web/metadata/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
     <security:intercept-url pattern="/saml/web/**" access="ROLE_ADMIN"/>
     <security:custom-filter before="FIRST" ref="metadataGeneratorFilter"/>
@@ -89,7 +90,8 @@
   </bean>
 
   <!-- Handler for successful logout -->
-  <bean id="successLogoutHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
+  <bean id="successLogoutHandler"
+        class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
     <property name="defaultTargetUrl" value="/logout.jsp"/>
   </bean>
 
@@ -107,16 +109,27 @@
   <!-- Logger for SAML messages and events -->
   <bean id="samlLogger" class="org.springframework.security.saml.log.SAMLDefaultLogger"/>
 
+  <bean id="keyStoreLocator" class="oidc.saml.KeyStoreLocator"/>
+
   <!-- Central storage of cryptographic keys -->
   <bean id="keyManager" class="org.springframework.security.saml.key.JKSKeyManager">
-    <constructor-arg value="classpath:security/samlKeystore.jks"/>
-    <constructor-arg type="java.lang.String" value="nalle123"/>
+    <constructor-arg>
+      <bean factory-bean="keyStoreLocator"
+            factory-method="createKeyStore">
+        <constructor-arg value="${idp.entity.id}"/>
+        <constructor-arg value="${idp.public.certificate}"/>
+        <constructor-arg value="${sp.entity.id}"/>
+        <constructor-arg value="${sp.public.certificate}"/>
+        <constructor-arg value="${sp.private.key}"/>
+        <constructor-arg value="${sp.passphrase}"/>
+      </bean>
+    </constructor-arg>
     <constructor-arg>
       <map>
-        <entry key="apollo" value="nalle123"/>
+        <entry key="${sp.entity.id}" value="${sp.passphrase}"/>
       </map>
     </constructor-arg>
-    <constructor-arg type="java.lang.String" value="apollo"/>
+    <constructor-arg type="java.lang.String" value="${sp.entity.id}"/>
   </bean>
 
   <!-- Entry point to initialize authentication, default values taken from properties file -->
@@ -131,8 +144,7 @@
   <bean id="metadataGeneratorFilter" class="org.springframework.security.saml.metadata.MetadataGeneratorFilter">
     <constructor-arg>
       <bean class="org.springframework.security.saml.metadata.MetadataGenerator">
-        <!--<property name="entityId" value="https://oidc.test.surfconext.nl/shibboleth"/>-->
-        <property name="entityId" value="https://oidc.local.surfconext.nl"/>
+        <property name="entityId" value="${sp.entity.id}"/>
         <property name="extendedMetadata">
           <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
             <property name="signMetadata" value="false"/>
@@ -159,10 +171,10 @@
           <constructor-arg>
             <bean class="org.opensaml.saml2.metadata.provider.HTTPMetadataProvider">
               <constructor-arg>
-                <value type="java.lang.String">https://engine.test.surfconext.nl/authentication/idp/metadata</value>
+                <value type="java.lang.String">${idp.metadata.url}</value>
               </constructor-arg>
               <constructor-arg>
-                <value type="int">5000</value>
+                <value type="int">15000</value>
               </constructor-arg>
               <property name="parserPool" ref="parserPool"/>
               <property name="requireValidMetadata" value="false"/>
@@ -182,7 +194,7 @@
 
   <!-- SAML Authentication Provider responsible for validating of received SAML messages -->
   <bean id="samlAuthenticationProvider" class="org.springframework.security.saml.SAMLAuthenticationProvider">
-    <property name="userDetails" ref="defaultSAMLUserDetailsService" />
+    <property name="userDetails" ref="defaultSAMLUserDetailsService"/>
   </bean>
 
   <!-- Provider of default SAML Context -->

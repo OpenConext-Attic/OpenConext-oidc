@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 
 import java.text.ParseException;
 
+// Not thread-safe. Instantiate for every verify action
 public class JWKVerifier {
 
   private final JWKSet jwkSet;

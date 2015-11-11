@@ -32,6 +32,9 @@ import static org.junit.Assert.assertTrue;
 
 public class AbstractTestIntegration {
 
+  private static final String TEST_CLIENT = "test_client";
+  private static final String SECRET = "secret";
+
   protected String callback = "http://localhost:8889/callback";
   protected String serverUrl = "http://localhost:8080";
   protected RestTemplate template = new RestTemplate();
@@ -98,7 +101,7 @@ public class AbstractTestIntegration {
 
   protected HttpHeaders getAuthorizationHeadersForTokenFetch() {
     HttpHeaders headers = new HttpHeaders();
-    String authenticationCredentials = "Basic " + new String(Base64.encodeBase64(new String("test_client" + ":" + "secret").getBytes(Charset.forName("UTF-8"))));
+    String authenticationCredentials = "Basic " + new String(Base64.encodeBase64(new String(TEST_CLIENT + ":" + SECRET).getBytes(Charset.forName("UTF-8"))));
     headers.add("Authorization", authenticationCredentials);
     headers.add("Content-Type", "application/x-www-form-urlencoded");
     headers.add("Accept", "application/json");
@@ -125,7 +128,7 @@ public class AbstractTestIntegration {
     assertEquals("RS256", header.getAlgorithm().getName());
 
     Map<String, Object> claims = verifier.claims().getClaims();
-    assertEquals(Arrays.asList("test_client"), claims.get("aud"));
+    assertEquals(Arrays.asList(TEST_CLIENT), claims.get("aud"));
     assertEquals("http://localhost:8080/", claims.get("iss"));
     assertNotNull(claims.get("exp"));
     assertNotNull(claims.get("iat"));
@@ -146,8 +149,8 @@ public class AbstractTestIntegration {
       assertEquals(true, Boolean.valueOf((Boolean) active));
     }
     assertEquals(scope, introspect.get("scope"));
-    assertEquals("urn:collab:person:example.com:admin", introspect.get("sub"));
-    assertEquals("test_client", introspect.get("client_id"));
+    assertEquals("urn:collab:person:example.com:local", introspect.get("sub"));
+    assertEquals(TEST_CLIENT, introspect.get("client_id"));
     assertEquals("bearer", ((String) introspect.get("token_type")).toLowerCase());
     assertEquals("surfnet.nl", introspect.get("schac_home"));
   }

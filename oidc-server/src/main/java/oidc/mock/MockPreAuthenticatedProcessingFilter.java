@@ -13,21 +13,16 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 
 import javax.servlet.http.HttpServletRequest;
 
-public class MockPreAuthenticatedProcessingFilter extends AbstractPreAuthenticatedProcessingFilter implements AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
+public class MockPreAuthenticatedProcessingFilter extends AbstractPreAuthenticatedProcessingFilter {
 
   @Override
   protected Object getPreAuthenticatedPrincipal(final HttpServletRequest request) {
-      return new SAMLUser("urn:collab:person:example.com:admin", "surfnet.nl", "John Doe", "http://mock-idp", "john.doe@example.org");
+      return new SAMLUser("urn:collab:person:example.com:local", "surfnet.nl", "Local User", "http://mock", "local@example.org");
   }
 
   @Override
   protected Object getPreAuthenticatedCredentials(HttpServletRequest request) {
     return "N/A";
-  }
-
-  @Override
-  public UserDetails loadUserDetails(final PreAuthenticatedAuthenticationToken authentication) throws UsernameNotFoundException {
-    return (SAMLUser) authentication.getPrincipal();
   }
 
 }

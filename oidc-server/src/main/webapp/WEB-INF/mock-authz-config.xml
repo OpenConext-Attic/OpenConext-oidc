@@ -39,12 +39,13 @@
     <bean id="mockFilter" class=
         "oidc.mock.MockPreAuthenticatedProcessingFilter">
       <property name="authenticationManager" ref="authenticationManager"/>
-      <property name="environment" value="${environment}"/>
     </bean>
 
     <bean id="preauthAuthProvider"
           class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
-      <property name="preAuthenticatedUserDetailsService" ref="mockFilter"/>
+      <property name="preAuthenticatedUserDetailsService">
+        <bean class="oidc.mock.MockAuthenticationUserDetailsService"/>
+      </property>
     </bean>
 
 </beans>
