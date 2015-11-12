@@ -56,7 +56,7 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
         authenticatingAuthority = authenticatingAuthorities.get(0).getURI();
       }
     }
-    return new SAMLUser(userInfo.getSub(), userInfo.getProfile(), userInfo.getName(), authenticatingAuthority, "local@example.org");
+    return new SAMLUser(userInfo.getSub(), userInfo.getProfile(), userInfo.getName(), authenticatingAuthority, userInfo.getEmail());
   }
 
   private String getStringValueFromXMLObject(XMLObject xmlObj) {

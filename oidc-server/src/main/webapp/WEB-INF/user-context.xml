@@ -145,10 +145,10 @@
     <constructor-arg>
       <bean class="org.springframework.security.saml.metadata.MetadataGenerator">
         <property name="entityId" value="${sp.entity.id}"/>
+        <property name="entityBaseURL" value="${sp.entity.base.url}"/>
         <property name="extendedMetadata">
           <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
-            <!--<property name="signMetadata" value="true"/>-->
-            <property name="signMetadata" value="false"/>
+            <property name="signMetadata" value="true"/>
             <property name="idpDiscoveryEnabled" value="false"/>
           </bean>
         </property>
@@ -168,7 +168,7 @@
   <bean id="metadataManager" class="org.springframework.security.saml.metadata.CachingMetadataManager">
     <constructor-arg>
       <list>
-        <bean class="oidc.saml.LenientExtendedMetadataDelegate">
+        <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
           <constructor-arg>
             <bean class="org.opensaml.saml2.metadata.provider.HTTPMetadataProvider">
               <constructor-arg>
@@ -188,7 +188,7 @@
   </bean>
 
   <!-- IDP Metadata configuration - paths to metadata of IDPs in circle of trust is here -->
-  <bean class="oidc.saml.LenientExtendedMetadataDelegate">
+  <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
     <constructor-arg ref="metadataManager"/>
   </bean>
 

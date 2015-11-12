@@ -76,3 +76,7 @@ OpenConext-OIDC is a proxy for SP's that want to use OpenConnect ID instead of S
 the WAYF and ARP must be scoped for the requesting SP (and not OpenConext-OIDC). This works if OpenConext-OIDC is marked
 as a trusted proxy in SR and the signing certificate (e.g. sp.public.certificate) in added to the certData metadata
 field in SR.
+
+## SAML metadata
+
+The metadata is generated on the fly and is displayed on http://localhost:8080/saml/metadata

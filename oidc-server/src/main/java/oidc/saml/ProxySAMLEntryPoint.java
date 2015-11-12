@@ -40,10 +40,10 @@ public class ProxySAMLEntryPoint extends SAMLEntryPoint {
   protected WebSSOProfileOptions getProfileOptions(SAMLMessageContext context, AuthenticationException exception) throws MetadataProviderException {
     WebSSOProfileOptions profileOptions = super.getProfileOptions(context, exception);
     String clientId = (String) context.getInboundMessageTransport().getAttribute(CLIENT_DETAILS);
-    if (StringUtils.hasText(clientId)) {
-      profileOptions.setIncludeScoping(true);
-      profileOptions.setRequesterIds(new HashSet<>(Arrays.asList(clientId)));
-    }
+//    if (StringUtils.hasText(clientId)) {
+//      profileOptions.setIncludeScoping(true);
+//      profileOptions.setRequesterIds(new HashSet<>(Arrays.asList(clientId)));
+//    }
     return profileOptions;
   }
 }
