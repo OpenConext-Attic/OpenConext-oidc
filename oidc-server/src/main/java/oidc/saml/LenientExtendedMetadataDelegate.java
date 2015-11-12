@@ -9,23 +9,23 @@ public class LenientExtendedMetadataDelegate extends ExtendedMetadataDelegate {
     super(delegate);
   }
 
-  @Override
-  public boolean requireValidMetadata() {
-    return false;
-  }
-
-  @Override
-  protected boolean isTrustFiltersInitialized() {
-    return true;
-  }
-
-  @Override
-  public boolean isMetadataRequireSignature() {
-    return false;
-  }
-
-  @Override
-  public boolean isMetadataTrustCheck() {
-    return false;
-  }
+//  @Override
+//  public boolean requireValidMetadata() {
+//    return false;
+//  }
+//
+//  @Override
+//  protected boolean isTrustFiltersInitialized() {
+//    return false;
+//  }
+//
+//  @Override
+//  public boolean isMetadataRequireSignature() {
+//    return false;
+//  }
+//
+//  @Override
+//  public boolean isMetadataTrustCheck() {
+//    return false;
+//  }
 }

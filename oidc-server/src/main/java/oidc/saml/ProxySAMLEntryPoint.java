@@ -4,13 +4,10 @@ import org.mitre.oauth2.model.ClientDetailsEntity;
 import org.mitre.oauth2.service.ClientDetailsEntityService;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.saml.SAMLEntryPoint;
 import org.springframework.security.saml.context.SAMLMessageContext;
 import org.springframework.security.saml.websso.WebSSOProfileOptions;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
@@ -19,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
 
 public class ProxySAMLEntryPoint extends SAMLEntryPoint {
 
@@ -46,7 +42,7 @@ public class ProxySAMLEntryPoint extends SAMLEntryPoint {
     String clientId = (String) context.getInboundMessageTransport().getAttribute(CLIENT_DETAILS);
     if (StringUtils.hasText(clientId)) {
       profileOptions.setIncludeScoping(true);
-      profileOptions.setRequesterIds(new HashSet<String>(Arrays.asList(clientId)));
+      profileOptions.setRequesterIds(new HashSet<>(Arrays.asList(clientId)));
     }
     return profileOptions;
   }

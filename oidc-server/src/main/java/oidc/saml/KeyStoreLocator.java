@@ -21,12 +21,12 @@ import java.util.ArrayList;
 public class KeyStoreLocator {
 
   public KeyStore createKeyStore(String idpEntityId,
-                                  String idpCertificate,
-                                  String spEntityId,
-                                  String spCertificate,
-                                  //This must be in the DER unencrypted PKCS#8 format. See README.md
-                                  String spPrivateKey,
-                                  String pemPassPhrase) {
+                                 String idpCertificate,
+                                 String spEntityId,
+                                 String spCertificate,
+                                 //This must be in the DER unencrypted PKCS#8 format. See README.md
+                                 String spPrivateKey,
+                                 String pemPassPhrase) {
     try {
       KeyStore keyStore = KeyStore.getInstance("JKS");
       keyStore.load(null, pemPassPhrase.toCharArray());
@@ -34,9 +34,9 @@ public class KeyStoreLocator {
       addCertificate(keyStore, idpEntityId, idpCertificate);
       addPrivateKey(keyStore, spEntityId, spPrivateKey, spCertificate, pemPassPhrase);
 
-
       return keyStore;
     } catch (Exception e) {
+      //too many exceptions we can't handle, so brute force catch
       throw new RuntimeException(e);
     }
   }

@@ -147,6 +147,7 @@
         <property name="entityId" value="${sp.entity.id}"/>
         <property name="extendedMetadata">
           <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
+            <!--<property name="signMetadata" value="true"/>-->
             <property name="signMetadata" value="false"/>
             <property name="idpDiscoveryEnabled" value="false"/>
           </bean>
@@ -177,6 +178,7 @@
                 <value type="int">15000</value>
               </constructor-arg>
               <property name="parserPool" ref="parserPool"/>
+              <!--<property name="requireValidMetadata" value="true"/>-->
               <property name="requireValidMetadata" value="false"/>
             </bean>
           </constructor-arg>
