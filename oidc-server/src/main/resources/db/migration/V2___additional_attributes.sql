@@ -2,7 +2,7 @@
 -- Additional attributes to store for the UserInfo,
 -- see https://wiki.surfnet.nl/pages/viewpage.action?spaceKey=P3GFeI2015&title=OpenID%20Connect%20Implementatie
 --
-CREATE INDEX ui_pu_idx ON user_info(preferred_username);
+CREATE INDEX ui_pu_idx ON user_info(sub);
 
 ALTER TABLE user_info ADD DTYPE varchar(256) DEFAULT NULL;
 
@@ -41,3 +41,9 @@ CREATE TABLE IF NOT EXISTS user_uid (
 	user_id BIGINT,
 	uid VARCHAR(256)
 );
+
+CREATE INDEX uepa_id_idx ON user_edu_person_affiliation(user_id);
+CREATE INDEX uepsa_id_idx ON user_edu_person_scoped_affiliation(user_id);
+CREATE INDEX uimo_id_idx ON user_is_member_of(user_id);
+CREATE INDEX uepe_id_idx ON user_edu_person_entitlement(user_id);
+CREATE INDEX uspuc_id_idx ON user_schac_personal_unique_code(user_id);

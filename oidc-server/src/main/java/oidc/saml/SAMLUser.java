@@ -5,9 +5,6 @@ import org.springframework.security.core.userdetails.User;
 
 import java.util.Arrays;
 
-/**
- *
- */
 public class SAMLUser extends User {
 
   public SAMLUser(String sub) {
