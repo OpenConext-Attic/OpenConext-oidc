@@ -1,8 +1,11 @@
 package oidc.saml;
 
-import oidc.ExtendedUserInfoService;
+import oidc.model.FederatedUserInfo;
+import oidc.service.HashedPairwiseIdentifierService;
+import oidc.user.FederatedUserInfoService;
 import org.mitre.openid.connect.model.DefaultUserInfo;
 import org.mitre.openid.connect.model.UserInfo;
+import org.mitre.openid.connect.service.PairwiseIdentiferService;
 import org.opensaml.saml2.core.Attribute;
 import org.opensaml.saml2.core.AuthenticatingAuthority;
 import org.opensaml.saml2.core.AuthnStatement;
@@ -16,47 +19,47 @@ import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
 
   @Autowired
-  private ExtendedUserInfoService extendedUserInfoService;
+  private FederatedUserInfoService extendedUserInfoService;
+
+  @Autowired
+  private HashedPairwiseIdentifierService hashedPairwiseIdentifierService;
 
   @Override
   public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
-    Map<String, String> properties = new HashMap<>();
-    String nameId = credential.getNameID().getValue();
-    properties.put("nameId", nameId);
+    Map<String, List<String>> properties = new HashMap<>();
+    String unspecifiedNameId = credential.getNameID().getValue();
 
     List<Attribute> attributes = credential.getAttributes();
     for (Attribute attribute : attributes) {
       String name = attribute.getName();
+      List<String> values = new ArrayList<>();
       List<XMLObject> attributeValues = attribute.getAttributeValues();
       for (XMLObject xmlObject : attributeValues) {
         String value = getStringValueFromXMLObject(xmlObject);
         if (StringUtils.hasText(value)) {
-          //we don't support multi value attribute values - soo overwrite if there are multiple
-          properties.put(name, value);
+          values.add(value);
         }
       }
+      properties.put(name, values);
     }
-    UserInfo existingUserInfo = extendedUserInfoService.getByUsername(nameId);
-    UserInfo userInfo = this.buildUserInfo(nameId, properties);
+    String clientId = credential.getRelayState();
+    String sub = hashedPairwiseIdentifierService.getIdentifier(unspecifiedNameId, clientId);
+
+    UserInfo existingUserInfo = extendedUserInfoService.getByUsernameAndClientId(sub, clientId);
+
     if (existingUserInfo == null) {
+      UserInfo userInfo = this.buildUserInfo(unspecifiedNameId, sub, properties);
       extendedUserInfoService.saveUserInfo(userInfo);
     }
-    String authenticatingAuthority = null;
-    List<AuthnStatement> authnStatements = credential.getAuthenticationAssertion().getAuthnStatements();
-    if (!CollectionUtils.isEmpty(authnStatements)) {
-      List<AuthenticatingAuthority> authenticatingAuthorities = authnStatements.get(0).getAuthnContext().getAuthenticatingAuthorities();
-      if (!CollectionUtils.isEmpty(authenticatingAuthorities)) {
-        authenticatingAuthority = authenticatingAuthorities.get(0).getURI();
-      }
-    }
-    return new SAMLUser(userInfo.getSub(), userInfo.getProfile(), userInfo.getName(), authenticatingAuthority, userInfo.getEmail());
+    return new SAMLUser(
+        sub,
+        unspecifiedNameId,
+        flattenList(properties.get("urn:mace:terena.org:attribute-def:schacHomeOrganization")));
   }
 
   private String getStringValueFromXMLObject(XMLObject xmlObj) {
@@ -68,18 +71,22 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
     return null;
   }
 
-  private UserInfo buildUserInfo(String nameId, Map<String, String> properties) {
-    DefaultUserInfo userInfo = new DefaultUserInfo();
-    userInfo.setEmail(properties.get("urn:mace:dir:attribute-def:mail"));
-    userInfo.setFamilyName(properties.get("urn:mace:dir:attribute-def:sn"));
-    userInfo.setGivenName(properties.get("urn:mace:dir:attribute-def:givenName"));
-    //This looks strange, but preferred username is the property where OIDC fetches users by
-    userInfo.setPreferredUsername(nameId);
-    userInfo.setProfile(properties.get("urn:mace:terena.org:attribute-def:schacHomeOrganization"));
-    userInfo.setName(properties.get("urn:mace:dir:attribute-def:cn"));
-    userInfo.setSub(nameId);
-    userInfo.setNickname(properties.get("urn:mace:dir:attribute-def:displayName"));
+  private UserInfo buildUserInfo(String unspecifiedNameId, String sub, Map<String, List<String>> properties) {
+    FederatedUserInfo userInfo = new FederatedUserInfo();
+    userInfo.setEmail(flattenList(properties.get("urn:mace:dir:attribute-def:mail")));
+    userInfo.setFamilyName(flattenList(properties.get("urn:mace:dir:attribute-def:sn")));
+    userInfo.setGivenName(flattenList(properties.get("urn:mace:dir:attribute-def:givenName")));
+    userInfo.setSchacHomeOrganization(flattenList(properties.get("urn:mace:terena.org:attribute-def:schacHomeOrganization")));
+    userInfo.setPreferredUsername(flattenList(properties.get("urn:mace:dir:attribute-def:cn")));
+    userInfo.setName(flattenList(properties.get("urn:mace:dir:attribute-def:cn")));
+    userInfo.setUnspecifiedNameId(unspecifiedNameId);
+    userInfo.setSub(sub);
+    userInfo.setNickname(flattenList(properties.get("urn:mace:dir:attribute-def:displayName")));
     return userInfo;
+  }
+
+  private String flattenList(List<String> values) {
+    return CollectionUtils.isEmpty(values) ? null : values.get(0);
   }
 
 }

@@ -1,4 +1,4 @@
-package oidc;
+package oidc.service;
 
 import org.mitre.oauth2.model.OAuth2AccessTokenEntity;
 import org.mitre.oauth2.service.impl.DefaultIntrospectionResultAssembler;
@@ -15,6 +15,7 @@ import java.util.Set;
 @Primary
 public class ExtendedIntrospectionResultAssembler extends DefaultIntrospectionResultAssembler {
 
+  //TODO - add / remove stuff here
   @Override
   public Map<String, Object> assembleFrom(OAuth2AccessTokenEntity accessToken, UserInfo userInfo, Set<String> authScopes) {
     Map<String, Object> result = super.assembleFrom(accessToken, userInfo, authScopes);

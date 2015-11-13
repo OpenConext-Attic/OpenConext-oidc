@@ -16,32 +16,21 @@ import java.util.Map;
  *
  */
 public class SAMLUser extends User {
-  private final String schacHomeOrganization;
-  private final String displayName;
-  private final String authenticatingAuthority;
-  private final String email;
 
-  public SAMLUser(String username, String schacHomeOrganization, String displayName, String authenticatingAuthority, String email) {
-    super(username, "N/A", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN")));
+  private final String unspecifiedNameId;
+  private final String schacHomeOrganization;
+
+  public SAMLUser(String sub, String unspecifiedNameId, String schacHomeOrganization) {
+    super(sub, "N/A", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN")));
+    this.unspecifiedNameId = unspecifiedNameId;
     this.schacHomeOrganization = schacHomeOrganization;
-    this.displayName = displayName;
-    this.authenticatingAuthority = authenticatingAuthority;
-    this.email = email;
   }
 
   public String getSchacHomeOrganization() {
     return schacHomeOrganization;
   }
 
-  public String getDisplayName() {
-    return displayName;
-  }
-
-  public String getAuthenticatingAuthority() {
-    return authenticatingAuthority;
-  }
-
-  public String getEmail() {
-    return email;
+  public String getUnspecifiedNameId() {
+    return unspecifiedNameId;
   }
 }

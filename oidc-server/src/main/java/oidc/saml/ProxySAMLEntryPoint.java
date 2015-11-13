@@ -40,10 +40,15 @@ public class ProxySAMLEntryPoint extends SAMLEntryPoint {
   protected WebSSOProfileOptions getProfileOptions(SAMLMessageContext context, AuthenticationException exception) throws MetadataProviderException {
     WebSSOProfileOptions profileOptions = super.getProfileOptions(context, exception);
     String clientId = (String) context.getInboundMessageTransport().getAttribute(CLIENT_DETAILS);
-//    if (StringUtils.hasText(clientId)) {
-//      profileOptions.setIncludeScoping(true);
-//      profileOptions.setRequesterIds(new HashSet<>(Arrays.asList(clientId)));
-//    }
+    boolean clientIdCall = StringUtils.hasText(clientId);
+    String relayState = clientIdCall ? clientId : context.getLocalEntityId();
+    // So it can be picked up when provisioning the user
+    profileOptions.setRelayState(relayState);
+    // We are a trusted proxy and scoping will be done by EB on WAYF and ARP
+    if (clientIdCall) {
+      profileOptions.setIncludeScoping(true);
+      profileOptions.setRequesterIds(new HashSet<>(Arrays.asList(clientId)));
+    }
     return profileOptions;
   }
 }

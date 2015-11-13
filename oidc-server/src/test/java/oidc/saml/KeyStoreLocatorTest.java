@@ -1,29 +1,52 @@
 package oidc.saml;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.chrono.ISOChronology;
 import org.junit.Test;
+import org.opensaml.xml.security.credential.Credential;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.saml.key.JKSKeyManager;
 
-import static org.junit.Assert.*;
+import java.io.IOException;
+import java.security.KeyStore;
+import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import static junit.framework.TestCase.assertEquals;
 
 public class KeyStoreLocatorTest {
 
+  private KeyStoreLocator keyStoreLocator = new KeyStoreLocator();
+
   @Test
   public void testCreateKeyStore() throws Exception {
-    String digest = new String(DigestUtils.md5Hex("https://test.sp"));
-    System.out.println(digest);
+    Properties props = getProperties();
 
-    DateTime time = new DateTime("2015-11-12T15:40:43Z", ISOChronology.getInstanceUTC());
+    Map<String, String> passwords = new HashMap<>();
+    passwords.put(props.getProperty("sp.entity.id"), props.getProperty("sp.passphrase"));
 
-    System.out.println(time.toDate());
-    Thread.sleep(25);
-    long reference = System.currentTimeMillis();
-    //DateTime reference = DateTime.now(time.getZone());//System.currentTimeMillis();
-//    boolean before = time.isBefore(reference.plus(60 * 1000));
-    boolean before = time.isBefore(reference + (60 * 1000));
-    System.out.println(before);
+    KeyStore keyStore = keyStoreLocator.createKeyStore(
+        props.getProperty("idp.entity.id"),
+        props.getProperty("idp.public.certificate"),
+        props.getProperty("sp.entity.id"),
+        props.getProperty("sp.public.certificate"),
+        props.getProperty("sp.private.key"),
+        props.getProperty("sp.passphrase"));
 
+    JKSKeyManager jksKeyManager = new JKSKeyManager(keyStore, passwords, props.getProperty("sp.entity.id"));
+
+    Credential defaultCredential = jksKeyManager.getDefaultCredential();
+    assertEquals("RSA", defaultCredential.getPrivateKey().getAlgorithm());
+    assertEquals("RSA", defaultCredential.getPublicKey().getAlgorithm());
+
+    X509Certificate certificate = jksKeyManager.getCertificate(props.getProperty("idp.entity.id"));
+    String name = certificate.getSubjectDN().getName();
+    assertEquals("CN=test2 saml cert, O=SURFnet, L=Utrecht, ST=Utrecht, C=NL", name);
+  }
+
+  private Properties getProperties() throws IOException {
+    Properties props = new Properties();
+    props.load(new ClassPathResource("application.oidc.properties").getInputStream());
+    return props;
   }
 }

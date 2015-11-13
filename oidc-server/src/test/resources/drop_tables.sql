@@ -49,4 +49,11 @@ DROP TABLE IF EXISTS system_scope;
 DROP TABLE IF EXISTS token_scope;                             
 DROP TABLE IF EXISTS user_info;                               
 DROP TABLE IF EXISTS whitelisted_site;                        
-DROP TABLE IF EXISTS whitelisted_site_scope;                  
+DROP TABLE IF EXISTS whitelisted_site_scope;
+
+DROP TABLE IF EXISTS user_edu_person_affiliation;
+DROP TABLE IF EXISTS user_edu_person_entitlement;
+DROP TABLE IF EXISTS user_edu_person_scoped_affiliation;
+DROP TABLE IF EXISTS user_is_member_of;
+DROP TABLE IF EXISTS user_schac_personal_unique_code;
+DROP TABLE IF EXISTS user_uid;

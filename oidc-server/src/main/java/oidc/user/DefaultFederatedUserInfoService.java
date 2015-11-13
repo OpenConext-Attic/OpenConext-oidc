@@ -1,7 +1,6 @@
-package oidc.saml;
+package oidc.user;
 
-import oidc.ExtendedUserInfoRepository;
-import oidc.ExtendedUserInfoService;
+import oidc.repository.FederatedUserInfoRepository;
 import org.mitre.openid.connect.model.UserInfo;
 import org.mitre.openid.connect.service.impl.DefaultUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +9,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Primary
-public class SamlUserInfoService extends DefaultUserInfoService implements ExtendedUserInfoService {
+public class DefaultFederatedUserInfoService extends DefaultUserInfoService implements FederatedUserInfoService {
 
   @Autowired
-  private ExtendedUserInfoRepository userInfoRepository;
+  private FederatedUserInfoRepository userInfoRepository;
 
   @Override
   public UserInfo saveUserInfo(UserInfo userInfo) {
     return userInfoRepository.saveUserInfo(userInfo);
+  }
+
+  @Override
+  public UserInfo getByUsernameAndClientId(String username, String clientId) {
+    return getByUsername(username);
   }
 }
