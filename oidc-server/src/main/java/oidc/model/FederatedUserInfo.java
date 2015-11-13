@@ -1,6 +1,9 @@
 package oidc.model;
 
+import com.google.gson.JsonObject;
 import org.mitre.openid.connect.model.DefaultUserInfo;
+import org.springframework.util.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -20,7 +23,7 @@ public class FederatedUserInfo extends DefaultUserInfo {
   private Set<String> eduPersonScopedAffiliations = new HashSet<>();
   private Set<String> isMemberOfs = new HashSet<>();
   private Set<String> eduPersonEntitlements = new HashSet<>();
-  private Set<String> schacPersonalUniqueCode = new HashSet<>();
+  private Set<String> schacPersonalUniqueCodes = new HashSet<>();
   private Set<String> uids = new HashSet<>();
 
   @Basic
@@ -135,12 +138,12 @@ public class FederatedUserInfo extends DefaultUserInfo {
       joinColumns = @JoinColumn(name = "user_id")
   )
   @Column(name = "schac_personal_unique_code")
-  public Set<String> getSchacPersonalUniqueCode() {
-    return schacPersonalUniqueCode;
+  public Set<String> getSchacPersonalUniqueCodes() {
+    return schacPersonalUniqueCodes;
   }
 
-  public void setSchacPersonalUniqueCode(Set<String> schacPersonalUniqueCode) {
-    this.schacPersonalUniqueCode = schacPersonalUniqueCode;
+  public void setSchacPersonalUniqueCodes(Set<String> schacPersonalUniqueCodes) {
+    this.schacPersonalUniqueCodes = schacPersonalUniqueCodes;
   }
 
   @ElementCollection(fetch = FetchType.EAGER)
@@ -155,5 +158,34 @@ public class FederatedUserInfo extends DefaultUserInfo {
 
   public void setUids(Set<String> uids) {
     this.uids = uids;
+  }
+
+  @Override
+  public JsonObject toJson() {
+    JsonObject obj = super.toJson();
+    addProperty(obj, this.schacHomeOrganization, "schacHomeOrganization");
+    addProperty(obj, this.schacHomeOrganizationType, "schacHomeOrganizationType");
+    addProperty(obj, this.eduPersonPrincipalName, "eduPersonPrincipalName");
+    addProperty(obj, this.eduPersonTargetedId, "eduPersonTargetedId");
+
+    addListProperty(obj, this.eduPersonAffiliations, "eduPersonAffiliation");
+    addListProperty(obj, this.eduPersonScopedAffiliations, "eduPersonScopedAffiliation");
+    addListProperty(obj, this.isMemberOfs, "isMemberOf");
+    addListProperty(obj, this.eduPersonEntitlements, "eduPersonEntitlement");
+    addListProperty(obj, this.schacPersonalUniqueCodes, "schacPersonalUniqueCode");
+    addListProperty(obj, this.uids, "uid");
+    return obj;
+  }
+
+  private void addListProperty(JsonObject obj, Set<String> set, String name) {
+    if (!CollectionUtils.isEmpty(set)) {
+      obj.addProperty(name, StringUtils.join(set, ", "));
+    }
+  }
+
+  private void addProperty(JsonObject obj, String property, String name) {
+    if (StringUtils.isNotEmpty(property)) {
+      obj.addProperty(name, property);
+    }
   }
 }
