@@ -163,16 +163,16 @@ public class FederatedUserInfo extends DefaultUserInfo {
   @Override
   public JsonObject toJson() {
     JsonObject obj = super.toJson();
-    addProperty(obj, this.schacHomeOrganization, "schacHomeOrganization");
-    addProperty(obj, this.schacHomeOrganizationType, "schacHomeOrganizationType");
-    addProperty(obj, this.eduPersonPrincipalName, "eduPersonPrincipalName");
-    addProperty(obj, this.eduPersonTargetedId, "eduPersonTargetedId");
+    addProperty(obj, this.schacHomeOrganization, "schac_home_organization");
+    addProperty(obj, this.schacHomeOrganizationType, "schac_home_organization_type");
+    addProperty(obj, this.eduPersonPrincipalName, "edu_person_principal_name");
+    addProperty(obj, this.eduPersonTargetedId, "edu_person_targeted_id");
 
-    addListProperty(obj, this.eduPersonAffiliations, "eduPersonAffiliation");
-    addListProperty(obj, this.eduPersonScopedAffiliations, "eduPersonScopedAffiliation");
-    addListProperty(obj, this.isMemberOfs, "isMemberOf");
-    addListProperty(obj, this.eduPersonEntitlements, "eduPersonEntitlement");
-    addListProperty(obj, this.schacPersonalUniqueCodes, "schacPersonalUniqueCode");
+    addListProperty(obj, this.eduPersonAffiliations, "edu_person_affiliation");
+    addListProperty(obj, this.eduPersonScopedAffiliations, "edu_person_scoped_affiliation");
+    addListProperty(obj, this.isMemberOfs, "is_member_of");
+    addListProperty(obj, this.eduPersonEntitlements, "edu_person_entitlement");
+    addListProperty(obj, this.schacPersonalUniqueCodes, "schac_personal_unique_code");
     addListProperty(obj, this.uids, "uid");
     return obj;
   }

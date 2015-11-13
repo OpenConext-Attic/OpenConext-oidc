@@ -20,9 +20,6 @@ public class MockPreAuthenticatedProcessingFilter extends AbstractPreAuthenticat
   @Autowired
   private FederatedUserInfoService extendedUserInfoService;
 
-  @Autowired
-  private HashedPairwiseIdentifierService hashedPairwiseIdentifierService;
-
   private FederatedUserInfo federatedUserInfo;
 
   @Override

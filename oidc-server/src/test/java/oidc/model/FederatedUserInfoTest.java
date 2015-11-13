@@ -31,7 +31,7 @@ public class FederatedUserInfoTest {
     JsonObject jsonObject = federatedUserInfo.toJson();
 
     assertEquals("uid2, uid1", jsonObject.getAsJsonPrimitive("uid").getAsString());
-    assertEquals("student, faculty", jsonObject.getAsJsonPrimitive("eduPersonAffiliation").getAsString());
+    assertEquals("student, faculty", jsonObject.getAsJsonPrimitive("edu_person_affiliation").getAsString());
     //TODO more asserts
   }
 }
