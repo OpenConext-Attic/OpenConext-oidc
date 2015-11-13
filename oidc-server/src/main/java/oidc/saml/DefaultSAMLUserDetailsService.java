@@ -3,12 +3,8 @@ package oidc.saml;
 import oidc.model.FederatedUserInfo;
 import oidc.service.HashedPairwiseIdentifierService;
 import oidc.user.FederatedUserInfoService;
-import org.mitre.openid.connect.model.DefaultUserInfo;
 import org.mitre.openid.connect.model.UserInfo;
-import org.mitre.openid.connect.service.PairwiseIdentiferService;
 import org.opensaml.saml2.core.Attribute;
-import org.opensaml.saml2.core.AuthenticatingAuthority;
-import org.opensaml.saml2.core.AuthnStatement;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.XSAny;
 import org.opensaml.xml.schema.XSString;
@@ -31,13 +27,29 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
 
   @Override
   public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
-    Map<String, List<String>> properties = new HashMap<>();
     String unspecifiedNameId = credential.getNameID().getValue();
+
+    Map<String, List<String>> properties = getAttributes(credential);
+
+    String clientId = credential.getRelayState();
+    String sub = hashedPairwiseIdentifierService.getIdentifier(unspecifiedNameId, clientId);
+
+    UserInfo existingUserInfo = extendedUserInfoService.getByUsernameAndClientId(sub, clientId);
+
+    if (existingUserInfo == null) {
+      existingUserInfo = this.buildUserInfo(unspecifiedNameId, sub, properties);
+      extendedUserInfoService.saveUserInfo(existingUserInfo);
+    }
+    return new SAMLUser(sub);
+  }
+
+  private Map<String, List<String>> getAttributes(SAMLCredential credential) {
+    Map<String, List<String>> properties = new HashMap<>();
 
     List<Attribute> attributes = credential.getAttributes();
     for (Attribute attribute : attributes) {
       String name = attribute.getName();
-      List<String> values = new ArrayList<>();
+      List<String> values = new ArrayList<String>();
       List<XMLObject> attributeValues = attribute.getAttributeValues();
       for (XMLObject xmlObject : attributeValues) {
         String value = getStringValueFromXMLObject(xmlObject);
@@ -46,20 +58,7 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
         }
       }
       properties.put(name, values);
-    }
-    String clientId = credential.getRelayState();
-    String sub = hashedPairwiseIdentifierService.getIdentifier(unspecifiedNameId, clientId);
-
-    UserInfo existingUserInfo = extendedUserInfoService.getByUsernameAndClientId(sub, clientId);
-
-    if (existingUserInfo == null) {
-      UserInfo userInfo = this.buildUserInfo(unspecifiedNameId, sub, properties);
-      extendedUserInfoService.saveUserInfo(userInfo);
-    }
-    return new SAMLUser(
-        sub,
-        unspecifiedNameId,
-        flattenList(properties.get("urn:mace:terena.org:attribute-def:schacHomeOrganization")));
+    } return properties;
   }
 
   private String getStringValueFromXMLObject(XMLObject xmlObj) {
@@ -73,20 +72,39 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
 
   private UserInfo buildUserInfo(String unspecifiedNameId, String sub, Map<String, List<String>> properties) {
     FederatedUserInfo userInfo = new FederatedUserInfo();
-    userInfo.setEmail(flattenList(properties.get("urn:mace:dir:attribute-def:mail")));
-    userInfo.setFamilyName(flattenList(properties.get("urn:mace:dir:attribute-def:sn")));
-    userInfo.setGivenName(flattenList(properties.get("urn:mace:dir:attribute-def:givenName")));
-    userInfo.setSchacHomeOrganization(flattenList(properties.get("urn:mace:terena.org:attribute-def:schacHomeOrganization")));
-    userInfo.setPreferredUsername(flattenList(properties.get("urn:mace:dir:attribute-def:cn")));
-    userInfo.setName(flattenList(properties.get("urn:mace:dir:attribute-def:cn")));
+
     userInfo.setUnspecifiedNameId(unspecifiedNameId);
     userInfo.setSub(sub);
-    userInfo.setNickname(flattenList(properties.get("urn:mace:dir:attribute-def:displayName")));
+
+    userInfo.setName(flatten(properties.get("urn:mace:dir:attribute-def:cn")));
+    userInfo.setPreferredUsername(flatten(properties.get("urn:mace:dir:attribute-def:displayName")));
+    userInfo.setNickname(flatten(properties.get("urn:mace:dir:attribute-def:displayName")));
+    userInfo.setGivenName(flatten(properties.get("urn:mace:dir:attribute-def:givenName")));
+    userInfo.setFamilyName(flatten(properties.get("urn:mace:dir:attribute-def:sn")));
+    userInfo.setLocale(flatten(properties.get("urn:mace:dir:attribute-def:preferredLanguage")));
+    userInfo.setEmail(flatten(properties.get("urn:mace:dir:attribute-def:mail")));
+
+    userInfo.setSchacHomeOrganization(flatten(properties.get("urn:mace:terena.org:attribute-def:schacHomeOrganization")));
+    userInfo.setSchacHomeOrganizationType(flatten(properties.get("urn:mace:terena.org:attribute-def:schacHomeOrganizationType")));
+
+    userInfo.setEduPersonAffiliations(set(properties.get("urn:mace:dir:attribute-def:eduPersonAffiliation")));
+    userInfo.setEduPersonScopedAffiliations(set(properties.get("urn:mace:dir:attribute-def:eduPersonScopedAffiliation")));
+
+    userInfo.setIsMemberOfs(set(properties.get("urn:mace:dir:attribute-def:isMemberOf")));
+    userInfo.setEduPersonEntitlements(set(properties.get("urn:mace:dir:attribute-def:eduPersonEntitlement")));
+    userInfo.setSchacPersonalUniqueCode(set(properties.get("urn:schac:attribute-def:schacPersonalUniqueCode")));
+    userInfo.setEduPersonPrincipalName(flatten(properties.get("urn:mace:dir:attribute-def:eduPersonPrincipalName")));
+    userInfo.setUids(set(properties.get("urn:mace:dir:attribute-def:uid ")));
+    userInfo.setEduPersonTargetedId(flatten(properties.get("urn:mace:dir:attribute-def:eduPersonTargetedID")));
+
     return userInfo;
   }
 
-  private String flattenList(List<String> values) {
+  private String flatten(List<String> values) {
     return CollectionUtils.isEmpty(values) ? null : values.get(0);
   }
 
+  private Set<String> set(List<String> values) {
+    return CollectionUtils.isEmpty(values) ? new HashSet<String>() : new HashSet<>(values);
+  }
 }
