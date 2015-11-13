@@ -1,0 +1,36 @@
+{
+  "sub": "fbf446e918287b50f057c2d616d9c23f1d1ee838c7aa9e62683e94e6907711f8969d33c09d8abd332b58b583b6df0b26296ee94f69aa2d63380208c90b2f1b5b",
+  "preferredUsername": "John Doe",
+  "name": "John Doe",
+  "givenName": "Jonh",
+  "familyName": "Doe",
+  "email": "john.doe@example.org",
+  "locale": "NL",
+  "unspecifiedNameId":"urn:collab:person:example.com:local",
+  "schacHomeOrganization": "surfnet.nl",
+  "schacHomeOrganizationType": "institution",
+  "eduPersonPrincipalName": "principal_name",
+  "eduPersonTargetedId": "targeted_id",
+  "eduPersonAffiliations": [
+    "student",
+    "faculty"
+  ],
+  "eduPersonScopedAffiliations": [
+    "student",
+    "faculty"
+  ],
+  "isMemberOfs": [
+    "surfnet"
+  ],
+  "eduPersonEntitlements": [
+    "http://xstor.com/contracts/HEd123",
+    "urn:mace:washington.edu:confocalMicroscope"
+  ],
+  "schacPersonalUniqueCode": [
+    "personal"
+  ],
+  "uids": [
+    "uid2",
+    "uid1"
+  ]
+}

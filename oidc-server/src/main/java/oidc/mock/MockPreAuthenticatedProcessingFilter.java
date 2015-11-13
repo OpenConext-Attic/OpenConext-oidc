@@ -1,37 +1,55 @@
 package oidc.mock;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import oidc.model.FederatedUserInfo;
 import oidc.saml.SAMLUser;
 import oidc.service.HashedPairwiseIdentifierService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import oidc.user.FederatedUserInfoService;
+import org.mitre.openid.connect.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 public class MockPreAuthenticatedProcessingFilter extends AbstractPreAuthenticatedProcessingFilter {
+
+  private static final String CLIENT_ID = "https://oidc.localhost.surfconext.nl";
+
+  @Autowired
+  private FederatedUserInfoService extendedUserInfoService;
 
   @Autowired
   private HashedPairwiseIdentifierService hashedPairwiseIdentifierService;
 
-  private static final String UNSPECIFIED_NAMEID = "urn:collab:person:example.com:local";
-  private static final String SCHAC_HOMEORGANIZATION = "surfnet.nl";
+  private FederatedUserInfo federatedUserInfo;
 
   @Override
   protected Object getPreAuthenticatedPrincipal(final HttpServletRequest request) {
-      String sub = hashedPairwiseIdentifierService.getIdentifier(UNSPECIFIED_NAMEID, SCHAC_HOMEORGANIZATION);
-      return new SAMLUser(sub, UNSPECIFIED_NAMEID, SCHAC_HOMEORGANIZATION);
+    UserInfo existingUserInfo = extendedUserInfoService.getByUsernameAndClientId(federatedUserInfo.getSub(), CLIENT_ID);
+
+    if (existingUserInfo == null) {
+      extendedUserInfoService.saveUserInfo(federatedUserInfo);
+    }
+
+    return new SAMLUser(federatedUserInfo.getSub(), federatedUserInfo.getUnspecifiedNameId(), federatedUserInfo.getSchacHomeOrganization());
   }
+
 
   @Override
   protected Object getPreAuthenticatedCredentials(HttpServletRequest request) {
     return "N/A";
   }
 
+  @Override
+  public void afterPropertiesSet() {
+    super.afterPropertiesSet();
+    ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      this.federatedUserInfo = objectMapper.readValue(new ClassPathResource("model/federated_user_info.json").getInputStream(), FederatedUserInfo.class);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }

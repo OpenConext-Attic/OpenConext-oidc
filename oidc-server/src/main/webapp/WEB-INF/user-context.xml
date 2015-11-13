@@ -175,7 +175,7 @@
                 <value type="java.lang.String">${idp.metadata.url}</value>
               </constructor-arg>
               <constructor-arg>
-                <value type="int">15000</value>
+                <value type="int">30000</value>
               </constructor-arg>
               <property name="parserPool" ref="parserPool"/>
               <!--<property name="requireValidMetadata" value="true"/>-->

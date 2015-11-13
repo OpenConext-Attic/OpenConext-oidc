@@ -1,5 +1,6 @@
-package oidc;
+package oidc.openid;
 
+import oidc.AbstractTestIntegration;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

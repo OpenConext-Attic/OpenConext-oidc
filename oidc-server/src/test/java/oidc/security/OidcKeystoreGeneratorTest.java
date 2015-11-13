@@ -1,4 +1,4 @@
-package oidc;
+package oidc.security;
 
 import com.nimbusds.jose.Algorithm;
 import net.minidev.json.JSONStyle;

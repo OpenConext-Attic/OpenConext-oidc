@@ -137,7 +137,7 @@ public class AbstractTestIntegration {
 
   protected void assertTokenId(String tokenId) throws Exception {
     JWKVerifier verifier = this.assertAccessToken(tokenId);
-    assertEquals(verifier.claims().getClaims().get("sub"), "urn:collab:person:example.com:admin");
+    assertEquals("fbf446e918287b50f057c2d616d9c23f1d1ee838c7aa9e62683e94e6907711f8969d33c09d8abd332b58b583b6df0b26296ee94f69aa2d63380208c90b2f1b5b",verifier.claims().getClaims().get("sub"));
   }
 
   protected void assertIntrospectResult(Map<String, Object> introspect, String scope) {
@@ -149,16 +149,16 @@ public class AbstractTestIntegration {
       assertEquals(true, Boolean.valueOf((Boolean) active));
     }
     assertEquals(scope, introspect.get("scope"));
-    assertEquals("urn:collab:person:example.com:local", introspect.get("sub"));
+    assertEquals("fbf446e918287b50f057c2d616d9c23f1d1ee838c7aa9e62683e94e6907711f8969d33c09d8abd332b58b583b6df0b26296ee94f69aa2d63380208c90b2f1b5b", introspect.get("sub"));
     assertEquals(TEST_CLIENT, introspect.get("client_id"));
     assertEquals("bearer", ((String) introspect.get("token_type")).toLowerCase());
     assertEquals("surfnet.nl", introspect.get("schac_home"));
+    assertEquals("urn:collab:person:example.com:local", introspect.get("unspecified_id"));
   }
 
   protected void assertUserInfoResult(Map<String, Object> userInfo) {
-    assertEquals("urn:collab:person:example.com:admin", userInfo.get("sub"));
+    assertEquals("fbf446e918287b50f057c2d616d9c23f1d1ee838c7aa9e62683e94e6907711f8969d33c09d8abd332b58b583b6df0b26296ee94f69aa2d63380208c90b2f1b5b", userInfo.get("sub"));
     assertEquals("John Doe", userInfo.get("name"));
-    assertEquals("surfnet.nl", userInfo.get("profile"));
     assertEquals("john.doe@example.org", userInfo.get("email"));
   }
   protected MultiValueMap<String, String> getAuthorizationCodeFormParameters(String authorizationCode) {

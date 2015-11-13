@@ -1,5 +1,6 @@
-package oidc;
+package oidc.oauth;
 
+import oidc.AbstractTestIntegration;
 import org.junit.Test;
 import org.springframework.http.*;
 import org.springframework.util.MultiValueMap;
