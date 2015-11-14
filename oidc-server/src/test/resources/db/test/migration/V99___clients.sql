@@ -8,6 +8,9 @@ INSERT INTO client_scope (owner_id, scope) VALUES
 	(9999999999, 'email'),
 	(9999999999, 'address'),
 	(9999999999, 'phone'),
+	(9999999999, 'organization'),
+	(9999999999, 'entitlement'),
+	(9999999999, 'userids'),
 	(9999999999, 'offline_access');
 
 INSERT INTO client_redirect_uri (owner_id, redirect_uri) VALUES
@@ -32,4 +35,7 @@ INSERT INTO whitelisted_site_scope (owner_id, scope) VALUES
 	(9999999999, 'email'),
 	(9999999999, 'address'),
 	(9999999999, 'phone'),
+	(9999999999, 'organization'),
+	(9999999999, 'entitlement'),
+	(9999999999, 'userids'),
 	(9999999999, 'offline_access');

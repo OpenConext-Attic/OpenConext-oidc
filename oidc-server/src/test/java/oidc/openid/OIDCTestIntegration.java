@@ -20,10 +20,11 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
   public void testOpenIdCodeFlow() throws Exception {
     wireMockRule.stubFor(get(urlMatching("/callback.*")).withQueryParam("code", matching(".*")).willReturn(aResponse().withStatus(200)));
 
+    String scope = "openid profile email organization userids entitlement";
     String authorizeUri = UriComponentsBuilder.fromHttpUrl(serverUrl + "/authorize")
         .queryParam("response_type", "code")
         .queryParam("client_id", "test_client")
-        .queryParam("scope", "openid profile email")
+        .queryParam("scope", scope)
         .queryParam("redirect_uri", callback)
         .build().toUriString();
     ResponseEntity<String> response = template.exchange(authorizeUri, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), String.class);
@@ -49,7 +50,7 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
         .queryParam("token", accessToken)
         .build().toUriString();
     Map<String, Object> introspect = template.exchange(introspectUri, HttpMethod.GET, new HttpEntity<>(headers), Map.class).getBody();
-    assertIntrospectResult(introspect, "openid profile email");
+    assertIntrospectResult(introspect, scope);
 
     //Call the userinfo endpoint
     headers = getAuthorizationHeadersForUserInfo(accessToken);

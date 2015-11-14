@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.nimbusds.jose.JWSHeader;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.lang3.StringUtils;
 import org.flywaydb.core.Flyway;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -18,17 +19,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.Assert.*;
 
 public class AbstractTestIntegration {
 
@@ -137,18 +131,18 @@ public class AbstractTestIntegration {
 
   protected void assertTokenId(String tokenId) throws Exception {
     JWKVerifier verifier = this.assertAccessToken(tokenId);
-    assertEquals("fbf446e918287b50f057c2d616d9c23f1d1ee838c7aa9e62683e94e6907711f8969d33c09d8abd332b58b583b6df0b26296ee94f69aa2d63380208c90b2f1b5b",verifier.claims().getClaims().get("sub"));
+    Map<String, Object> claims = verifier.claims().getClaims();
+    assertEquals("fbf446e918287b50f057c2d616d9c23f1d1ee838c7aa9e62683e94e6907711f8969d33c09d8abd332b58b583b6df0b26296ee94f69aa2d63380208c90b2f1b5b", claims.get("sub"));
   }
 
   protected void assertIntrospectResult(Map<String, Object> introspect, String scope) {
-    Object active = introspect.get("active");
-    if (active instanceof String) {
-      assertEquals(true, Boolean.valueOf((String) active));
-    }
-    if (active instanceof Boolean) {
-      assertEquals(true, Boolean.valueOf((Boolean) active));
-    }
-    assertEquals(scope, introspect.get("scope"));
+    Boolean active = (Boolean) introspect.get("active");
+    assertTrue(active);
+    //the order might be different, so we want to use Set#equals
+    Set<String> actual = new HashSet(Arrays.asList(StringUtils.split((String) introspect.get("scope"), " ")));
+    Set<String> expected = new HashSet(Arrays.asList(StringUtils.split(scope, " ")));
+    assertEquals(expected, actual);
+
     assertEquals("fbf446e918287b50f057c2d616d9c23f1d1ee838c7aa9e62683e94e6907711f8969d33c09d8abd332b58b583b6df0b26296ee94f69aa2d63380208c90b2f1b5b", introspect.get("sub"));
     assertEquals(TEST_CLIENT, introspect.get("client_id"));
     assertEquals("bearer", ((String) introspect.get("token_type")).toLowerCase());
@@ -159,8 +153,23 @@ public class AbstractTestIntegration {
   protected void assertUserInfoResult(Map<String, Object> userInfo) {
     assertEquals("fbf446e918287b50f057c2d616d9c23f1d1ee838c7aa9e62683e94e6907711f8969d33c09d8abd332b58b583b6df0b26296ee94f69aa2d63380208c90b2f1b5b", userInfo.get("sub"));
     assertEquals("John Doe", userInfo.get("name"));
+    assertEquals("John Doe", userInfo.get("preferred_username"));
+    assertEquals("John", userInfo.get("given_name"));
+    assertEquals("Doe", userInfo.get("family_name"));
+    assertEquals("NL", userInfo.get("locale"));
     assertEquals("john.doe@example.org", userInfo.get("email"));
+
+    assertEquals("surfnet.nl", userInfo.get("schac_home_organization"));
+    assertEquals("institution", userInfo.get("schac_home_organization_type"));
+    assertEquals("principal_name", userInfo.get("edu_person_principal_name"));
+    assertEquals("targeted_id", userInfo.get("edu_person_targeted_id"));
+    assertEquals("student, faculty", userInfo.get("edu_person_affiliation"));
+    assertEquals("student, faculty", userInfo.get("edu_person_scoped_affiliation"));
+    assertEquals("surfnet", userInfo.get("is_member_of"));
+    assertEquals("personal", userInfo.get("schac_personal_unique_code"));
+    assertEquals("uid2, uid1", userInfo.get("uid"));
   }
+
   protected MultiValueMap<String, String> getAuthorizationCodeFormParameters(String authorizationCode) {
     MultiValueMap<String, String> bodyMap = new LinkedMultiValueMap<>();
     bodyMap.add("grant_type", "authorization_code");

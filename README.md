@@ -36,8 +36,11 @@ If you don't use the local profile then you need to login on the SURFconext fede
 
 ## Integration tests
 
-There are JUnit integration tests that will run against the locally started Jetty container. You can also start the OIDC server
-and then run the tests from within your IDE (e.g. you can debug either the test or the OIDC server).
+There are JUnit integration tests that will run against the locally started Jetty container. 
+
+`mvn verify`
+
+You can also start the OIDC server and then run the tests from within your IDE (e.g. you can debug either the test or the OIDC server).
 
 The integration tests set the spring.active.profile property to local too prevent having to do the SAML dance.
 
