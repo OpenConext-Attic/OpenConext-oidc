@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.nio.ByteBuffer;
+import java.util.UUID;
+
 @Primary
 @Service("hashedPairwiseIdentifierService")
 public class DefaultHashedPairwiseIdentifierService implements HashedPairwiseIdentifierService {
@@ -23,4 +26,5 @@ public class DefaultHashedPairwiseIdentifierService implements HashedPairwiseIde
     String identifier = unspecifiedNameId + "_" + clientId;
     return DigestUtils.sha512Hex(identifier);
   }
+
 }
