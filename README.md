@@ -67,6 +67,15 @@ Remove the whitespace, heading and footer from the oidc.crt and oidc.der:
 
 `cat oidc.crt |head -n -1 |tail -n +2 | tr -d '\n'; echo`
 
+Above commands work on linux distributions. On mac you can issue the same command with `ghead` after you install `coreutils`:
+
+`brew install coreutils`
+
+`cat oidc.der |ghead -n -1 |tail -n +2 | tr -d '\n'; echo`
+
+`cat oidc.crt |ghead -n -1 |tail -n +2 | tr -d '\n'; echo`
+
+
 Add the oidc key pair to the application.oidc.properties file:
 
 `sp.private.key=${output from cleaning the der file}`
