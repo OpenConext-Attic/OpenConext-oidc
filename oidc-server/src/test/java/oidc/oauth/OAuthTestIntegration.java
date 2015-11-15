@@ -21,7 +21,7 @@ public class OAuthTestIntegration extends AbstractTestIntegration {
 
     String authorizeUri = UriComponentsBuilder.fromHttpUrl(serverUrl + "/authorize")
         .queryParam("response_type", "code")
-        .queryParam("client_id", "test_client")
+        .queryParam("client_id", TEST_CLIENT)
         .queryParam("scope", "read")
         .queryParam("redirect_uri", callback)
         .build().toUriString();

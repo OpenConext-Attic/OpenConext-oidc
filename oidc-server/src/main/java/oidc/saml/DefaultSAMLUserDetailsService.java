@@ -25,13 +25,16 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
   @Autowired
   private HashedPairwiseIdentifierService hashedPairwiseIdentifierService;
 
+  @Autowired
+  private ServiceProviderTranslationService serviceProviderTranslationService;
+
   @Override
   public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
     String unspecifiedNameId = credential.getNameID().getValue();
 
     Map<String, List<String>> properties = getAttributes(credential);
 
-    String clientId = credential.getRelayState();
+    String clientId = serviceProviderTranslationService.translateServiceProviderEntityId(credential.getRelayState());
     String sub = hashedPairwiseIdentifierService.getIdentifier(unspecifiedNameId, clientId);
 
     UserInfo existingUserInfo = extendedUserInfoService.getByUsernameAndClientId(sub, clientId);

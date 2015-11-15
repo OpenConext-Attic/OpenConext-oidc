@@ -22,6 +22,9 @@ public class ProxySAMLEntryPoint extends SAMLEntryPoint {
   @Autowired
   private ClientDetailsEntityService clientDetailsEntityService;
 
+  @Autowired
+  private ServiceProviderTranslationService serviceProviderTranslationService;
+
   private static final String CLIENT_DETAILS = ProxySAMLEntryPoint.class.getName() + "_CLIENT_DETAILS";
 
   @Override
@@ -42,12 +45,15 @@ public class ProxySAMLEntryPoint extends SAMLEntryPoint {
     String clientId = (String) context.getInboundMessageTransport().getAttribute(CLIENT_DETAILS);
     boolean clientIdCall = StringUtils.hasText(clientId);
     String relayState = clientIdCall ? clientId : context.getLocalEntityId();
+
     // So it can be picked up when provisioning the user
     profileOptions.setRelayState(relayState);
+
     // We are a trusted proxy and scoping will be done by EB on WAYF and ARP
     if (clientIdCall) {
       profileOptions.setIncludeScoping(true);
-      profileOptions.setRequesterIds(new HashSet<>(Arrays.asList(clientId)));
+      String spEntityId = serviceProviderTranslationService.translateClientId(clientId);
+      profileOptions.setRequesterIds(new HashSet<>(Arrays.asList(spEntityId)));
     }
     return profileOptions;
   }

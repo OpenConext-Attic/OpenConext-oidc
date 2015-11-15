@@ -23,7 +23,7 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
     String scope = "openid profile email organization userids entitlement";
     String authorizeUri = UriComponentsBuilder.fromHttpUrl(serverUrl + "/authorize")
         .queryParam("response_type", "code")
-        .queryParam("client_id", "test_client")
+        .queryParam("client_id", TEST_CLIENT)
         .queryParam("scope", scope)
         .queryParam("redirect_uri", callback)
         .build().toUriString();

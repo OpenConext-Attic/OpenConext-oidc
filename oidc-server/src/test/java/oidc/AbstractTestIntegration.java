@@ -26,12 +26,13 @@ import static org.junit.Assert.*;
 
 public class AbstractTestIntegration {
 
-  private static final String TEST_CLIENT = "test_client";
   private static final String SECRET = "secret";
 
   protected String callback = "http://localhost:8889/callback";
   protected String serverUrl = "http://localhost:8080";
   protected RestTemplate template = new RestTemplate();
+
+  public static final String TEST_CLIENT = "https@//oidc.localhost.surfconext.nl";
 
   @Rule
   public WireMockRule wireMockRule = new WireMockRule(8889);

@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class MockPreAuthenticatedProcessingFilter extends AbstractPreAuthenticatedProcessingFilter {
 
-  private static final String CLIENT_ID = "https://oidc.localhost.surfconext.nl";
+  private static final String CLIENT_ID = "https@//oidc.localhost.surfconext.nl";
 
   @Autowired
   private FederatedUserInfoService extendedUserInfoService;

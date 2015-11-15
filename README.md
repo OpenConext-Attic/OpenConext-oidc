@@ -89,9 +89,14 @@ Add the EB certificate to the application.oidc.properties file:
 ## Trusted Proxy
 
 OpenConext-OIDC is a proxy for SP's that want to use OpenConnect ID instead of SAML to provide their Service to the federation memebers. Therefore
-the WAYF and ARP must be scoped for the requesting SP (and not OpenConext-OIDC). This works if OpenConext-OIDC is marked
+the WAYF and ARP must be scoped for the requesting SP (and not this OIDC SP). This works if OpenConext-OIDC is marked
 as a trusted proxy in SR and the signing certificate (e.g. sp.public.certificate) in added to the certData metadata
 field in SR.
+
+We link SPs and OIDC Clients by name: the entityId of the SP equals the clientId of the client where we replace 
+all ":" characters with the "@" character. 
+
+See [ServiceProviderTranslationService](oidc-server/src/main/java/oidc/saml/ServiceProviderTranslationService.java)
 
 ## SAML metadata
 

@@ -48,12 +48,9 @@
   <bean id="samlFilter" class="org.springframework.security.web.FilterChainProxy">
     <security:filter-chain-map request-matcher="ant">
       <security:filter-chain pattern="/saml/login/**" filters="samlEntryPoint"/>
-      <security:filter-chain pattern="/saml/logout/**" filters="samlLogoutFilter"/>
       <security:filter-chain pattern="/saml/metadata/**" filters="metadataDisplayFilter"/>
       <security:filter-chain pattern="/saml/SSO/**" filters="samlWebSSOProcessingFilter"/>
       <security:filter-chain pattern="/saml/SSOHoK/**" filters="samlWebSSOHoKProcessingFilter"/>
-      <security:filter-chain pattern="/saml/SingleLogout/**" filters="samlLogoutProcessingFilter"/>
-      <security:filter-chain pattern="/saml/discovery/**" filters="samlIDPDiscovery"/>
     </security:filter-chain-map>
   </bean>
 
@@ -190,20 +187,6 @@
   <bean id="logoutHandler"
         class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler">
     <property name="invalidateHttpSession" value="false"/>
-  </bean>
-
-  <!-- Override default logout processing filter with the one processing SAML messages -->
-  <bean id="samlLogoutFilter" class="org.springframework.security.saml.SAMLLogoutFilter">
-    <constructor-arg index="0" ref="successLogoutHandler"/>
-    <constructor-arg index="1" ref="logoutHandler"/>
-    <constructor-arg index="2" ref="logoutHandler"/>
-  </bean>
-
-  <!-- Filter processing incoming logout messages -->
-  <!-- First argument determines URL user will be redirected to after successful global logout -->
-  <bean id="samlLogoutProcessingFilter" class="org.springframework.security.saml.SAMLLogoutProcessingFilter">
-    <constructor-arg index="0" ref="successLogoutHandler"/>
-    <constructor-arg index="1" ref="logoutHandler"/>
   </bean>
 
   <!-- Class loading incoming SAML messages from httpRequest stream -->
