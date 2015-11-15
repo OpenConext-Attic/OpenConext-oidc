@@ -162,7 +162,7 @@
   <bean id="defaultSAMLUserDetailsService" class="oidc.saml.DefaultSAMLUserDetailsService"/>
 
   <!-- SAML Authentication Provider responsible for validating of received SAML messages -->
-  <bean id="samlAuthenticationProvider" class="org.springframework.security.saml.SAMLAuthenticationProvider">
+  <bean id="samlAuthenticationProvider" class="oidc.saml.FederatedSAMLAuthenticationProvider">
     <property name="userDetails" ref="defaultSAMLUserDetailsService"/>
   </bean>
 
