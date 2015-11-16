@@ -23,8 +23,9 @@ package oidc.saml;
  */
 public interface ServiceProviderTranslationService {
 
+  String translateServiceProviderEntityId(String entityId);
+
   String translateClientId(String clientId);
 
-  String translateServiceProviderEntityId(String entityId);
 
 }

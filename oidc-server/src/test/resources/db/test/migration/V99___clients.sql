@@ -23,6 +23,7 @@ INSERT INTO client_redirect_uri (owner_id, redirect_uri) VALUES
 INSERT INTO client_grant_type (owner_id, grant_type) VALUES
 	(9999999999, 'authorization_code'),
 	(9999999999, 'implicit'),
+	(9999999999, 'client_credentials'),
 	(9999999999, 'refresh_token');
 
 INSERT INTO whitelisted_site (id, client_id) VALUES

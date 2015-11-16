@@ -1,7 +1,9 @@
 package oidc.openid;
 
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import oidc.AbstractTestIntegration;
 import org.junit.Test;
+import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -9,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -58,5 +62,22 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
     assertUserInfoResult(userinfo);
   }
 
+  @Test
+  public void testOpenIdImplicitIdTokenFlow() throws Exception {
+    String scope = "openid profile email organization userids entitlement";
+    String authorizeUri = UriComponentsBuilder.fromHttpUrl(serverUrl + "/authorize")
+        .queryParam("response_type", "id_token")
+        .queryParam("client_id", TEST_CLIENT)
+        .queryParam("scope", scope)
+        .queryParam("redirect_uri", callback)
+        .build().toUriString();
+    //we don't want follow redirects so we use the TestRestTemplate
+    ResponseEntity<String> response = new TestRestTemplate().exchange(authorizeUri, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), String.class);
+    assertEquals(302, response.getStatusCode().value());
+
+    URI location = response.getHeaders().getLocation();
+    String fragment = location.getFragment().split("=")[1];
+    assertTokenId(fragment);
+  }
 
 }

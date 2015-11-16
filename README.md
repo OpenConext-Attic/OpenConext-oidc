@@ -32,6 +32,10 @@ command to set up the git submodules, then you can run
 
 `mvn package jetty:run -Dspring.profiles.active="local"`
 
+or the shorthand:
+
+`.\start.sh`
+
 If you don't use the local profile then you need to login on the SURFconext federation.
 
 ## Integration tests
@@ -40,9 +44,9 @@ There are JUnit integration tests that will run against the locally started Jett
 
 `mvn verify`
 
-You can also start the OIDC server and then run the tests from within your IDE (e.g. you can debug either the test or the OIDC server).
+You can also start the OIDC server (local mode !) and then run the tests from within your IDE (e.g. you can debug either the test or the OIDC server).
 
-The integration tests set the spring.active.profile property to local too prevent having to do the SAML dance.
+The integration tests set the spring.active.profile property automatically to local too prevent having to do the SAML dance.
 
 ## JWK Keys
 
@@ -88,13 +92,16 @@ Add the EB certificate to the application.oidc.properties file:
 
 ## Trusted Proxy
 
-OpenConext-OIDC is a proxy for SP's that want to use OpenConnect ID instead of SAML to provide their Service to the federation memebers. Therefore
-the WAYF and ARP must be scoped for the requesting SP (and not this OIDC SP). This works if OpenConext-OIDC is marked
-as a trusted proxy in SR and the signing certificate (e.g. sp.public.certificate) in added to the certData metadata
-field in SR.
+OpenConext-OIDC is a proxy for SP's that want to use OpenConnect ID instead of SAML to provide their Service to the federation members. 
+Therefore the WAYF and ARP must be scoped for the requesting SP (and not this OIDC SP). This works if OpenConext-OIDC is marked
+as a trusted proxy in SR and the signing certificate (e.g. sp.public.certificate) in added to the certData metadata field in SR.
 
-We link SPs and OIDC Clients by name: the entityId of the SP equals the clientId of the client where we replace 
-all ":" characters with the "@" character. 
+## Damn
+
+We link SPs and OIDC Clients by the SP entity-id and the client name. The authorization server MUST support the HTTP Basic
+authentication scheme for authenticating clients that were issued a client password and Basic authentication does not support
+':' in the username. We therefore substitute each "@" in the SP entity-id with a "@@" and each ":" with a "@". The algorithm needs to be
+revertible, because the SP entity is 'saved' during SAML request in the relay state of the AuthN request.
 
 See [ServiceProviderTranslationService](oidc-server/src/main/java/oidc/saml/ServiceProviderTranslationService.java)
 
