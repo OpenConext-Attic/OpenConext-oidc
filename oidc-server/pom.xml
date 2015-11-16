@@ -29,6 +29,10 @@
             <overlay>
               <groupId>org.mitre</groupId>
               <artifactId>openid-connect-server-webapp</artifactId>
+              <excludes>
+                <!-- Conflicts with our version of oauth2 -->
+                <exclude>WEB-INF/lib/spring-security-oauth2-2.0.3.RELEASE.jar</exclude>
+              </excludes>
             </overlay>
           </overlays>
         </configuration>
