@@ -7,17 +7,21 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.flywaydb.core.Flyway;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
+import org.junit.*;
+import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -31,12 +35,14 @@ public class AbstractTestIntegration {
   protected String callback = "http://localhost:8889/callback";
   protected String serverUrl = "http://localhost:8080";
   protected RestTemplate template = new RestTemplate();
+  protected HttpHeaders headersForTokenFetch;
 
   public static final String TEST_CLIENT = "https@//oidc.localhost.surfconext.nl";
   public static final String SUB = "75726e3a-636f-6c6c-6162-3a706572736f";
 
   @Rule
   public WireMockRule wireMockRule = new WireMockRule(8889);
+
 
   @BeforeClass
   public static void beforeClass() throws IOException {
@@ -69,6 +75,12 @@ public class AbstractTestIntegration {
     for (String table : tables) {
       jdbcTemplate.update("delete from " + table);
     }
+
+  }
+
+  @Before
+  public void before() {
+     this.headersForTokenFetch = getAuthorizationHeadersForTokenFetch();
 
   }
 
@@ -112,12 +124,14 @@ public class AbstractTestIntegration {
     return headers;
   }
 
-  protected JWKVerifier assertAccessToken(String accessToken) throws Exception {
+  protected JWKVerifier assertAccessToken(String accessToken, boolean verifySignature) throws Exception {
     assertNotNull(accessToken);
     String jwkKeys = template.getForEntity(serverUrl + "/jwk", String.class).getBody();
 
     JWKVerifier verifier = new JWKVerifier(jwkKeys, accessToken);
-    assertTrue(verifier.verifySigned("oidc"));
+    if (verifySignature) {
+      assertTrue(verifier.verifySigned("oidc"));
+    }
 
     JWSHeader header = verifier.header();
     assertEquals("oidc", header.getKeyID());
@@ -132,7 +146,7 @@ public class AbstractTestIntegration {
   }
 
   protected void assertTokenId(String tokenId) throws Exception {
-    JWKVerifier verifier = this.assertAccessToken(tokenId);
+    JWKVerifier verifier = this.assertAccessToken(tokenId, true);
     Map<String, Object> claims = verifier.claims().getClaims();
     assertEquals(SUB, claims.get("sub"));
   }
@@ -178,6 +192,54 @@ public class AbstractTestIntegration {
     bodyMap.add("code", authorizationCode);
     bodyMap.add("redirect_uri", callback);
     return bodyMap;
+  }
+
+  protected Map doTestAuthorizationCode(String scope) throws Exception {
+    wireMockRule.stubFor(get(urlMatching("/callback.*")).withQueryParam("code", matching(".*")).willReturn(aResponse().withStatus(200)));
+
+    String authorizeUri = UriComponentsBuilder.fromHttpUrl(serverUrl + "/authorize")
+        .queryParam("response_type", "code")
+        .queryParam("client_id", TEST_CLIENT)
+        .queryParam("scope", scope)
+        .queryParam("redirect_uri", callback)
+        .build().toUriString();
+    ResponseEntity<String> response = template.exchange(authorizeUri, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), String.class);
+    assertEquals(200, response.getStatusCode().value());
+
+    String authorizationCode = getCodeFromCallback();
+
+    MultiValueMap<String, String> bodyMap = getAuthorizationCodeFormParameters(authorizationCode);
+
+    Map body = template.exchange(serverUrl + "/token", HttpMethod.POST, new HttpEntity<>(bodyMap, headersForTokenFetch), Map.class).getBody();
+    assertEquals("bearer", ((String) body.get("token_type")).toLowerCase());
+    String accessToken = (String) body.get("access_token");
+    assertAccessToken(accessToken, true);
+
+    // Call the Introspect endpoint (e.g. impersonating a Resource Server) using the accessCode
+    String introspectUri = UriComponentsBuilder.fromHttpUrl(serverUrl + "/introspect")
+        .queryParam("token", accessToken)
+        .build().toUriString();
+    Map<String, Object> introspect = template.exchange(introspectUri, HttpMethod.GET, new HttpEntity<>(headersForTokenFetch), Map.class).getBody();
+    assertIntrospectResult(introspect, scope);
+
+    return body;
+
+  }
+
+  protected String doTestOAuthImplicitFlow(String scope, String responseType) throws Exception {
+    String authorizeUri = UriComponentsBuilder.fromHttpUrl(serverUrl + "/authorize")
+        .queryParam("response_type", responseType)
+        .queryParam("client_id", TEST_CLIENT)
+        .queryParam("scope", scope)
+        .queryParam("redirect_uri", callback)
+        .build().toUriString();
+    //we don't want follow redirects so we use the TestRestTemplate
+    ResponseEntity<String> response = new TestRestTemplate().exchange(authorizeUri, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), String.class);
+    assertEquals(302, response.getStatusCode().value());
+
+    URI location = response.getHeaders().getLocation();
+    String fragment = location.getFragment().split("=")[1];
+    return fragment;
   }
 
 }
