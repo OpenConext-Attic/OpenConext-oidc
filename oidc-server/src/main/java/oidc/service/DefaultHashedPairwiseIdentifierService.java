@@ -24,8 +24,9 @@ public class DefaultHashedPairwiseIdentifierService implements HashedPairwiseIde
   @Override
   public String getIdentifier(String unspecifiedNameId, String clientId) {
     String identifier = unspecifiedNameId + "_" + clientId;
-    // or use UUID? http://stackoverflow.com/questions/24408984/convert-bytearray-to-uuid-java
-    return DigestUtils.sha512Hex(identifier);
+    ByteBuffer bb = ByteBuffer.wrap(identifier.getBytes());
+    return new UUID(bb.getLong(), bb.getLong()).toString();
+    //return DigestUtils.sha512Hex(identifier);
   }
 
 }

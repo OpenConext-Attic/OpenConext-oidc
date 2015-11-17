@@ -33,6 +33,7 @@ public class AbstractTestIntegration {
   protected RestTemplate template = new RestTemplate();
 
   public static final String TEST_CLIENT = "https@//oidc.localhost.surfconext.nl";
+  public static final String SUB = "75726e3a-636f-6c6c-6162-3a706572736f";
 
   @Rule
   public WireMockRule wireMockRule = new WireMockRule(8889);
@@ -133,7 +134,7 @@ public class AbstractTestIntegration {
   protected void assertTokenId(String tokenId) throws Exception {
     JWKVerifier verifier = this.assertAccessToken(tokenId);
     Map<String, Object> claims = verifier.claims().getClaims();
-    assertEquals("fbf446e918287b50f057c2d616d9c23f1d1ee838c7aa9e62683e94e6907711f8969d33c09d8abd332b58b583b6df0b26296ee94f69aa2d63380208c90b2f1b5b", claims.get("sub"));
+    assertEquals(SUB, claims.get("sub"));
   }
 
   protected void assertIntrospectResult(Map<String, Object> introspect, String scope) {
@@ -144,7 +145,7 @@ public class AbstractTestIntegration {
     Set<String> expected = new HashSet(Arrays.asList(StringUtils.split(scope, " ")));
     assertEquals(expected, actual);
 
-    assertEquals("fbf446e918287b50f057c2d616d9c23f1d1ee838c7aa9e62683e94e6907711f8969d33c09d8abd332b58b583b6df0b26296ee94f69aa2d63380208c90b2f1b5b", introspect.get("sub"));
+    assertEquals(SUB, introspect.get("sub"));
     assertEquals(TEST_CLIENT, introspect.get("client_id"));
     assertEquals("bearer", ((String) introspect.get("token_type")).toLowerCase());
     assertEquals("surfnet.nl", introspect.get("schac_home"));
@@ -152,7 +153,7 @@ public class AbstractTestIntegration {
   }
 
   protected void assertUserInfoResult(Map<String, Object> userInfo) {
-    assertEquals("fbf446e918287b50f057c2d616d9c23f1d1ee838c7aa9e62683e94e6907711f8969d33c09d8abd332b58b583b6df0b26296ee94f69aa2d63380208c90b2f1b5b", userInfo.get("sub"));
+    assertEquals(SUB, userInfo.get("sub"));
     assertEquals("John Doe", userInfo.get("name"));
     assertEquals("John Doe", userInfo.get("preferred_username"));
     assertEquals("John", userInfo.get("given_name"));
