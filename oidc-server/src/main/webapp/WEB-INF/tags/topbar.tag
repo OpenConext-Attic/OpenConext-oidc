@@ -95,7 +95,7 @@
 	                    </security:authorize>
 	                    <security:authorize access="!hasRole('ROLE_USER')">
 	                    <li>
-	                    	<a id="loginButton" href="login" data-toggle="collapse" data-target=".nav-collapse"><i class="icon-lock icon-white"></i> <spring:message code="topbar.login"/></a>
+	                    	<a id="loginButton" href="saml/login" data-toggle="collapse" data-target=".nav-collapse"><i class="icon-lock icon-white"></i> <spring:message code="topbar.login"/></a>
 	                    </li>
 	                    </security:authorize>
 	                </ul>

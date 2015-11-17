@@ -38,10 +38,19 @@
   <security:http security="none" pattern=".well-known/openid-configuration"/>
 
   <!-- Secured pages with SAML as entry point -->
-  <security:http entry-point-ref="samlEntryPoint" use-expressions="false">
-    <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
+  <security:http entry-point-ref="samlEntryPoint" use-expressions="true">
+    <security:intercept-url pattern="/authorize" access="hasRole('ROLE_USER')" />
+    <!--<security:intercept-url pattern="/api/**" access="hasRole('ROLE_ADMIN')" />-->
+    <!--<security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>-->
+    <security:intercept-url pattern="/**" access="permitAll" />
     <security:custom-filter before="FIRST" ref="metadataGeneratorFilter"/>
+    <security:custom-filter ref="authRequestFilter" after="SECURITY_CONTEXT_FILTER" />
     <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
+    <!--<security:anonymous />-->
+    <security:headers>
+      <security:frame-options policy="DENY" />
+    </security:headers>
+    <security:csrf request-matcher-ref="apiCsrfProtectionMatcher"/>
   </security:http>
 
   <!-- Filters for processing of SAML messages -->
@@ -145,7 +154,6 @@
                 <value type="int">30000</value>
               </constructor-arg>
               <property name="parserPool" ref="parserPool"/>
-              <!--<property name="requireValidMetadata" value="true"/>-->
               <property name="requireValidMetadata" value="false"/>
             </bean>
           </constructor-arg>
