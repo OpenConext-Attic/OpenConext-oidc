@@ -29,6 +29,7 @@ public class FederatedUserApprovalHandler implements UserApprovalHandler {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public Map<String, Object> getUserApprovalRequest(AuthorizationRequest authorizationRequest, Authentication userAuthentication) {
     return Collections.EMPTY_MAP;
   }

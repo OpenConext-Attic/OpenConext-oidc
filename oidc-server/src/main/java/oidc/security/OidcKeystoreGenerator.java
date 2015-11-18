@@ -2,18 +2,25 @@ package oidc.security;
 
 import com.nimbusds.jose.Algorithm;
 import net.minidev.json.JSONStyle;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
-public class OidcKeystoreGeneratorTest {
+public class OidcKeystoreGenerator {
 
-  @Test
-  @Ignore
+  public static void main(String[] args) {
+    try {
+      new OidcKeystoreGenerator().generate();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public void generate() throws Exception {
     KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
     kpg.initialize(2048);
@@ -27,7 +34,10 @@ public class OidcKeystoreGeneratorTest {
         .keyID("oidc")
         .build();
     String json = build.toJSONObject().toJSONString(JSONStyle.NO_COMPRESS);
-    //copy the json to the secrets file for the target environment under the key oidc_server_oidc_keystore_jwks_json
-    //this will ensure it ends up on the classpath in a file name oidc.keystore.jwks.json
+
+    System.out.println("\nCopy the json below to the secrets file for the target environment under the key oidc_server_oidc_keystore_jwks_json\n" +
+        "This will ensure it ends up on the classpath in a file name oidc.keystore.jwks.json\n");
+    System.out.println(json);
+    System.out.println("\n");
   }
 }
