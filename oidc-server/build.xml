@@ -1,0 +1,12 @@
+<project name="oidc" basedir=".">
+
+  <target name="trampoline">
+    <echo message="Executing target '${mvnAntTarget}'"/>
+    <antcall target="${mvnAntTarget}"/>
+  </target>
+
+  <target name="testTarget">
+    <echo message="Yay, I'm a test target.."/>
+  </target>
+
+</project>

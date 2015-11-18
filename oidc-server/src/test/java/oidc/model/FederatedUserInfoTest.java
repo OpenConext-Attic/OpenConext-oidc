@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,7 +44,13 @@ public class FederatedUserInfoTest {
     assertEquals("student, faculty", jsonObject.getAsJsonPrimitive("edu_person_affiliation").getAsString());
     assertEquals("student, faculty", jsonObject.getAsJsonPrimitive("edu_person_scoped_affiliation").getAsString());
     assertEquals("surfnet", jsonObject.getAsJsonPrimitive("is_member_of").getAsString());
-    assertEquals("http://xstor.com/contracts/HEd123, urn:mace:washington.edu:confocalMicroscope", jsonObject.getAsJsonPrimitive("edu_person_entitlement").getAsString());
+
+    //The ordering is not constant
+    Set<String> entitlementsExpected = new HashSet<>(Arrays.asList("http://xstor.com/contracts/HEd123","urn:mace:washington.edu:confocalMicroscope"));
+    String[] entitlementsActual = jsonObject.getAsJsonPrimitive("edu_person_entitlement").getAsString().split(", ");
+    assertEquals(entitlementsExpected, new HashSet<>(Arrays.asList(entitlementsActual) ));
+
+
     assertEquals("personal", jsonObject.getAsJsonPrimitive("schac_personal_unique_code").getAsString());
     assertEquals("uid2, uid1", jsonObject.getAsJsonPrimitive("uid").getAsString());
 
