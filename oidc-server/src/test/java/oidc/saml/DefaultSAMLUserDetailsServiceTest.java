@@ -49,7 +49,6 @@ public class DefaultSAMLUserDetailsServiceTest {
     };
     subject.setExtendedUserInfoService(userInfoService);
     subject.setHashedPairwiseIdentifierService(new DefaultHashedPairwiseIdentifierService());
-    subject.setServiceProviderTranslationService(new DefaultServiceProviderTranslationService());
 
     this.federatedUserInfo = objectMapper.readValue(new ClassPathResource("model/federated_user_info.json").getInputStream(), FederatedUserInfo.class);
 

@@ -14,39 +14,19 @@ import java.util.Properties;
 
 import static junit.framework.TestCase.assertEquals;
 
-public class KeyStoreLocatorTest {
-
-  private KeyStoreLocator keyStoreLocator = new KeyStoreLocator();
+public class KeyStoreLocatorTest extends KeyStoreTest {
 
   @Test
   public void testCreateKeyStore() throws Exception {
-    Properties props = getProperties();
-
-    Map<String, String> passwords = new HashMap<>();
-    passwords.put(props.getProperty("sp.entity.id"), props.getProperty("sp.passphrase"));
-
-    KeyStore keyStore = keyStoreLocator.createKeyStore(
-        props.getProperty("idp.entity.id"),
-        props.getProperty("idp.public.certificate"),
-        props.getProperty("sp.entity.id"),
-        props.getProperty("sp.public.certificate"),
-        props.getProperty("sp.private.key"),
-        props.getProperty("sp.passphrase"));
-
-    JKSKeyManager jksKeyManager = new JKSKeyManager(keyStore, passwords, props.getProperty("sp.entity.id"));
+    JKSKeyManager jksKeyManager = createJksKeyManager();
 
     Credential defaultCredential = jksKeyManager.getDefaultCredential();
     assertEquals("RSA", defaultCredential.getPrivateKey().getAlgorithm());
     assertEquals("RSA", defaultCredential.getPublicKey().getAlgorithm());
 
-    X509Certificate certificate = jksKeyManager.getCertificate(props.getProperty("idp.entity.id"));
+    X509Certificate certificate = jksKeyManager.getCertificate(properties.getProperty("idp.entity.id"));
     String name = certificate.getSubjectDN().getName();
     assertEquals("CN=test2 saml cert, O=SURFnet, L=Utrecht, ST=Utrecht, C=NL", name);
   }
 
-  private Properties getProperties() throws IOException {
-    Properties props = new Properties();
-    props.load(new ClassPathResource("application.oidc.properties").getInputStream());
-    return props;
-  }
 }

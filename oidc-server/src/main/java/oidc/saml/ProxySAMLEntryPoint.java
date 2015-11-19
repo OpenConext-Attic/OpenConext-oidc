@@ -25,7 +25,7 @@ public class ProxySAMLEntryPoint extends SAMLEntryPoint {
   @Autowired
   private ServiceProviderTranslationService serviceProviderTranslationService;
 
-  private static final String CLIENT_DETAILS = ProxySAMLEntryPoint.class.getName() + "_CLIENT_DETAILS";
+  protected static final String CLIENT_DETAILS = ProxySAMLEntryPoint.class.getName() + "_CLIENT_DETAILS";
 
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
@@ -36,8 +36,13 @@ public class ProxySAMLEntryPoint extends SAMLEntryPoint {
         request.setAttribute(CLIENT_DETAILS, clientDetails.getClientId());
       }
     }
+    doCommence(request, response, e);
+  }
+
+  protected void doCommence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
     super.commence(request, response, e);
   }
+
 
   @Override
   protected WebSSOProfileOptions getProfileOptions(SAMLMessageContext context, AuthenticationException exception) throws MetadataProviderException {
@@ -56,5 +61,13 @@ public class ProxySAMLEntryPoint extends SAMLEntryPoint {
       profileOptions.setRequesterIds(new HashSet<>(Arrays.asList(spEntityId)));
     }
     return profileOptions;
+  }
+
+  public void setServiceProviderTranslationService(ServiceProviderTranslationService serviceProviderTranslationService) {
+    this.serviceProviderTranslationService = serviceProviderTranslationService;
+  }
+
+  public void setClientDetailsEntityService(ClientDetailsEntityService clientDetailsEntityService) {
+    this.clientDetailsEntityService = clientDetailsEntityService;
   }
 }

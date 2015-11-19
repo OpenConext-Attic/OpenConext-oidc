@@ -25,16 +25,14 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
   @Autowired
   private HashedPairwiseIdentifierService hashedPairwiseIdentifierService;
 
-  @Autowired
-  private ServiceProviderTranslationService serviceProviderTranslationService;
-
   @Override
   public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
     String unspecifiedNameId = credential.getNameID().getValue();
 
     Map<String, List<String>> properties = getAttributes(credential);
 
-    String clientId = serviceProviderTranslationService.translateServiceProviderEntityId(credential.getRelayState());
+    //we saved the clientId on the relay state in ProxySAMLEntryPoint#getProfileOptions
+    String clientId = credential.getRelayState();
     String sub = hashedPairwiseIdentifierService.getIdentifier(unspecifiedNameId, clientId);
 
     UserInfo existingUserInfo = extendedUserInfoService.getByUsernameAndClientId(sub, clientId);
@@ -61,7 +59,8 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
         }
       }
       properties.put(name, values);
-    } return properties;
+    }
+    return properties;
   }
 
   private String getStringValueFromXMLObject(XMLObject xmlObj) {
@@ -119,7 +118,4 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
     this.hashedPairwiseIdentifierService = hashedPairwiseIdentifierService;
   }
 
-  public void setServiceProviderTranslationService(ServiceProviderTranslationService serviceProviderTranslationService) {
-    this.serviceProviderTranslationService = serviceProviderTranslationService;
-  }
 }
