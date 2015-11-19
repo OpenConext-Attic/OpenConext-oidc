@@ -1,4 +1,4 @@
-package oidc.spring;
+package oidc.security;
 
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;

@@ -107,6 +107,14 @@ revertible, because the SP entity is 'saved' during SAML request in the relay st
 
 See [ServiceProviderTranslationService](oidc-server/src/main/java/oidc/saml/ServiceProviderTranslationService.java)
 
+You can also query the translate endpoint:
+
+`http://oidc.${env}.surfconext.nl/translate-sp-entity-id?spEntityId=${urlEncoded SP entity ID}`
+
+Example for localhost
+
+`http://localhost:8080/translate-sp-entity-id?spEntityId=https%3A//oidc.test.surfconext.nl`
+
 ## SAML metadata
 
 The metadata is generated on the fly and is displayed on http://localhost:8080/saml/metadata
