@@ -18,4 +18,20 @@ public class DefaultHashedPairwiseIdentifierServiceTest {
     assertEquals(identifier, another);
   }
 
+  @Test
+  public void testIdentifierInsufficientLength() throws Exception {
+    String identifier = identifierService.getIdentifier("urn", "s");
+    String another = identifierService.getIdentifier("urn", "s");
+    assertEquals(identifier, another);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testIdentifierClientIdNull() throws Exception {
+    identifierService.getIdentifier("urn", null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testIdentifierUrnNull() throws Exception {
+    identifierService.getIdentifier(null, "clientId");
+  }
 }

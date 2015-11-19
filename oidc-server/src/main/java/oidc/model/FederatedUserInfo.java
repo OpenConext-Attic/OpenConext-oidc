@@ -188,4 +188,21 @@ public class FederatedUserInfo extends DefaultUserInfo {
       obj.addProperty(name, property);
     }
   }
+
+  @Override
+  public String toString() {
+    return "FederatedUserInfo{" +
+        "schacHomeOrganization='" + schacHomeOrganization + '\'' +
+        ", unspecifiedNameId='" + unspecifiedNameId + '\'' +
+        ", schacHomeOrganizationType='" + schacHomeOrganizationType + '\'' +
+        ", eduPersonPrincipalName='" + eduPersonPrincipalName + '\'' +
+        ", eduPersonTargetedId='" + eduPersonTargetedId + '\'' +
+        ", eduPersonAffiliations=" + eduPersonAffiliations +
+        ", eduPersonScopedAffiliations=" + eduPersonScopedAffiliations +
+        ", isMemberOfs=" + isMemberOfs +
+        ", eduPersonEntitlements=" + eduPersonEntitlements +
+        ", schacPersonalUniqueCodes=" + schacPersonalUniqueCodes +
+        ", uids=" + uids +
+        '}';
+  }
 }

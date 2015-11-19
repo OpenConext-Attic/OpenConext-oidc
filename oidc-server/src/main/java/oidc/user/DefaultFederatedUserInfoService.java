@@ -23,4 +23,8 @@ public class DefaultFederatedUserInfoService extends DefaultUserInfoService impl
   public UserInfo getByUsernameAndClientId(String username, String clientId) {
     return getByUsername(username);
   }
+
+  public void setUserInfoRepository(FederatedUserInfoRepository userInfoRepository) {
+    this.userInfoRepository = userInfoRepository;
+  }
 }

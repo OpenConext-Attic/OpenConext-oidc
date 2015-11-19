@@ -23,10 +23,15 @@ public class DefaultHashedPairwiseIdentifierService implements HashedPairwiseIde
 
   @Override
   public String getIdentifier(String unspecifiedNameId, String clientId) {
+    Assert.notNull(unspecifiedNameId, "unspecifiedNameId is null");
+    Assert.notNull(clientId, "clientId is null");
     String identifier = unspecifiedNameId + "_" + clientId;
+    if (identifier.length() < 16) {
+      //otherwise the bb.getLong fails
+      identifier = String.format("%-16s", identifier).replace(' ', '*');
+    }
     ByteBuffer bb = ByteBuffer.wrap(identifier.getBytes());
     return new UUID(bb.getLong(), bb.getLong()).toString();
-    //return DigestUtils.sha512Hex(identifier);
   }
 
 }

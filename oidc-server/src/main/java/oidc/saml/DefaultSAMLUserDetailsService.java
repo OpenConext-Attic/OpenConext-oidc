@@ -95,9 +95,9 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
 
     userInfo.setIsMemberOfs(set(properties.get("urn:mace:dir:attribute-def:isMemberOf")));
     userInfo.setEduPersonEntitlements(set(properties.get("urn:mace:dir:attribute-def:eduPersonEntitlement")));
-    userInfo.setSchacPersonalUniqueCodes(set(properties.get("urn:schac:attribute-def:schacPersonalUniqueCode")));
+    userInfo.setSchacPersonalUniqueCodes(set(properties.get("urn:mace:dir:attribute-def:schacPersonalUniqueCode")));
     userInfo.setEduPersonPrincipalName(flatten(properties.get("urn:mace:dir:attribute-def:eduPersonPrincipalName")));
-    userInfo.setUids(set(properties.get("urn:mace:dir:attribute-def:uid ")));
+    userInfo.setUids(set(properties.get("urn:mace:dir:attribute-def:uid")));
     userInfo.setEduPersonTargetedId(flatten(properties.get("urn:mace:dir:attribute-def:eduPersonTargetedID")));
 
     return userInfo;
@@ -109,5 +109,17 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
 
   private Set<String> set(List<String> values) {
     return CollectionUtils.isEmpty(values) ? new HashSet<String>() : new HashSet<>(values);
+  }
+
+  public void setExtendedUserInfoService(FederatedUserInfoService extendedUserInfoService) {
+    this.extendedUserInfoService = extendedUserInfoService;
+  }
+
+  public void setHashedPairwiseIdentifierService(HashedPairwiseIdentifierService hashedPairwiseIdentifierService) {
+    this.hashedPairwiseIdentifierService = hashedPairwiseIdentifierService;
+  }
+
+  public void setServiceProviderTranslationService(ServiceProviderTranslationService serviceProviderTranslationService) {
+    this.serviceProviderTranslationService = serviceProviderTranslationService;
   }
 }
