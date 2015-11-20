@@ -35,7 +35,7 @@
   <context:component-scan base-package="org.springframework.security.saml"/>
 
   <!-- Unsecured pages -->
-  <security:http security="none" pattern=".well-known/openid-configuration"/>
+  <security:http security="none" pattern="/translate-sp-entity-id" create-session="never"/>
 
   <!-- Secured pages with SAML as entry point -->
   <security:http entry-point-ref="samlEntryPoint" use-expressions="true">
@@ -50,6 +50,7 @@
     </security:headers>
     <security:csrf request-matcher-ref="apiCsrfProtectionMatcher"/>
   </security:http>
+
 
   <!-- Filters for processing of SAML messages -->
   <bean id="samlFilter" class="org.springframework.security.web.FilterChainProxy">

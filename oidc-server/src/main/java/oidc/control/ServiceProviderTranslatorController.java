@@ -17,8 +17,8 @@ public class ServiceProviderTranslatorController {
   @RequestMapping("/translate-sp-entity-id")
   public Map<String, String> translate(@RequestParam String spEntityId) {
     Map<String, String> result = new HashMap<>();
-    result.put("spEntityId",spEntityId);
-    result.put("clientId",translationService.translateServiceProviderEntityId(spEntityId) );
+    result.put("spEntityId", spEntityId);
+    result.put("clientId", translationService.translateServiceProviderEntityId(spEntityId));
     return result;
   }
 
