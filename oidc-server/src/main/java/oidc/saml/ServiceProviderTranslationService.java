@@ -17,8 +17,9 @@ package oidc.saml;
  * a ':'. For example: https://oidc.localhost.surfconext.nl
  *
  * We want to use the entity-id of a SP as the client_id of an OAuth / OpenConnect ID
- * client. However this his breaks the Basic Authentication. We therefore must
- * translate the client_id to a SP entity-id and vica-versa.
+ * client. However this breaks the Basic Authentication must-have.
+ *
+ * We therefore must translate the client_id to a SP entity-id and vica-versa.
  *
  */
 public interface ServiceProviderTranslationService {

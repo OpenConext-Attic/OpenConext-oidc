@@ -118,3 +118,12 @@ Example for localhost
 ## SAML metadata
 
 The metadata is generated on the fly and is displayed on http://localhost:8080/saml/metadata
+
+## Subject Identifier Types
+
+The OpenID Connect [specification](http://openid.net/specs/openid-connect-core-1_0.html#SubjectIDTypes) defines two Subject Identifier types. The OICD
+server is implemented to always use the pairwise type. For each client the 'sub' of the user is a unique combination of the client_id and user_id.
+
+The [openid-configuration](http://localhost:8080/.well-known/openid-configuration) states we support both, but that is the default (hard-coded)
+behaviour we inherited from the initial codebase.
+

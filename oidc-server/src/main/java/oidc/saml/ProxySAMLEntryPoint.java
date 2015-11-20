@@ -39,6 +39,7 @@ public class ProxySAMLEntryPoint extends SAMLEntryPoint {
     doCommence(request, response, e);
   }
 
+  //only here for test override
   protected void doCommence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
     super.commence(request, response, e);
   }

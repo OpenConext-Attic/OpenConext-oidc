@@ -15,6 +15,7 @@ public class FederatedUserApprovalHandler implements UserApprovalHandler {
 
   @Override
   public boolean isApproved(AuthorizationRequest authorizationRequest, Authentication userAuthentication) {
+    //by default, we don't show the consent screen as EB just did this
     return true;
   }
 

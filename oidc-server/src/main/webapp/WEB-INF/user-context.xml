@@ -167,7 +167,9 @@
     <constructor-arg ref="metadataManager"/>
   </bean>
 
-  <bean id="defaultSAMLUserDetailsService" class="oidc.saml.DefaultSAMLUserDetailsService"/>
+  <bean id="defaultSAMLUserDetailsService" class="oidc.saml.DefaultSAMLUserDetailsService">
+    <constructor-arg value="${sp.entity.id}"/>
+  </bean>
 
   <!-- SAML Authentication Provider responsible for validating of received SAML messages -->
   <bean id="samlAuthenticationProvider" class="oidc.saml.FederatedSAMLAuthenticationProvider">

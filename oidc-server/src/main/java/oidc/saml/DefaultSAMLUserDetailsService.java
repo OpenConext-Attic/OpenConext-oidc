@@ -19,11 +19,17 @@ import java.util.*;
 
 public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
 
+  private final String localSpEntityId;
   @Autowired
   private FederatedUserInfoService extendedUserInfoService;
 
   @Autowired
   private HashedPairwiseIdentifierService hashedPairwiseIdentifierService;
+
+  public DefaultSAMLUserDetailsService(String localSpEntityId) {
+    super();
+    this.localSpEntityId = localSpEntityId;
+  }
 
   @Override
   public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
@@ -41,7 +47,8 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
       existingUserInfo = this.buildUserInfo(unspecifiedNameId, sub, properties);
       extendedUserInfoService.saveUserInfo(existingUserInfo);
     }
-    return new SAMLUser(sub);
+    //if the sp-entity-id equals the OIDC server (e.g. non-proxy mode to access the GUI) we grant admin rights
+    return new SAMLUser(sub, clientId.equals(this.localSpEntityId));
   }
 
   private Map<String, List<String>> getAttributes(SAMLCredential credential) {

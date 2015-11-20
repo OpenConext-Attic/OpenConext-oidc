@@ -14,6 +14,7 @@ import org.opensaml.saml2.core.NameID;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.XSString;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.saml.SAMLCredential;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.util.*;
 
 import static java.util.Collections.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
@@ -29,9 +31,11 @@ import static org.mockito.Mockito.when;
 
 public class DefaultSAMLUserDetailsServiceTest {
 
+  private static final String SP_ENTITY_ID = "sp-entity-id";
+
   private static ObjectMapper objectMapper = new ObjectMapper();
 
-  private DefaultSAMLUserDetailsService subject = new DefaultSAMLUserDetailsService();
+  private DefaultSAMLUserDetailsService subject = new DefaultSAMLUserDetailsService(SP_ENTITY_ID);
   private FederatedUserInfo federatedUserInfo;
   private FederatedUserInfo saveUserInfoArgument;
   private NameID nameId;
@@ -77,8 +81,11 @@ public class DefaultSAMLUserDetailsServiceTest {
         getAttribute("urn:mace:dir:attribute-def:eduPersonTargetedID", federatedUserInfo.getEduPersonTargetedId()),
         getAttribute("urn:mace:dir:attribute-def:eduPersonScopedAffiliation", federatedUserInfo.getEduPersonScopedAffiliations())
     );
-    SAMLCredential samlCredential = new SAMLCredential(nameId, mock(Assertion.class), "remoteEntityID", "relayState", attributes, "localEntityID");
+    SAMLCredential samlCredential = new SAMLCredential(nameId, mock(Assertion.class), "remoteEntityID", SP_ENTITY_ID, attributes, "localEntityID");
     SAMLUser user = (SAMLUser) subject.loadUserBySAML(samlCredential);
+
+    //because relay state equals the OIDC SP
+    assertTrue(user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")));
 
     assertEquals("75726e3a-636f-6c6c-6162-3a706572736f", user.getUsername());
     assertEquals(federatedUserInfo.toString(), saveUserInfoArgument.toString());
