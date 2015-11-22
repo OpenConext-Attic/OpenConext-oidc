@@ -30,7 +30,7 @@ public class MockPreAuthenticatedProcessingFilter extends AbstractPreAuthenticat
       extendedUserInfoService.saveUserInfo(federatedUserInfo);
     }
 
-    return new SAMLUser(federatedUserInfo.getSub(), false);
+    return new SAMLUser(federatedUserInfo.getSub(), true);
   }
 
 
