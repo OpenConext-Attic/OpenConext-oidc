@@ -127,3 +127,14 @@ server is implemented to always use the pairwise type. For each client the 'sub'
 The [openid-configuration](http://localhost:8080/.well-known/openid-configuration) states we support both, but that is the default (hard-coded)
 behaviour we inherited from the initial codebase.
 
+## Dependencies
+
+Besides the 'normal' 3rd party libraries defined in the pom.xml, we also include two forked dependencies in the target war:
+
+* [spring-security-oauth](https://github.com/oharsta/spring-security-oauth/tree/feature/open-conext-build)
+  * Branch based on (pull-request to support other response types then code and token )[https://github.com/spring-projects/spring-security-oauth/pull/627].
+
+* [spring-security-saml](https://github.com/OpenConext/spring-security-saml/tree/feature/open-connext)
+  * Branch based on (pull-request to include RequesterID)[https://github.com/spring-projects/spring-security-saml/pull/19].
+
+Once the pull request are accepted and merged into a release we can depend on the original repositories again.
