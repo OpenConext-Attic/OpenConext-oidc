@@ -4,6 +4,7 @@ import oidc.AbstractTestIntegration;
 import org.junit.Test;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -39,5 +40,19 @@ public class OAuthTestIntegration extends AbstractTestIntegration {
     String scope = "openid profile email organization userids entitlement";
     String fragment = doTestOAuthImplicitFlow(scope, "token");
     assertAccessToken(fragment, false);
+  }
+
+  @Test
+  public void testClientCredentials() throws Exception {
+    MultiValueMap<String, String> bodyMap = new LinkedMultiValueMap<>();
+    bodyMap.add("grant_type", "client_credentials");
+
+    HttpHeaders headers = getAuthorizationHeadersForTokenFetch();
+
+    Map body = template.exchange(serverUrl + "/token", HttpMethod.POST, new HttpEntity<>(bodyMap, headers), Map.class).getBody();
+    assertEquals("bearer", ((String) body.get("token_type")).toLowerCase());
+    String accessToken = (String) body.get("access_token");
+    assertAccessToken(accessToken, true);
+
   }
 }
