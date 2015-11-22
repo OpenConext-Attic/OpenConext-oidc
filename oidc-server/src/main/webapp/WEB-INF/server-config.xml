@@ -39,7 +39,7 @@
 		<property name="issuer" value="${issuer}" />
 		
 		<!-- This property is a URL pointing to a logo image 24px high to be used in the top bar -->
- 		<property name="logoImageUrl" value="resources/images/openconext.png" />
+ 		<property name="logoImageUrl" value="resources/images/logo@2x.png" />
  		
  		<!-- This property sets the display name of the server, displayed in the topbar and page title -->
  		<property name="topbarTitle" value="OpenConext OIDC" />

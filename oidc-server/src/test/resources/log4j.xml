@@ -31,6 +31,14 @@
 		<level value="warn" />
 	</logger>
 
+  <logger name="org.flywaydb.core">
+    <level value="error" />
+  </logger>
+
+  <logger name="org.mitre.openid.connect.config">
+    <level value="error" />
+  </logger>
+
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework">
 		<level value="warn" />

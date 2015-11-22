@@ -1,0 +1,172 @@
+.mod-header {
+    *zoom: 1;
+    padding: 25px 30px 10px;
+    background: #fff;
+    border-bottom: 2px solid #4DB3CF;
+}
+
+.mod-header:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.mod-header .title {
+    background: url("/resources/images/logo@2x.png") no-repeat left center;
+    background-size: 161px 50px;
+    height: 50px;
+    float: left;
+    font-size: 26.5px;
+    line-height: 29px;
+}
+
+.mod-header .title a {
+    color: #4DB3CF;
+    padding-left: 190px;
+}
+
+.mod-header .title a:hover {
+    color: #4DB3CF;
+}
+
+.mod-header .meta {
+    float: right;
+}
+
+.mod-header a {
+    text-decoration: none;
+}
+
+.mod-header a:hover {
+    text-decoration: none;
+}
+
+.mod-header .language,
+.mod-header .links {
+    float: left;
+    margin-left: 60px;
+    line-height: 30px;
+}
+
+.mod-header .language li,
+.mod-header .links li {
+    float: left;
+    list-style: none;
+}
+
+.mod-header .language a {
+    display: block;
+    border-right: 1px solid #EFEFEE;
+    padding: 4px 16px;
+}
+
+.mod-header .links img {
+    width: 28px;
+}
+
+.mod-header .language li:last-child a,
+.mod-header .links li:last-child a {
+    border: 0;
+}
+
+.mod-header .language {
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.mod-header .language a {
+    background: #EFEFEE;
+    border-color: #fff;
+}
+
+.mod-header .language a:hover, .mod-header .language a.selected {
+    background: #4DB3CF;
+    color: #fff;
+}
+
+.mod-header .language a.selected:hover {
+    text-decoration: none;
+}
+
+.mod-header .name {
+    float: left;
+    line-height: 28px;
+}
+
+.mod-header .name .fa-caret-down,
+.mod-header .name .fa-caret-up {
+    padding-left: 5px;
+}
+
+.mod-header .name ul.user-profile {
+    position: absolute;
+    z-index: 100;
+    padding: 20px 20px 0;
+    max-width: 400px;
+    min-width: 200px;
+    top: 60px;
+}
+
+.mod-header .name h2 {
+    font-weight: 900;
+}
+
+.mod-header .name li, .mod-header .name h2 {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mod-header .name ul ul {
+    margin-bottom: 20px;
+}
+
+.mod-header .name li.user-profile-entity {
+    padding-left: 15px;
+    position: relative;
+}
+
+.mod-navigation {
+    background: #4DB3CF;
+    padding: 0 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.mod-navigation li {
+    float: left;
+    list-style: none;
+}
+
+.mod-navigation li:last-child {
+    float: right;
+}
+
+.mod-navigation li.active {
+    font-weight: bold;
+}
+
+.mod-navigation li.action {
+    float: right;
+}
+
+.mod-navigation a {
+    color: #fff;
+    padding: 18px 20px 20px;
+    display: block;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.mod-navigation a.action {
+    padding: 6px 20px;
+    margin-top: 12px;
+    margin-right: 10px;
+    border: solid 1px white;
+    border-radius: 5px;
+}
+
+.mod-navigation .spinner {
+    left: 50%;
+    position: fixed;
+    z-index: 99;
+    top: 50%;
+}

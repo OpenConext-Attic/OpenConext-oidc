@@ -43,6 +43,7 @@ public class OAuthTestIntegration extends AbstractTestIntegration {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testClientCredentials() throws Exception {
     MultiValueMap<String, String> bodyMap = new LinkedMultiValueMap<>();
     bodyMap.add("grant_type", "client_credentials");

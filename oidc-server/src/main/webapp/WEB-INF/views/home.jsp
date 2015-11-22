@@ -8,29 +8,10 @@
 <o:topbar pageName="Home" />
 <div class="container-fluid main">
 	<div class="row-fluid">
-		<o:sidebar />
-		<div class="span10">
+		<div class="span12">
 			<div class="hero-unit">
-				<o:landingPageWelcome />
+				<o:oidcLandingPageWelcome />
 			</div>
-			<!-- Example row of columns -->
-			<div class="row-fluid">
-				<div class="span6">
-					<o:landingPageAbout />
-				</div>
-				<div class="span6">
-					<o:landingPageContact />
-				</div>
-
-			</div>
-			<hr>
-			<!-- Example row of columns -->
-			<div class="row-fluid">
-				<div class="span12">
-					<%--<o:landingPageStats />--%>
-				</div>
-			</div>
-
 		</div>
 	</div>
 </div>

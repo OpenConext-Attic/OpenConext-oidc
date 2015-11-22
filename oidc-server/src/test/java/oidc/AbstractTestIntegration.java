@@ -61,6 +61,7 @@ public class AbstractTestIntegration {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
     List<String> tables = Arrays.asList(
         "access_token",
+        "refresh_token",
         "approved_site",
         "authentication_holder",
         "authentication_holder_authority",
@@ -109,7 +110,8 @@ public class AbstractTestIntegration {
 
   protected HttpHeaders getAuthorizationHeadersForTokenFetch() {
     HttpHeaders headers = new HttpHeaders();
-    String authenticationCredentials = "Basic " + new String(Base64.encodeBase64(new String(TEST_CLIENT + ":" + SECRET).getBytes(Charset.forName("UTF-8"))));
+    String basicAuthz = TEST_CLIENT + ":" + SECRET;
+    String authenticationCredentials = "Basic " + new String(Base64.encodeBase64(basicAuthz.getBytes(Charset.forName("UTF-8"))));
     headers.add("Authorization", authenticationCredentials);
     headers.add("Content-Type", "application/x-www-form-urlencoded");
     headers.add("Accept", "application/json");
@@ -138,7 +140,7 @@ public class AbstractTestIntegration {
     assertEquals("RS256", header.getAlgorithm().getName());
 
     Map<String, Object> claims = verifier.claims().getClaims();
-    assertEquals(Arrays.asList(TEST_CLIENT), claims.get("aud"));
+    assertEquals(Collections.singletonList(TEST_CLIENT), claims.get("aud"));
     assertEquals("http://localhost:8080/", claims.get("iss"));
     assertNotNull(claims.get("exp"));
     assertNotNull(claims.get("iat"));
@@ -151,6 +153,7 @@ public class AbstractTestIntegration {
     assertEquals(SUB, claims.get("sub"));
   }
 
+  @SuppressWarnings("unchecked")
   protected void assertIntrospectResult(Map<String, Object> introspect, String scope) {
     Boolean active = (Boolean) introspect.get("active");
     assertTrue(active);
@@ -194,6 +197,7 @@ public class AbstractTestIntegration {
     return bodyMap;
   }
 
+  @SuppressWarnings("unchecked")
   protected Map doTestAuthorizationCode(String scope) throws Exception {
     wireMockRule.stubFor(get(urlMatching("/callback.*")).withQueryParam("code", matching(".*")).willReturn(aResponse().withStatus(200)));
 
@@ -238,8 +242,7 @@ public class AbstractTestIntegration {
     assertEquals(302, response.getStatusCode().value());
 
     URI location = response.getHeaders().getLocation();
-    String fragment = location.getFragment().split("=")[1];
-    return fragment;
+    return location.getFragment().split("=")[1];
   }
 
 }

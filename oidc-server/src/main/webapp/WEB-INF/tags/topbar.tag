@@ -3,128 +3,45 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="o" tagdir="/WEB-INF/tags"%>
-<c:choose>
-	<c:when test="${ not empty userInfo.name }">
-		<c:set var="shortName" value="${ userInfo.name }" />
-	</c:when>
-	<c:otherwise>
-		<c:set var="shortName" value="${ userInfo.sub }" />
-	</c:otherwise>
-</c:choose>
-<c:choose>
-	<c:when test="${ not empty userInfo.name }">
-		<c:set var="longName" value="${ userInfo.name }" />
-	</c:when>
-	<c:otherwise>
-		<c:choose>
-			<c:when test="${ not empty userInfo.givenName || not empty userInfo.familyName }">
-				<c:set var="longName" value="${ userInfo.givenName } ${ userInfo.familyName }" />
-			</c:when>
-			<c:otherwise>
-				<c:set var="longName" value="${ shortName }" />
-			</c:otherwise>
-		</c:choose>
-	</c:otherwise>
-</c:choose>
-<div class="navbar navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container">
-			<button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-				<span class="icon-bar"></span> 
-				<span class="icon-bar"></span> 
-				<span class="icon-bar"></span>
-			</button>
-			<a class="brand" href=""><img src="${ config.logoImageUrl }" /> ${config.topbarTitle}</a>
-			<c:if test="${ not empty pageName }">
-				<div class="nav-collapse collapse">
-					<ul class="nav">
-						<c:choose>
-							<c:when test="${pageName == 'Home'}">
-								<li class="active"><a href="" data-toggle="collapse" data-target=".nav-collapse"><spring:message code="topbar.home"/></a></li>
-							</c:when>
-							<c:otherwise>
-								<li><a href="" data-toggle="collapse" data-target=".nav-collapse"><spring:message code="topbar.home"/></a></li>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${pageName == 'About'}">
-								<li class="active" data-toggle="collapse" data-target=".nav-collapse"><a href=""><spring:message code="topbar.about"/></a></li>
-							</c:when>
-							<c:otherwise>
-								<li><a href="about" data-toggle="collapse" data-target=".nav-collapse"><spring:message code="topbar.about"/></a></li>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${pageName == 'Statistics'}">
-								<li class="active" data-toggle="collapse" data-target=".nav-collapse"><a href=""><spring:message code="topbar.statistics"/></a></li>
-							</c:when>
-							<c:otherwise>
-								<li><a href="stats" data-toggle="collapse" data-target=".nav-collapse"><spring:message code="topbar.statistics"/></a></li>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${pageName == 'Contact'}">
-								<li class="active" data-toggle="collapse" data-target=".nav-collapse"><a href=""><spring:message code="topbar.contact"/></a></li>
-							</c:when>
-							<c:otherwise>
-								<li><a href="contact" data-toggle="collapse" data-target=".nav-collapse"><spring:message code="topbar.contact"/></a></li>
-							</c:otherwise>
-						</c:choose>
-	
-					</ul>
-	
-						<security:authorize access="hasRole('ROLE_USER')">
-		
-							<ul class="nav hidden-desktop">
-							<o:actionmenu />
-							</ul>
-	
-						</security:authorize>
-	
-					<!-- use a full user menu and button when not collapsed -->
-					<ul class="nav pull-right visible-desktop">
-	                    <security:authorize access="hasRole('ROLE_USER')">
-						<li class="dropdown">
-							<a id="userButton" class="dropdown-toggle" data-toggle="dropdown" href=""><i class="icon-user icon-white"></i> ${ shortName } <span class="caret"></span></a>
-							<ul class="dropdown-menu pull-right">
-								<li><a href="manage/#user/profile" data-toggle="collapse" data-target=".nav-collapse">${ longName }</a></li>
-								<li class="divider"></li>
-								<li><a href="" data-toggle="collapse" data-target=".nav-collapse" class="logoutLink"><i class="icon-remove"></i> <spring:message code="topbar.logout"/></a></li>
-							</ul>
-						</li>
-	                    </security:authorize>
-	                    <security:authorize access="!hasRole('ROLE_USER')">
-	                    <li>
-	                    	<a id="loginButton" href="saml/login" data-toggle="collapse" data-target=".nav-collapse"><i class="icon-lock icon-white"></i> <spring:message code="topbar.login"/></a>
-	                    </li>
-	                    </security:authorize>
-	                </ul>
-	                
-	                <!--  use a simplified user button system when collapsed -->
-	                <ul class="nav hidden-desktop">
-	                    <security:authorize access="hasRole('ROLE_USER')">
-						<li><a href="manage/#user/profile">${ longName }</a></li>
-						<li class="divider"></li>
-						<li><a href="" class="logoutLink"><i class="icon-remove"></i> <spring:message code="topbar.logout"/></a></li>
-	                    </security:authorize>
-	                    <security:authorize access="!hasRole('ROLE_USER')">
-	                    <li>
-	                    	<a href="login" data-toggle="collapse" data-target=".nav-collapse"><i class="icon-lock"></i> <spring:message code="topbar.login"/></a>
-	                    </li>
-	                    </security:authorize>
-	                </ul>
+<div class="mod-header">
+    <p class="title"><a href="/">${config.topbarTitle}</a></p>
 
-	            </div><!--/.nav-collapse -->
-			</c:if>
-        </div>
+    <div class="meta">
+        <security:authorize access="hasRole('ROLE_ADMIN')">
+            <div class="name">
+                <a href="manage/#user/profile"><span>Welcome ${ userInfo.name }</span></a>
+            </div>
+        </security:authorize>
+        <ul class="language">
+            <li>
+                <a href="#" class="selected"><spring:message code="openconext.header.lang_en"/></a>
+            </li>
+            <li>
+                <a href="#" class=""><spring:message code="openconext.header.lang_nl"/></a>
+            </li>
+        </ul>
+        <ul class="links">
+            <li>
+                <a href="<spring:message code="openconext.footer.git_link"/>" target="_blank">
+                    <img src="resources/images/github.png"/>
+                </a>
+            </li>
+        </ul>
     </div>
 </div>
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		$('.logoutLink').on('click', function(e) {
-			e.preventDefault();
-			$('#logoutForm').submit();
-		});
-	});
-</script>
+<div class="mod-navigation">
+    <security:authorize access="hasRole('ROLE_ADMIN')">
+        <ul>
+            <li><a href="manage/#admin/clients" data-toggle="collapse" data-target=".nav-collapse"><spring:message
+                    code="sidebar.administrative.manage_clients"/></a></li>
+            <li><a href="manage/#admin/whitelists" data-toggle="collapse" data-target=".nav-collapse"><spring:message
+                    code="sidebar.administrative.whitelisted_clients"/></a></li>
+            <li><a href="manage/#admin/blacklist" data-toggle="collapse" data-target=".nav-collapse"><spring:message
+                    code="sidebar.administrative.blacklisted_clients"/></a></li>
+            <li><a href="manage/#admin/scope" data-toggle="collapse" data-target=".nav-collapse"><spring:message
+                    code="sidebar.administrative.system_scopes"/></a></li>
+            <li><a href="manage/#user/profile" data-toggle="collapse" data-target=".nav-collapse"><spring:message
+                    code="sidebar.personal.profile_information"/></a></li>
+        </ul>
+    </security:authorize>
+</div>
