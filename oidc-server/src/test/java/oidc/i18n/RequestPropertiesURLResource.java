@@ -1,4 +1,4 @@
-package oidc;
+package oidc.i18n;
 
 import org.springframework.core.io.UrlResource;
 import org.springframework.util.ResourceUtils;

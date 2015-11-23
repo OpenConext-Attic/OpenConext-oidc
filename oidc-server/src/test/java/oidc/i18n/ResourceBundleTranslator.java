@@ -1,6 +1,7 @@
-package oidc;
+package oidc.i18n;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -62,6 +63,7 @@ public class ResourceBundleTranslator {
     }
   }
 
+  @Ignore
   @Test
   public void doTranslate() throws IOException {
     Map<String, Object> messages = getMessages();
