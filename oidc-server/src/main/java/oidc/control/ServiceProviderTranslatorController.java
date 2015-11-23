@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
@@ -16,7 +17,7 @@ public class ServiceProviderTranslatorController {
 
   @RequestMapping("/translate-sp-entity-id")
   public Map<String, String> translate(@RequestParam String spEntityId) {
-    Map<String, String> result = new HashMap<>();
+    Map<String, String> result = new LinkedHashMap<>();
     result.put("spEntityId", spEntityId);
     result.put("clientId", translationService.translateServiceProviderEntityId(spEntityId));
     return result;
