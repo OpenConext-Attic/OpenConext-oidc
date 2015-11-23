@@ -38,7 +38,9 @@
     </bean>
 	</mvc:interceptors>
 
-  <bean id="localeResolver" primary="true" class="org.springframework.web.servlet.i18n.CookieLocaleResolver "/>
+  <bean id="localeResolver" primary="true" class="org.springframework.web.servlet.i18n.SessionLocaleResolver ">
+		<property name="defaultLocale" value="en" />
+	</bean>
 
   <import resource="mock-authz-config.xml" />
 

@@ -1,9 +1,9 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<h1><spring:message code="home.welcome.title"/></h1>
+<h1><spring:message code="openconext.welcome.title"/></h1>
 
-<p><spring:message code="home.welcome.body"/></p>
+<p><spring:message code="openconext.welcome.body"/></p>
 
 <security:authorize access="!hasRole('ROLE_ADMIN')">
     <p>

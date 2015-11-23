@@ -40,6 +40,7 @@
     <script type="text/javascript" src="resources/js/lib/jquery.js"></script>
     <script type="text/javascript" charset="UTF-8" src="resources/js/lib/moment-with-locales.js"></script>
     <script type="text/javascript" src="resources/js/lib/i18next.js"></script>
+    <script type="text/javascript" src="resources/js/language-selector.js"></script>
     <script type="text/javascript">
         $.i18n.init({
             fallbackLng: "en",

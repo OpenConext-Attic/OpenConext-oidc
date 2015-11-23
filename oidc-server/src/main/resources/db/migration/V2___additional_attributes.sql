@@ -47,3 +47,4 @@ CREATE INDEX uepsa_id_idx ON user_edu_person_scoped_affiliation(user_id);
 CREATE INDEX uimo_id_idx ON user_is_member_of(user_id);
 CREATE INDEX uepe_id_idx ON user_edu_person_entitlement(user_id);
 CREATE INDEX uspuc_id_idx ON user_schac_personal_unique_code(user_id);
+CREATE INDEX uu_id_idx ON user_uid(user_id);

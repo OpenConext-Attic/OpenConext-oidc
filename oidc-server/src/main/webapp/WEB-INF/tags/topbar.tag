@@ -14,10 +14,10 @@
         </security:authorize>
         <ul class="language">
             <li>
-                <a href="#" class="selected"><spring:message code="openconext.header.lang_en"/></a>
+                <a id="header_lang_en" href="#" class="${pageContext.response.locale == "en" || pageContext.response.locale == null ? "selected" : ""}"><spring:message code="openconext.header.lang_en"/></a>
             </li>
             <li>
-                <a href="#" class=""><spring:message code="openconext.header.lang_nl"/></a>
+                <a id="header_lang_nl" href="#" class="${pageContext.response.locale == "nl" ? "selected" : ""}"><spring:message code="openconext.header.lang_nl"/></a>
             </li>
         </ul>
         <ul class="links">
