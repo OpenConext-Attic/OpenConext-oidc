@@ -4,6 +4,7 @@ INSERT INTO client_details (id, client_id, client_secret, client_name, dynamical
 INSERT INTO client_scope (owner_id, scope) VALUES
 	(9999999999, 'read'),
 	(9999999999, 'openid'),
+	(9999999999, 'groups'),
 	(9999999999, 'profile'),
 	(9999999999, 'email'),
 	(9999999999, 'address'),
@@ -32,6 +33,7 @@ INSERT INTO whitelisted_site (id, client_id) VALUES
 INSERT INTO whitelisted_site_scope (owner_id, scope) VALUES
 	(9999999999, 'read'),
 	(9999999999, 'openid'),
+	(9999999999, 'groups'),
 	(9999999999, 'profile'),
 	(9999999999, 'email'),
 	(9999999999, 'address'),
