@@ -79,7 +79,7 @@
             "id-token-signing-algorithm": "ID Token Signing Algorithm",
             "id-token-timeout": "ID Token Timeout",
             "implicit": "impliciet",
-            "initiate-login": "Initiëren Inloggen",
+            "initiate-login": "Initieren Inloggen",
             "initiate-login-help": "URL naar login starten op de client",
             "introspection": "Introspectie",
             "jwk-set": "Public key",
@@ -131,7 +131,7 @@
                 "unchanged": "ongewijzigd"
             },
             "scope-placeholder": "nieuwe scope",
-            "scope-help": "OAuth scopes deze cliënt mag verzoek",
+            "scope-help": "OAuth scopes deze client mag verzoek",
             "seconds": "seconden",
             "secret-asymmetric-jwt": "Asymmetrisch ondertekend JWT bewering",
             "secret-http": "Client Secret via HTTP Basic",
@@ -171,7 +171,7 @@
         },
         "client-table": {
             "allow-introspection-tooltip": "Deze client kan token introspectie uitvoeren",
-            "confirm": "Bent u zeker dat u wilt deze cliënt verwijderen?",
+            "confirm": "Bent u zeker dat u wilt deze client verwijderen?",
             "dynamically-registered-tooltip": "Deze client is dynamisch geregistreerd. Klik hier voor registratie access token bekijken",
             "match": {
                 "contacts": "contacten",
@@ -195,7 +195,7 @@
             "whitelist": "Whitelist",
             "unknown": "op een onbekende tijd"
         },
-        "manage": "Beheer Cliënten",
+        "manage": "Beheer Clienten",
         "more-info": {
             "contacts": "Administratieve Contacten:",
             "home": "Homepage:",
@@ -208,7 +208,7 @@
     "common": {
         "cancel": "Annuleer",
         "client": "Opdrachtgever",
-        "clients": "Cliënten",
+        "clients": "Clienten",
         "close": "Sluiten",
         "delete": "Verwijder",
         "description": "Beschrijving",
@@ -338,7 +338,7 @@
             "allowed-scopes": "Toegestaan ​​Scopes",
             "edit": "Bewerk witte lijst Site",
             "new": "Nieuwe witte lijst Site",
-            "scope-help": "Lijst van scopes die automatisch zal worden goedgekeurd wanneer deze cliënt een verzoek",
+            "scope-help": "Lijst van scopes die automatisch zal worden goedgekeurd wanneer deze client een verzoek",
             "scope-placeholder": "nieuwe scope"
         },
         "whitelist-table": {
@@ -401,7 +401,7 @@
     "sidebar": {
         "administrative": {
             "title": "Administratief",
-            "manage_clients": "Beheer Cliënten",
+            "manage_clients": "Beheer Clienten",
             "whitelisted_clients": "Witte lijst Clients",
             "blacklisted_clients": "Zwarte lijst Clients",
             "system_scopes": "Systeem Scopes"
@@ -474,7 +474,8 @@
     "openconext": {
         "header": {
             "lang_en": "EN",
-            "lang_nl": "NL"
+            "lang_nl": "NL",
+            "welcome":"Welkom"
         },
         "footer": {
             "org": "SURFnet",

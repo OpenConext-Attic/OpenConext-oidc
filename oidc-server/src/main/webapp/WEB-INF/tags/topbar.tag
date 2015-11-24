@@ -9,7 +9,7 @@
     <div class="meta">
         <security:authorize access="hasRole('ROLE_ADMIN')">
             <div class="name">
-                <a href="manage/#user/profile"><span>Welcome ${ userInfo.name }</span></a>
+                <a href="manage/#user/profile"><span><spring:message code="openconext.header.welcome"/> ${ userInfo.name }</span></a>
             </div>
         </security:authorize>
         <ul class="language">

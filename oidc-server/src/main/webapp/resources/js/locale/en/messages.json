@@ -474,7 +474,8 @@
     "openconext": {
         "header": {
             "lang_en":"EN",
-            "lang_nl":"NL"
+            "lang_nl":"NL",
+            "welcome":"Welcome"
         },
         "footer": {
             "org":"SURFnet",
