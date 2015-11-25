@@ -1,36 +1,37 @@
 {
-  "sub": "75726e3a-636f-6c6c-6162-3a706572736f",
-  "preferredUsername": "John Doe",
-  "name": "John Doe",
-  "givenName": "John",
-  "familyName": "Doe",
-  "email": "john.doe@example.org",
-  "locale": "NL",
-  "unspecifiedNameId":"urn:collab:person:example.com:local",
-  "schacHomeOrganization": "surfnet.nl",
-  "schacHomeOrganizationType": "institution",
-  "eduPersonPrincipalName": "principal_name",
-  "eduPersonTargetedId": "targeted_id",
-  "eduPersonAffiliations": [
-    "student",
-    "faculty"
-  ],
-  "eduPersonScopedAffiliations": [
-    "student",
-    "faculty"
-  ],
-  "isMemberOfs": [
-    "surfnet"
-  ],
-  "eduPersonEntitlements": [
-    "http://xstor.com/contracts/HEd123",
-    "urn:mace:washington.edu:confocalMicroscope"
-  ],
-  "schacPersonalUniqueCodes": [
-    "personal"
-  ],
-  "uids": [
-    "uid2",
-    "uid1"
-  ]
+    "sub": "75726e3a-636f-6c6c-6162-3a706572736f",
+    "preferredUsername": "John Doe",
+    "name": "John Doe",
+    "givenName": "John",
+    "familyName": "Doe",
+    "email": "john.doe@example.org",
+    "locale": "NL",
+    "unspecifiedNameId": "urn:collab:person:example.com:local",
+    "authenticatingAuthority": "http://mock-idp",
+    "schacHomeOrganization": "surfnet.nl",
+    "schacHomeOrganizationType": "institution",
+    "eduPersonPrincipalName": "principal_name",
+    "eduPersonTargetedId": "targeted_id",
+    "eduPersonAffiliations": [
+        "student",
+        "faculty"
+    ],
+    "eduPersonScopedAffiliations": [
+        "student",
+        "faculty"
+    ],
+    "isMemberOfs": [
+        "surfnet"
+    ],
+    "eduPersonEntitlements": [
+        "http://xstor.com/contracts/HEd123",
+        "urn:mace:washington.edu:confocalMicroscope"
+    ],
+    "schacPersonalUniqueCodes": [
+        "personal"
+    ],
+    "uids": [
+        "uid2",
+        "uid1"
+    ]
 }

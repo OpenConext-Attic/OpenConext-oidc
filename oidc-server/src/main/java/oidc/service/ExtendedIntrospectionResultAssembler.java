@@ -23,6 +23,7 @@ public class ExtendedIntrospectionResultAssembler extends DefaultIntrospectionRe
       FederatedUserInfo federatedUserInfo = (FederatedUserInfo) userInfo;
       result.put("schac_home", federatedUserInfo.getSchacHomeOrganization());
       result.put("unspecified_id", federatedUserInfo.getUnspecifiedNameId());
+      result.put("authenticating_authority", federatedUserInfo.getAuthenticatingAuthority());
     }
     return result;
   }

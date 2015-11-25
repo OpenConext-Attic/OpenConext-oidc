@@ -15,6 +15,7 @@ public class FederatedUserInfo extends DefaultUserInfo {
 
   private String schacHomeOrganization;
   private String unspecifiedNameId;
+  private String authenticatingAuthority;
   private String schacHomeOrganizationType;
   private String eduPersonPrincipalName;
   private String eduPersonTargetedId;
@@ -44,6 +45,16 @@ public class FederatedUserInfo extends DefaultUserInfo {
 
   public void setUnspecifiedNameId(String unspecifiedNameId) {
     this.unspecifiedNameId = unspecifiedNameId;
+  }
+
+  @Basic
+  @Column(name = "authenticating_authority")
+  public String getAuthenticatingAuthority() {
+    return authenticatingAuthority;
+  }
+
+  public void setAuthenticatingAuthority(String authenticatingAuthority) {
+    this.authenticatingAuthority = authenticatingAuthority;
   }
 
   @Basic
@@ -194,6 +205,7 @@ public class FederatedUserInfo extends DefaultUserInfo {
     return "FederatedUserInfo{" +
         "schacHomeOrganization='" + schacHomeOrganization + '\'' +
         ", unspecifiedNameId='" + unspecifiedNameId + '\'' +
+        ", authenticatingAuthority='" + authenticatingAuthority + '\'' +
         ", schacHomeOrganizationType='" + schacHomeOrganizationType + '\'' +
         ", eduPersonPrincipalName='" + eduPersonPrincipalName + '\'' +
         ", eduPersonTargetedId='" + eduPersonTargetedId + '\'' +

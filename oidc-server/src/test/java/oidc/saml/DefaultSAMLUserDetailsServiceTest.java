@@ -8,9 +8,7 @@ import oidc.user.FederatedUserInfoService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mitre.openid.connect.model.UserInfo;
-import org.opensaml.saml2.core.Assertion;
-import org.opensaml.saml2.core.Attribute;
-import org.opensaml.saml2.core.NameID;
+import org.opensaml.saml2.core.*;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.XSString;
 import org.springframework.core.io.ClassPathResource;
@@ -18,15 +16,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.saml.SAMLCredential;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
-import static java.util.Collections.*;
+import static java.util.Collections.EMPTY_LIST;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class DefaultSAMLUserDetailsServiceTest {
@@ -42,11 +40,12 @@ public class DefaultSAMLUserDetailsServiceTest {
 
   @Before
   public void before() throws IOException {
-    FederatedUserInfoService userInfoService = new DefaultFederatedUserInfoService(){
+    FederatedUserInfoService userInfoService = new DefaultFederatedUserInfoService() {
       public UserInfo saveUserInfo(UserInfo userInfo) {
         saveUserInfoArgument = (FederatedUserInfo) userInfo;
         return userInfo;
       }
+
       public UserInfo getByUsername(String username) {
         return null;
       }
@@ -81,7 +80,7 @@ public class DefaultSAMLUserDetailsServiceTest {
         getAttribute("urn:mace:dir:attribute-def:eduPersonTargetedID", federatedUserInfo.getEduPersonTargetedId()),
         getAttribute("urn:mace:dir:attribute-def:eduPersonScopedAffiliation", federatedUserInfo.getEduPersonScopedAffiliations())
     );
-    SAMLCredential samlCredential = new SAMLCredential(nameId, mock(Assertion.class), "remoteEntityID", SP_ENTITY_ID, attributes, "localEntityID");
+    SAMLCredential samlCredential = new SAMLCredential(nameId, mockAssertion(), "remoteEntityID", SP_ENTITY_ID, attributes, "localEntityID");
     SAMLUser user = (SAMLUser) subject.loadUserBySAML(samlCredential);
 
     //because relay state equals the OIDC SP
@@ -91,16 +90,30 @@ public class DefaultSAMLUserDetailsServiceTest {
     assertEquals(federatedUserInfo.toString(), saveUserInfoArgument.toString());
   }
 
+  //saml2 library is hard to instantiate
+  private Assertion mockAssertion() {
+    Assertion assertion = mock(Assertion.class);
+    AuthnStatement statement = mock(AuthnStatement.class);
+    AuthnContext authnContext = mock(AuthnContext.class);
+    AuthenticatingAuthority authenticatingAuthority = mock(AuthenticatingAuthority.class);
+    when(authenticatingAuthority.getURI()).thenReturn("http://mock-idp");
+    when(authnContext.getAuthenticatingAuthorities()).thenReturn(Arrays.asList(authenticatingAuthority));
+    when(statement.getAuthnContext()).thenReturn(authnContext);
+    when(assertion.getAuthnStatements()).thenReturn(Arrays.asList(statement));
+    return assertion;
+  }
+
   @Test
   public void testLoadUserBySAMLWithEmptyAttributes() throws Exception {
     SAMLUser emptySamlUser = (SAMLUser) subject.loadUserBySAML(new SAMLCredential(
-        nameId, mock(Assertion.class), "remoteEntityID", "relayState", EMPTY_LIST, "localEntityID"));
+        nameId, mockAssertion(), "remoteEntityID", "relayState", EMPTY_LIST, "localEntityID"));
 
     assertEquals("75726e3a-636f-6c6c-6162-3a706572736f", emptySamlUser.getUsername());
 
     FederatedUserInfo emptyUserInfo = new FederatedUserInfo();
     emptyUserInfo.setSub(emptySamlUser.getUsername());
     emptyUserInfo.setUnspecifiedNameId(nameId.getValue());
+    emptyUserInfo.setAuthenticatingAuthority(this.federatedUserInfo.getAuthenticatingAuthority());
 
     assertEquals(emptyUserInfo.toString(), saveUserInfoArgument.toString());
   }

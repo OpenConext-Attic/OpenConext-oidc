@@ -167,6 +167,7 @@ public class AbstractTestIntegration {
     assertEquals("bearer", ((String) introspect.get("token_type")).toLowerCase());
     assertEquals("surfnet.nl", introspect.get("schac_home"));
     assertEquals("urn:collab:person:example.com:local", introspect.get("unspecified_id"));
+    assertEquals("http://mock-idp", introspect.get("authenticating_authority"));
   }
 
   protected void assertUserInfoResult(Map<String, Object> userInfo) {

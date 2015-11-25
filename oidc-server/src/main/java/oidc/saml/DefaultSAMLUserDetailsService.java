@@ -5,6 +5,8 @@ import oidc.service.HashedPairwiseIdentifierService;
 import oidc.user.FederatedUserInfoService;
 import org.mitre.openid.connect.model.UserInfo;
 import org.opensaml.saml2.core.Attribute;
+import org.opensaml.saml2.core.AuthenticatingAuthority;
+import org.opensaml.saml2.core.AuthnStatement;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.XSAny;
 import org.opensaml.xml.schema.XSString;
@@ -40,11 +42,12 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
     //we saved the clientId on the relay state in ProxySAMLEntryPoint#getProfileOptions
     String clientId = credential.getRelayState();
     String sub = hashedPairwiseIdentifierService.getIdentifier(unspecifiedNameId, clientId);
+    String authenticatingAuthority = getAuthenticatingAuthority(credential);
 
     UserInfo existingUserInfo = extendedUserInfoService.getByUsernameAndClientId(sub, clientId);
 
     if (existingUserInfo == null) {
-      existingUserInfo = this.buildUserInfo(unspecifiedNameId, sub, properties);
+      existingUserInfo = this.buildUserInfo(unspecifiedNameId, sub, authenticatingAuthority, properties);
       extendedUserInfoService.saveUserInfo(existingUserInfo);
     }
     //if the sp-entity-id equals the OIDC server (e.g. non-proxy mode to access the GUI) we grant admin rights
@@ -79,11 +82,26 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
     return null;
   }
 
-  private UserInfo buildUserInfo(String unspecifiedNameId, String sub, Map<String, List<String>> properties) {
+  private String getAuthenticatingAuthority(SAMLCredential credential) {
+    List<AuthnStatement> authnStatements = credential.getAuthenticationAssertion().getAuthnStatements();
+    for (AuthnStatement authnStatement : authnStatements) {
+      final List<AuthenticatingAuthority> authorities = authnStatement.getAuthnContext().getAuthenticatingAuthorities();
+      for (AuthenticatingAuthority authenticatingAuthority : authorities) {
+        String uri = authenticatingAuthority.getURI();
+        if (StringUtils.hasText(uri)) {
+          return uri;
+        }
+      }
+    }
+    throw new IllegalArgumentException("No AuthenticatingAuthority present in the Assertion, cannot determine IdP");
+  }
+
+  private UserInfo buildUserInfo(String unspecifiedNameId, String sub, String authenticatingAuthority, Map<String, List<String>> properties) {
     FederatedUserInfo userInfo = new FederatedUserInfo();
 
     userInfo.setUnspecifiedNameId(unspecifiedNameId);
     userInfo.setSub(sub);
+    userInfo.setAuthenticatingAuthority(authenticatingAuthority);
 
     userInfo.setName(flatten(properties.get("urn:mace:dir:attribute-def:cn")));
     userInfo.setPreferredUsername(flatten(properties.get("urn:mace:dir:attribute-def:displayName")));
