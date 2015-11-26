@@ -47,7 +47,10 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
     FederatedUserInfo existingUserInfo = (FederatedUserInfo) extendedUserInfoService.getByUsernameAndClientId(sub, clientId);
     FederatedUserInfo userInfo = this.buildUserInfo(unspecifiedNameId, sub, authenticatingAuthority, properties);
 
-    if (existingUserInfo == null || !existingUserInfo.hashed().equals(userInfo.hashed())) {
+    if (existingUserInfo == null) {
+      extendedUserInfoService.saveUserInfo(userInfo);
+    } else if (!existingUserInfo.hashed().equals(userInfo.hashed())) {
+      userInfo.setId(existingUserInfo.getId());
       extendedUserInfoService.saveUserInfo(userInfo);
     }
     //if the sp-entity-id equals the OIDC server (e.g. non-proxy mode to access the GUI) we grant admin rights
