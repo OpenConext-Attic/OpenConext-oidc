@@ -1,6 +1,7 @@
 package oidc.model;
 
 import com.google.gson.JsonObject;
+import org.apache.commons.ssl.asn1.ASN1Object;
 import org.mitre.openid.connect.model.DefaultUserInfo;
 import org.springframework.util.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -216,5 +217,9 @@ public class FederatedUserInfo extends DefaultUserInfo {
         ", schacPersonalUniqueCodes=" + schacPersonalUniqueCodes +
         ", uids=" + uids +
         '}';
+  }
+
+  public String hashed() {
+    return this.toString();
   }
 }

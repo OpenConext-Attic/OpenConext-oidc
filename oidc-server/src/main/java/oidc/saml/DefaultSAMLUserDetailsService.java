@@ -44,11 +44,11 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
     String sub = hashedPairwiseIdentifierService.getIdentifier(unspecifiedNameId, clientId);
     String authenticatingAuthority = getAuthenticatingAuthority(credential);
 
-    UserInfo existingUserInfo = extendedUserInfoService.getByUsernameAndClientId(sub, clientId);
+    FederatedUserInfo existingUserInfo = (FederatedUserInfo) extendedUserInfoService.getByUsernameAndClientId(sub, clientId);
+    FederatedUserInfo userInfo = this.buildUserInfo(unspecifiedNameId, sub, authenticatingAuthority, properties);
 
-    if (existingUserInfo == null) {
-      existingUserInfo = this.buildUserInfo(unspecifiedNameId, sub, authenticatingAuthority, properties);
-      extendedUserInfoService.saveUserInfo(existingUserInfo);
+    if (existingUserInfo == null || !existingUserInfo.hashed().equals(userInfo.hashed())) {
+      extendedUserInfoService.saveUserInfo(userInfo);
     }
     //if the sp-entity-id equals the OIDC server (e.g. non-proxy mode to access the GUI) we grant admin rights
     return new SAMLUser(sub, clientId.equals(this.localSpEntityId));
@@ -96,7 +96,7 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
     throw new IllegalArgumentException("No AuthenticatingAuthority present in the Assertion, cannot determine IdP");
   }
 
-  private UserInfo buildUserInfo(String unspecifiedNameId, String sub, String authenticatingAuthority, Map<String, List<String>> properties) {
+  private FederatedUserInfo buildUserInfo(String unspecifiedNameId, String sub, String authenticatingAuthority, Map<String, List<String>> properties) {
     FederatedUserInfo userInfo = new FederatedUserInfo();
 
     userInfo.setUnspecifiedNameId(unspecifiedNameId);

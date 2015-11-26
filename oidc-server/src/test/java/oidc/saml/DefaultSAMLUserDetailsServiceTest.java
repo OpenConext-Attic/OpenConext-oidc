@@ -36,10 +36,12 @@ public class DefaultSAMLUserDetailsServiceTest {
   private DefaultSAMLUserDetailsService subject = new DefaultSAMLUserDetailsService(SP_ENTITY_ID);
   private FederatedUserInfo federatedUserInfo;
   private FederatedUserInfo saveUserInfoArgument;
+  private FederatedUserInfo findByUserNameReturnValue;
   private NameID nameId;
 
   @Before
   public void before() throws IOException {
+    //this can't be handled by Mockito as we need to verify the argument passed on at a later stage
     FederatedUserInfoService userInfoService = new DefaultFederatedUserInfoService() {
       public UserInfo saveUserInfo(UserInfo userInfo) {
         saveUserInfoArgument = (FederatedUserInfo) userInfo;
@@ -47,13 +49,14 @@ public class DefaultSAMLUserDetailsServiceTest {
       }
 
       public UserInfo getByUsername(String username) {
-        return null;
+        return findByUserNameReturnValue;
       }
     };
     subject.setExtendedUserInfoService(userInfoService);
     subject.setHashedPairwiseIdentifierService(new DefaultHashedPairwiseIdentifierService());
 
     this.federatedUserInfo = objectMapper.readValue(new ClassPathResource("model/federated_user_info.json").getInputStream(), FederatedUserInfo.class);
+    this.findByUserNameReturnValue = null;
 
     this.nameId = mock(NameID.class);
     when(nameId.getValue()).thenReturn(federatedUserInfo.getUnspecifiedNameId());
@@ -101,6 +104,21 @@ public class DefaultSAMLUserDetailsServiceTest {
     when(statement.getAuthnContext()).thenReturn(authnContext);
     when(assertion.getAuthnStatements()).thenReturn(Arrays.asList(statement));
     return assertion;
+  }
+
+  @Test
+  public void testReprovisionUserWhenAttributesChange() throws Exception {
+    findByUserNameReturnValue = new FederatedUserInfo();
+    findByUserNameReturnValue.setSchacHomeOrganizationType("outdated");
+
+    List<Attribute> attributes = Arrays.asList(
+        getAttribute("urn:mace:terena.org:attribute-def:schacHomeOrganizationType",
+            "different")
+    );
+    subject.loadUserBySAML(new SAMLCredential(
+        nameId, mockAssertion(), "remoteEntityID", "relayState", attributes, "localEntityID"));
+
+    assertEquals("different", saveUserInfoArgument.getSchacHomeOrganizationType());
   }
 
   @Test
