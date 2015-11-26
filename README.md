@@ -138,3 +138,15 @@ Besides the 'normal' 3rd party libraries defined in the pom.xml, we also include
   * Branch based on [pull-request to include RequesterID](https://github.com/spring-projects/spring-security-saml/pull/19).
 
 Once the pull request are accepted and merged into a release we can depend on the original repositories again.
+
+## Functional testing
+
+Using the [authz-playground](https://authz-playground.test.surfconext.nl) you can test all implemented flows and endpoints of the OIDC server. If you want to test
+the (re)provisioning of the user it is sometimes useful to add/change the default attributes that Mujina-idp returns. These extra attributes show up in the
+the userinfo page - step 3 in the authz-playground wizard. To add an attribute use the Mujina API:
+
+`curl -v -H "Accept: application/json" -H "Content-type: application/json" -d '{"value": ["teacher","professor"]}' -X PUT https://mujina-idp.test.surfconext.nl/api/attributes/urn:mace:dir:attribute-def:eduPersonScopedAffiliation`
+
+To reset Mujina back to its default behaviour, issue:
+ 
+`curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST https://mujina-idp.test.surfconext.nl/api/reset`
