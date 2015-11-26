@@ -72,5 +72,4 @@ public class ResourceBundleTranslator {
     System.out.println(result);
   }
 
-
 }
