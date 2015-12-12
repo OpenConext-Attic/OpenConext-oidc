@@ -7,11 +7,14 @@ import org.mitre.oauth2.service.ClientDetailsEntityService;
 import org.mitre.oauth2.service.SystemScopeService;
 import org.mitre.openid.connect.service.OIDCTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.exceptions.InvalidScopeException;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.security.oauth2.provider.response.CustomResponseTypesHandler;
+import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.TokenGranter;
+import org.springframework.security.oauth2.provider.response.DefaultResponseTypesHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,7 +29,7 @@ import java.util.Set;
 import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 
 @Service("oidcCustomResponseTypesHandler")
-public class OpenIdResponseTypesHandler implements CustomResponseTypesHandler {
+public class OpenIdResponseTypesHandler extends DefaultResponseTypesHandler {
 
   @Autowired
   private OIDCTokenService connectTokenService;
@@ -36,13 +39,24 @@ public class OpenIdResponseTypesHandler implements CustomResponseTypesHandler {
 
   private Set<String> idTokenResponseType = Collections.singleton("id_token");
 
+  @Autowired
+  public OpenIdResponseTypesHandler(@Qualifier("oauth2TokenGranter") TokenGranter tokenGranter,
+                                    @Qualifier("connectOAuth2RequestFactory") OAuth2RequestFactory oAuth2RequestFactory) {
+    super(tokenGranter, oAuth2RequestFactory);
+  }
+
+  @Override
+  protected ModelAndView handleUnsupportedResponseType(Set<String> responseTypes, AuthorizationRequest authorizationRequest, Authentication authentication) {
+    return canHandleResponseTypes(responseTypes) ? doHandleApprovedAuthorizationRequest(authorizationRequest, authentication)
+        : super.handleUnsupportedResponseType(responseTypes, authorizationRequest, authentication);
+  }
+
   @Override
   public boolean canHandleResponseTypes(Set<String> responseTypes) {
     return idTokenResponseType.equals(responseTypes);
   }
 
-  @Override
-  public ModelAndView handleApprovedAuthorizationRequest(AuthorizationRequest authorizationRequest, Authentication authentication) {
+  private ModelAndView doHandleApprovedAuthorizationRequest(AuthorizationRequest authorizationRequest, Authentication authentication) {
     String clientId = authorizationRequest.getClientId();
     Set<String> scopes = authorizationRequest.getScope();
     if (CollectionUtils.isEmpty(scopes) || !scopes.contains(SystemScopeService.OPENID_SCOPE)) {

@@ -39,16 +39,16 @@
 		redirect-resolver-ref="blacklistAwareRedirectResolver"
 		authorization-endpoint-url="/authorize"
 		token-endpoint-url="/token"
-		error-page="/error">
+		error-page="/error"
+		response-types-handler-ref="oidcCustomResponseTypesHandler">
 
 		<oauth:authorization-code
-				authorization-code-services-ref="defaultOAuth2AuthorizationCodeService"
-        custom-response-types-handler-ref="oidcCustomResponseTypesHandler"/>
-		<oauth:implicit />
-		<oauth:refresh-token/>
-		<oauth:client-credentials/>
-		<oauth:custom-grant token-granter-ref="chainedTokenGranter" />
-		<oauth:custom-grant token-granter-ref="jwtAssertionTokenGranter" />
+				authorization-code-services-ref="defaultOAuth2AuthorizationCodeService"/>
+			<oauth:implicit />
+			<oauth:refresh-token/>
+			<oauth:client-credentials/>
+			<oauth:custom-grant token-granter-ref="chainedTokenGranter" />
+			<oauth:custom-grant token-granter-ref="jwtAssertionTokenGranter" />
 
 	</oauth:authorization-server>
 
