@@ -53,7 +53,7 @@ public class OpenIdResponseTypesHandler extends DefaultResponseTypesHandler {
 
   @Override
   public boolean canHandleResponseTypes(Set<String> responseTypes) {
-    return idTokenResponseType.equals(responseTypes);
+    return super.canHandleResponseTypes(responseTypes) || idTokenResponseType.equals(responseTypes);
   }
 
   private ModelAndView doHandleApprovedAuthorizationRequest(AuthorizationRequest authorizationRequest, Authentication authentication) {
