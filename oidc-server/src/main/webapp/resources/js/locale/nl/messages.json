@@ -36,7 +36,7 @@
             "client-description-help": "Leesbare tekst beschrijving",
             "client-description-placeholder": "Typ een beschrijving",
             "client-id": "Klant ID",
-            "client-id-help": "Unieke identifier. Als u dit leeg laat zal het automatisch worden gegenereerd.",
+            "client-id-help": "Unieke identifier. De identifier moet herleidbaar zijn naar de entity ID van de SP in SR. Vervang elke ':' door een '@' in de entity ID van de SP",
             "client-id-placeholder": "Typ iets",
             "client-name": "Klantnaam",
             "client-name-help": "Mensen leesbare naam van de toepassing",

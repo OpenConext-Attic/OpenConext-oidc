@@ -34,10 +34,6 @@
         <ul>
             <li><a href="manage/#admin/clients" data-toggle="collapse" data-target=".nav-collapse"><spring:message
                     code="sidebar.administrative.manage_clients"/></a></li>
-            <li><a href="manage/#admin/whitelists" data-toggle="collapse" data-target=".nav-collapse"><spring:message
-                    code="sidebar.administrative.whitelisted_clients"/></a></li>
-            <li><a href="manage/#admin/blacklist" data-toggle="collapse" data-target=".nav-collapse"><spring:message
-                    code="sidebar.administrative.blacklisted_clients"/></a></li>
             <li><a href="manage/#admin/scope" data-toggle="collapse" data-target=".nav-collapse"><spring:message
                     code="sidebar.administrative.system_scopes"/></a></li>
             <li><a href="manage/#user/profile" data-toggle="collapse" data-target=".nav-collapse"><spring:message

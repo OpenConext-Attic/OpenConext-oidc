@@ -36,7 +36,7 @@
             "client-description-help": "Human-readable text description",
             "client-description-placeholder": "Type a description",
             "client-id": "Client ID",
-            "client-id-help": "Unique identifier. If you leave this blank it will be automatically generated.",
+            "client-id-help": "Unique identifier. This must be linkable to the SP entity ID in SR. Replace each ':' in the SP entity ID with '@'",
             "client-id-placeholder": "Type something",
             "client-name": "Client name",
             "client-name-help": "Human-readable application name",

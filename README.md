@@ -30,11 +30,11 @@ The OpenConext-oidc is a maven overlay for OpenID-Connect-Java-Server. Issue a
 
 command to set up the git submodules, then you can run 
 
-`mvn package jetty:run -Dspring.profiles.active="local"`
+`cd ./oidc-server && mvn clean package jetty:run -Dspring.profiles.active="local"`
 
 or the shorthand:
 
-`.\start.sh`
+`./start.sh`
 
 If you don't use the local profile then you need to login on the SURFconext federation.
 
@@ -96,7 +96,7 @@ Add the EB certificate to the application.oidc.properties file:
 
 OpenConext-OIDC is a proxy for SP's that want to use OpenConnect ID instead of SAML to provide their Service to the federation members. 
 Therefore the WAYF and ARP must be scoped for the requesting SP (and not this OIDC SP). This works if OpenConext-OIDC is marked
-as a trusted proxy in SR and the signing certificate (e.g. sp.public.certificate) in added to the certData metadata field in SR.
+as a trusted proxy in SR and the signing certificate (e.g. sp.public.certificate) is added to the certData metadata field in SR.
 
 ## Damn
 
@@ -137,7 +137,7 @@ Besides the 'normal' 3rd party libraries defined in the pom.xml, we also include
 * [spring-security-saml](https://github.com/OpenConext/spring-security-saml/tree/feature/open-connext)
   * Branch based on [pull-request to include RequesterID](https://github.com/spring-projects/spring-security-saml/pull/19).
 
-Once the pull request are accepted and merged into a release we can depend on the original repositories again.
+Once the pull requests are accepted and merged into a release we can depend on the original repositories again.
 
 ## Functional testing
 
