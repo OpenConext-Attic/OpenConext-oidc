@@ -1,5 +1,5 @@
 INSERT INTO client_details (id, client_id, client_secret, client_name, dynamically_registered, refresh_token_validity_seconds, access_token_validity_seconds, id_token_validity_seconds, allow_introspection) VALUES
-	(9999999999, 'https@//oidc.localhost.surfconext.nl', 'secret', 'Test Client', false, null, 3600, 600, true);
+	(9999999999, 'https@//oidc.localhost.surfconext.nl', 'secret', 'Test Client', false, null, 86400, 86400, true);
 
 INSERT INTO client_scope (owner_id, scope) VALUES
 	(9999999999, 'read'),

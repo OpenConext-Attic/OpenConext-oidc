@@ -22,6 +22,7 @@ import java.util.*;
 public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
 
   private final String localSpEntityId;
+
   @Autowired
   private FederatedUserInfoService extendedUserInfoService;
 

@@ -2,9 +2,6 @@ package oidc.security;
 
 import com.nimbusds.jose.Algorithm;
 import net.minidev.json.JSONStyle;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;

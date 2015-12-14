@@ -13,6 +13,7 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
   private String scope = "openid profile email organization userids entitlement";
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testOpenIdCodeFlow() throws Exception {
     Map body = doTestAuthorizationCode(scope);
     String accessToken = (String) body.get("access_token");
