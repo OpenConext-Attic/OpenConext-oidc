@@ -17,7 +17,7 @@ OpenConext implementation of a OpenID Connect server based on the MITREid Connec
 
 Connect to your local mysql database: `mysql -uroot`
 
-Execute the following:
+Execute the following to create a local datbase compliant with travis:
 
 ```sql
 CREATE DATABASE `oidcserver` DEFAULT CHARACTER SET latin1;
