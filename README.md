@@ -1,5 +1,8 @@
 # OpenConext-oidc
 
+[![Build Status](https://travis-ci.org/OpenConext/OpenConext-oidc.svg)](https://travis-ci.org/OpenConext/OpenConext-oidc)
+[![codecov.io](https://codecov.io/github/OpenConext/OpenConext-oidc/coverage.svg)](https://codecov.io/github/OpenConext/OpenConext-oidc)
+
 OpenConext implementation of a OpenID Connect server based on the MITREid Connect server
 
 ## Getting started
@@ -17,9 +20,9 @@ Connect to your local mysql database: `mysql -uroot`
 Execute the following:
 
 ```sql
-CREATE DATABASE `oidc-server` DEFAULT CHARACTER SET latin1;
-create user 'oidc-serverrw'@'localhost' identified by 'secret';
-grant all on `oidc-server`.* to 'oidc-serverrw'@'localhost';
+CREATE DATABASE `oidcserver` DEFAULT CHARACTER SET latin1;
+create user 'travis'@'localhost';
+grant all on `oidcserver`.* to 'travis'@'localhost';
 ```
 
 ## Building and running
