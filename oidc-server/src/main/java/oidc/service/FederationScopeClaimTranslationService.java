@@ -55,8 +55,4 @@ public class FederationScopeClaimTranslationService extends DefaultScopeClaimTra
     }
   }
 
-  @Override
-  public String getFieldNameForClaim(String claim) {
-    return super.getFieldNameForClaim(claim);
-  }
 }
