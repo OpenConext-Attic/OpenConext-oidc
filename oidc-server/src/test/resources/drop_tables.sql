@@ -1,5 +1,5 @@
 --
--- SELECT concat('DROP TABLE IF EXISTS ', table_name, ';') FROM information_schema.tables WHERE table_schema = 'oidc-server';
+-- SELECT concat('DROP TABLE IF EXISTS ', table_name, ';') FROM information_schema.tables WHERE table_schema = 'oidcserver';
 --
 DROP TABLE IF EXISTS access_token;
 DROP TABLE IF EXISTS access_token_permissions;                
