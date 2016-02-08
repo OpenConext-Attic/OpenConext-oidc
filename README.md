@@ -21,8 +21,8 @@ Execute the following to create a local datbase compliant with travis:
 
 ```sql
 CREATE DATABASE `oidcserver` DEFAULT CHARACTER SET latin1;
-create user 'travis'@'localhost';
-grant all on `oidcserver`.* to 'travis'@'localhost';
+create user 'root'@'localhost';
+grant all on `oidcserver`.* to 'root'@'localhost';
 ```
 
 ## Building and running

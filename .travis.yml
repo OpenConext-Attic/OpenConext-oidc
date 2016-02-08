@@ -5,7 +5,7 @@ services:
   - mysql
 before_install:
   - pip install --user codecov
-  - mysql -e "create database IF NOT EXISTS oidcserver; grant all on oidcserver.* to 'travis';" -uroot
+  - mysql -e "create database IF NOT EXISTS oidcserver; grant all on oidcserver.* to 'root';" -uroot
 after_success:
   - codecov
 
