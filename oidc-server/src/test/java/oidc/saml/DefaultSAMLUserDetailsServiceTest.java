@@ -89,7 +89,7 @@ public class DefaultSAMLUserDetailsServiceTest {
     //because relay state equals the OIDC SP
     assertTrue(user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")));
 
-    assertEquals("75726e3a-636f-6c6c-6162-3a706572736f", user.getUsername());
+    assertEquals("23c0db3b-cead-3878-a3c8-dfe73d052d94", user.getUsername());
     assertEquals(federatedUserInfo.toString(), saveUserInfoArgument.toString());
   }
 
@@ -126,7 +126,7 @@ public class DefaultSAMLUserDetailsServiceTest {
     SAMLUser emptySamlUser = (SAMLUser) subject.loadUserBySAML(new SAMLCredential(
         nameId, mockAssertion(), "remoteEntityID", "relayState", EMPTY_LIST, "localEntityID"));
 
-    assertEquals("75726e3a-636f-6c6c-6162-3a706572736f", emptySamlUser.getUsername());
+    assertEquals("3c1fdf9a-5370-341b-86c2-4e3bb376b22e", emptySamlUser.getUsername());
 
     FederatedUserInfo emptyUserInfo = new FederatedUserInfo();
     emptyUserInfo.setSub(emptySamlUser.getUsername());
