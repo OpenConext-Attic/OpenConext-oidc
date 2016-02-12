@@ -3,7 +3,6 @@ package oidc.mock;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import oidc.model.FederatedUserInfo;
 import oidc.saml.SAMLUser;
-import oidc.service.HashedPairwiseIdentifierService;
 import oidc.user.FederatedUserInfoService;
 import org.mitre.openid.connect.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;

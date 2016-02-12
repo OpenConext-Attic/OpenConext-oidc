@@ -1,0 +1,82 @@
+<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+                xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+                ID="CORTO4552c086eb0636ad51e4247e703268be70ad98bb"
+                Version="2.0"
+                IssueInstant="2016-02-12T09:34:03Z"
+                Destination="https://oidc.test.surfconext.nl/saml/SSO"
+                InResponseTo="a100g1gh291d41a65ajab0007iad76b"
+>
+    <saml:Issuer>https://engine.test.surfconext.nl/authentication/idp/metadata</saml:Issuer>
+    <samlp:Status>
+        <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
+    </samlp:Status>
+    <saml:Assertion xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                    ID="CORTO5dc0f6652e8e615e9b9a6ace879eaf612f716565"
+                    Version="2.0"
+                    IssueInstant="2016-02-12T09:34:03Z"
+    >
+        <saml:Issuer>https://engine.test.surfconext.nl/authentication/idp/metadata</saml:Issuer>
+        <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <ds:SignedInfo>
+                <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                <ds:Reference URI="#CORTO5dc0f6652e8e615e9b9a6ace879eaf612f716565">
+                    <ds:Transforms>
+                        <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                        <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                    </ds:Transforms>
+                    <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                    <ds:DigestValue>vf067ZvrCoyE1PDEPb8oGpk4PvA=</ds:DigestValue>
+                </ds:Reference>
+            </ds:SignedInfo>
+            <ds:SignatureValue>
+                dYGvZWonXQ6Z37b3Luvx0exIFBuFie/MkAvsACU6lIckhUeSDFf4MsguBzheKs5OxSJBE/M3LUcICvR7k7ogbvxUomSzVgJXnfRSAdA1iRg3sd0ziv9lLN9FBDqylOxbrivqSiG8NW8MkeS/DjWu4nL8GRvUTr0zB22AOu/21+o=
+            </ds:SignatureValue>
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        MIIC+zCCAmSgAwIBAgIJAPJvLjQsRR4iMA0GCSqGSIb3DQEBBQUAMF0xCzAJBgNVBAYTAk5MMRAwDgYDVQQIEwdVdHJlY2h0MRAwDgYDVQQHEwdVdHJlY2h0MRAwDgYDVQQKEwdTVVJGbmV0MRgwFgYDVQQDEw90ZXN0MiBzYW1sIGNlcnQwHhcNMTUwMzI0MTQwMzE3WhcNMjUwMzIxMTQwMzE3WjBdMQswCQYDVQQGEwJOTDEQMA4GA1UECBMHVXRyZWNodDEQMA4GA1UEBxMHVXRyZWNodDEQMA4GA1UEChMHU1VSRm5ldDEYMBYGA1UEAxMPdGVzdDIgc2FtbCBjZXJ0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCxKYrnW8NwqdRwRwaHulueL69gQFTJbdfoASLhYie2bOioJyJw1f+cAvpjsl4SVYpvEseIetXH8Lgpk7K73PkDJL8dFg4sEjFF6jgmjrOES3ox/gtTd9d/VwPHI/vPIcGy1sbVJ4pEMFl5d8GOAzoJkNWdPj9wV4rv4uv35May8wIDAQABo4HCMIG/MB0GA1UdDgQWBBTTIaPwpKpJlY8eIMSzNRZUjStbijCBjwYDVR0jBIGHMIGEgBTTIaPwpKpJlY8eIMSzNRZUjStbiqFhpF8wXTELMAkGA1UEBhMCTkwxEDAOBgNVBAgTB1V0cmVjaHQxEDAOBgNVBAcTB1V0cmVjaHQxEDAOBgNVBAoTB1NVUkZuZXQxGDAWBgNVBAMTD3Rlc3QyIHNhbWwgY2VydIIJAPJvLjQsRR4iMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADgYEAK8EvTU0LgHJsSugorOemgRlppMfJAeOmuuZNhSMY2QhumFOZpaAb8NFIwUKUVyyJnSo7k6ktHCKI94sQs976242hTDDYEwWJD9HhAsAqOo21Ua8gZT38/wm62e3KgrKXvnljAbKPXDXJM4akz7y6H6wvvIGT6f0f0iJWHq34jww=
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </ds:Signature>
+        <saml:Subject>
+            <saml:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified">
+                urn:collab:person:example.com:test
+            </saml:NameID>
+            <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+                <saml:SubjectConfirmationData NotOnOrAfter="2016-02-12T09:39:03Z"
+                                              Recipient="https://oidc.test.surfconext.nl/saml/SSO"
+                                              InResponseTo="a100g1gh291d41a65ajab0007iad76b"
+                />
+            </saml:SubjectConfirmation>
+        </saml:Subject>
+        <saml:Conditions NotBefore="2016-02-12T09:34:02Z"
+                         NotOnOrAfter="2016-02-12T09:39:03Z"
+        >
+            <saml:AudienceRestriction>
+                <saml:Audience>https://oidc.test.surfconext.nl</saml:Audience>
+            </saml:AudienceRestriction>
+        </saml:Conditions>
+        <saml:AuthnStatement AuthnInstant="2016-02-12T09:34:00Z">
+            <saml:AuthnContext>
+                <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:Password</saml:AuthnContextClassRef>
+                <saml:AuthenticatingAuthority>http://mock-idp</saml:AuthenticatingAuthority>
+                <saml:AuthenticatingAuthority>http://mock-idp</saml:AuthenticatingAuthority>
+            </saml:AuthnContext>
+        </saml:AuthnStatement>
+        <saml:AttributeStatement>
+            <saml:Attribute Name="urn:mace:dir:attribute-def:eduPersonTargetedID"
+                            NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+            >
+                <saml:AttributeValue>
+                    <saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent">
+                        fd9021b35ce0e2bb4fc28d1781e6cbb9eb720fed
+                    </saml:NameID>
+                </saml:AttributeValue>
+            </saml:Attribute>
+        </saml:AttributeStatement>
+    </saml:Assertion>
+</samlp:Response>
+

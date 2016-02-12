@@ -1,12 +1,11 @@
 package oidc.saml;
 
 import oidc.model.FederatedUserInfo;
-import oidc.service.HashedPairwiseIdentifierService;
 import oidc.user.FederatedUserInfoService;
-import org.mitre.openid.connect.model.UserInfo;
 import org.opensaml.saml2.core.Attribute;
 import org.opensaml.saml2.core.AuthenticatingAuthority;
 import org.opensaml.saml2.core.AuthnStatement;
+import org.opensaml.saml2.core.NameID;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.XSAny;
 import org.opensaml.xml.schema.XSString;
@@ -21,13 +20,13 @@ import java.util.*;
 
 public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
 
+  public static final String PERSISTENT_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent";
+  public static final String EDU_PERSON_TARGETED_ID = "urn:mace:dir:attribute-def:eduPersonTargetedID";
+
   private final String localSpEntityId;
 
   @Autowired
   private FederatedUserInfoService extendedUserInfoService;
-
-  @Autowired
-  private HashedPairwiseIdentifierService hashedPairwiseIdentifierService;
 
   public DefaultSAMLUserDetailsService(String localSpEntityId) {
     super();
@@ -42,7 +41,13 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
 
     //we saved the clientId on the relay state in ProxySAMLEntryPoint#getProfileOptions
     String clientId = credential.getRelayState();
-    String sub = hashedPairwiseIdentifierService.getIdentifier(unspecifiedNameId, clientId);
+    List<String> persistentIds = properties.get(EDU_PERSON_TARGETED_ID);
+    String sub;
+    if (CollectionUtils.isEmpty(persistentIds)) {
+      throw new IllegalArgumentException("The Assertion attributes ('" + properties + "') do not contain an " + EDU_PERSON_TARGETED_ID + " attribute with a persistent identifier");
+    } else {
+      sub = persistentIds.get(0);
+    }
     String authenticatingAuthority = getAuthenticatingAuthority(credential);
 
     FederatedUserInfo existingUserInfo = (FederatedUserInfo) extendedUserInfoService.getByUsernameAndClientId(sub, clientId);
@@ -81,7 +86,21 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
     if (xmlObj instanceof XSString) {
       return ((XSString) xmlObj).getValue();
     } else if (xmlObj instanceof XSAny) {
-      return ((XSAny) xmlObj).getTextContent();
+      XSAny xsAny = (XSAny) xmlObj;
+      String textContent = xsAny.getTextContent();
+      if (StringUtils.hasText(textContent)) {
+        return textContent;
+      }
+      List<XMLObject> unknownXMLObjects = xsAny.getUnknownXMLObjects();
+      if (!CollectionUtils.isEmpty(unknownXMLObjects)) {
+        XMLObject xmlObject = unknownXMLObjects.get(0);
+        if (xmlObject instanceof NameID) {
+          NameID nameID = (NameID) xmlObject;
+          if (PERSISTENT_NAME_ID_FORMAT.equals(nameID.getFormat())) {
+            return nameID.getValue();
+          }
+        }
+      }
     }
     return null;
   }
@@ -141,10 +160,6 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
 
   public void setExtendedUserInfoService(FederatedUserInfoService extendedUserInfoService) {
     this.extendedUserInfoService = extendedUserInfoService;
-  }
-
-  public void setHashedPairwiseIdentifierService(HashedPairwiseIdentifierService hashedPairwiseIdentifierService) {
-    this.hashedPairwiseIdentifierService = hashedPairwiseIdentifierService;
   }
 
 }
