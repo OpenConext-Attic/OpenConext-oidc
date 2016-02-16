@@ -53,10 +53,11 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
     List<String> persistentIds = properties.get(EDU_PERSON_TARGETED_ID);
     String sub;
     if (CollectionUtils.isEmpty(persistentIds)) {
-      LOG.info("Using the hashedPairwiseIdentifierService for the sub for {} and {}",unspecifiedNameId, clientId);
       sub = hashedPairwiseIdentifierService.getIdentifier(unspecifiedNameId, clientId);
+      LOG.info("Using the hashedPairwiseIdentifierService for the {} sub for {} and {}", sub, unspecifiedNameId, clientId);
     } else {
       sub = persistentIds.get(0);
+      LOG.info("Using the persistent identifier for the {} sub for {} and {}", sub, unspecifiedNameId, clientId);
     }
     String authenticatingAuthority = getAuthenticatingAuthority(credential);
 
