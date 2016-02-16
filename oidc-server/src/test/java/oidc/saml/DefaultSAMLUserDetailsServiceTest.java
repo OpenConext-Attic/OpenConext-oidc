@@ -2,6 +2,7 @@ package oidc.saml;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import oidc.model.FederatedUserInfo;
+import oidc.service.DefaultHashedPairwiseIdentifierService;
 import oidc.user.DefaultFederatedUserInfoService;
 import oidc.user.FederatedUserInfoService;
 import org.junit.Before;
@@ -51,6 +52,7 @@ public class DefaultSAMLUserDetailsServiceTest {
       }
     };
     subject.setExtendedUserInfoService(userInfoService);
+    subject.setHashedPairwiseIdentifierService(new DefaultHashedPairwiseIdentifierService());
 
     this.federatedUserInfo = objectMapper.readValue(new ClassPathResource("model/federated_user_info.json").getInputStream(), FederatedUserInfo.class);
     this.findByUserNameReturnValue = null;
@@ -78,6 +80,15 @@ public class DefaultSAMLUserDetailsServiceTest {
     subject.loadUserBySAML(samlCredential);
 
     assertEquals("different", saveUserInfoArgument.getSchacHomeOrganizationType());
+  }
+
+  @Test
+  public void testLoadSAmlUserWithoutPersistentIdentifier() throws Exception {
+    SAMLCredential samlCredential = SAMLTestHelper.parseSAMLCredential("http://mock-sp", "saml/noEduPersonTargetedIdassertionResponse.xml");
+
+    SAMLUser samlUser = (SAMLUser) subject.loadUserBySAML(samlCredential);
+
+    assertEquals("83e491ac-aede-378e-b7cb-40347f03d786", samlUser.getUsername());
   }
 
   @Test
