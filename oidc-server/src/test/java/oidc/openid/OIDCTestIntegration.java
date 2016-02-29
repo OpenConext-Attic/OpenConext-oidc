@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Map;
 
@@ -32,5 +33,12 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
     String fragment = doTestOAuthImplicitFlow(scope, "id_token");
     assertTokenId(fragment);
   }
+
+  @Test(expected = HttpClientErrorException.class)
+  @SuppressWarnings("unchecked")
+  public void testOpenIdCodeFlowWithUnknownScope() throws Exception {
+    doTestAuthorizationCode(scope + " bogus");
+  }
+
 
 }
