@@ -26,6 +26,8 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
 public class AbstractTestIntegration {
@@ -59,7 +61,7 @@ public class AbstractTestIntegration {
   public static void afterClass() throws IOException {
     BasicDataSource ds = getBasicDataSource();
     JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
-    List<String> tables = Arrays.asList(
+    List<String> tables = asList(
         "access_token",
         "refresh_token",
         "approved_site",
@@ -81,7 +83,7 @@ public class AbstractTestIntegration {
 
   @Before
   public void before() {
-     this.headersForTokenFetch = getAuthorizationHeadersForTokenFetch();
+    this.headersForTokenFetch = getAuthorizationHeadersForTokenFetch();
 
   }
 
@@ -140,7 +142,7 @@ public class AbstractTestIntegration {
     assertEquals("RS256", header.getAlgorithm().getName());
 
     Map<String, Object> claims = verifier.claims().getClaims();
-    assertEquals(Collections.singletonList(TEST_CLIENT), claims.get("aud"));
+    assertEquals(singletonList(TEST_CLIENT), claims.get("aud"));
     assertEquals("http://localhost:8080/", claims.get("iss"));
     assertNotNull(claims.get("exp"));
     assertNotNull(claims.get("iat"));
@@ -158,8 +160,8 @@ public class AbstractTestIntegration {
     Boolean active = (Boolean) introspect.get("active");
     assertTrue(active);
     //the order might be different, so we want to use Set#equals
-    Set<String> actual = new HashSet(Arrays.asList(StringUtils.split((String) introspect.get("scope"), " ")));
-    Set<String> expected = new HashSet(Arrays.asList(StringUtils.split(scope, " ")));
+    Set<String> actual = new HashSet(asList(StringUtils.split((String) introspect.get("scope"), " ")));
+    Set<String> expected = new HashSet(asList(StringUtils.split(scope, " ")));
     assertEquals(expected, actual);
 
     assertEquals(SUB, introspect.get("sub"));
@@ -182,12 +184,12 @@ public class AbstractTestIntegration {
     assertEquals("surfnet.nl", userInfo.get("schac_home_organization"));
     assertEquals("institution", userInfo.get("schac_home_organization_type"));
     assertEquals("principal_name", userInfo.get("edu_person_principal_name"));
-    assertEquals("targeted_id", userInfo.get("edu_person_targeted_id"));
-    assertEquals("student, faculty", userInfo.get("edu_person_affiliation"));
-    assertEquals("student, faculty", userInfo.get("edu_person_scoped_affiliation"));
-    assertEquals("surfnet", userInfo.get("is_member_of"));
-    assertEquals("personal", userInfo.get("schac_personal_unique_code"));
-    assertEquals("uid2, uid1", userInfo.get("uid"));
+    assertEquals("fd9021b35ce0e2bb4fc28d1781e6cbb9eb720fed", userInfo.get("edu_person_targeted_id"));
+    assertEquals(asList("student", "faculty"), userInfo.get("edu_person_affiliations"));
+    assertEquals(asList("student", "faculty"), userInfo.get("edu_person_scoped_affiliations"));
+    assertEquals(singletonList("surfnet"), userInfo.get("is_member_ofs"));
+    assertEquals(singletonList("personal"), userInfo.get("schac_personal_unique_codes"));
+    assertEquals(asList("uid2", "uid1"), userInfo.get("uids"));
   }
 
   protected MultiValueMap<String, String> getAuthorizationCodeFormParameters(String authorizationCode) {

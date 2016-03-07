@@ -1,6 +1,9 @@
 package oidc.model;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import org.apache.commons.ssl.asn1.ASN1Object;
 import org.mitre.openid.connect.model.DefaultUserInfo;
 import org.springframework.util.CollectionUtils;
@@ -180,18 +183,22 @@ public class FederatedUserInfo extends DefaultUserInfo {
     addProperty(obj, this.eduPersonPrincipalName, "edu_person_principal_name");
     addProperty(obj, this.eduPersonTargetedId, "edu_person_targeted_id");
 
-    addListProperty(obj, this.eduPersonAffiliations, "edu_person_affiliation");
-    addListProperty(obj, this.eduPersonScopedAffiliations, "edu_person_scoped_affiliation");
-    addListProperty(obj, this.isMemberOfs, "is_member_of");
-    addListProperty(obj, this.eduPersonEntitlements, "edu_person_entitlement");
-    addListProperty(obj, this.schacPersonalUniqueCodes, "schac_personal_unique_code");
-    addListProperty(obj, this.uids, "uid");
+    addListProperty(obj, this.eduPersonAffiliations, "edu_person_affiliations");
+    addListProperty(obj, this.eduPersonScopedAffiliations, "edu_person_scoped_affiliations");
+    addListProperty(obj, this.isMemberOfs, "is_member_ofs");
+    addListProperty(obj, this.eduPersonEntitlements, "edu_person_entitlements");
+    addListProperty(obj, this.schacPersonalUniqueCodes, "schac_personal_unique_codes");
+    addListProperty(obj, this.uids, "uids");
     return obj;
   }
 
   private void addListProperty(JsonObject obj, Set<String> set, String name) {
     if (!CollectionUtils.isEmpty(set)) {
-      obj.addProperty(name, StringUtils.join(set, ", "));
+      JsonArray jsonArray = new JsonArray();
+      for (String value : set) {
+        jsonArray.add(new JsonPrimitive(value));
+      }
+      obj.add(name, jsonArray);
     }
   }
 

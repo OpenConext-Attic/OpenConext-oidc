@@ -7,52 +7,69 @@ import org.mitre.openid.connect.service.impl.DefaultScopeClaimTranslationService
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Primary
 @Service("federationScopeClaimTranslationService")
-public class FederationScopeClaimTranslationService extends DefaultScopeClaimTranslationService implements ScopeClaimTranslationService {
+public class FederationScopeClaimTranslationService implements ScopeClaimTranslationService {
 
-  private SetMultimap<String, String> federatedScopesToClaims = HashMultimap.create();
+  private final Set<String> claims = new HashSet<>();
+  private final Set<String> noClaims = new HashSet<>();
 
   public FederationScopeClaimTranslationService() {
-    super();
+    claims.add("sub");
 
-    federatedScopesToClaims.put("organization", "schac_home_organization");
-    federatedScopesToClaims.put("organization", "schac_home_organization_type");
-    federatedScopesToClaims.put("organization", "edu_person_affiliation");
-    federatedScopesToClaims.put("organization", "edu_person_scoped_affiliation");
-    federatedScopesToClaims.put("organization", "is_member_of");
+    claims.add("name");
+    claims.add("preferred_username");
+    claims.add("given_name");
+    claims.add("family_name");
+    claims.add("middle_name");
+    claims.add("nickname");
+    claims.add("profile");
+    claims.add("picture");
+    claims.add("website");
+    claims.add("gender");
+    claims.add("zoneinfo");
+    claims.add("locale");
+    claims.add("updated_at");
+    claims.add("birthdate");
 
-    federatedScopesToClaims.put("entitlement", "edu_person_affiliation");
+    claims.add("email");
+    claims.add("email_verified");
 
-    federatedScopesToClaims.put("userids", "schac_personal_unique_code");
-    federatedScopesToClaims.put("userids", "edu_person_principal_name");
-    federatedScopesToClaims.put("userids", "uid");
-    federatedScopesToClaims.put("userids", "edu_person_targeted_id");
+    claims.add("phone_number");
+    claims.add("phone_number_verified");
+
+    claims.add("address");    
+
+    claims.add("schac_home_organization");
+    claims.add("schac_home_organization_type");
+    claims.add("edu_person_scoped_affiliations");
+    claims.add("is_member_ofs");
+
+    claims.add( "edu_person_affiliations");
+    claims.add( "edu_person_entitlements");
+
+    claims.add("schac_personal_unique_codes");
+    claims.add("edu_person_principal_name");
+    claims.add("uids");
+    claims.add("edu_person_targeted_id");
+
   }
 
   @Override
   public Set<String> getClaimsForScope(String scope) {
-    Set<String> claims = super.getClaimsForScope(scope);
-    addScope(scope, claims);
-    return claims;
+    return "openid".equals(scope) ? claims : noClaims;
   }
 
   @Override
   public Set<String> getClaimsForScopeSet(Set<String> scopes) {
-    Set<String> claims = super.getClaimsForScopeSet(scopes);
-    for (String scope : scopes) {
-      addScope(scope, claims);
-    }
-    return claims;
+    return scopes.contains("openid") ? claims : noClaims;
   }
 
-  private void addScope(String scope, Set<String> claims) {
-    Set<String> federatedClaims = federatedScopesToClaims.get(scope);
-    if (federatedClaims != null) {
-      claims.addAll(federatedClaims);
-    }
+  protected Set<String> allClaims() {
+    return claims;
   }
 
 }

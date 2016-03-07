@@ -1,16 +1,16 @@
 package oidc.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.google.gson.*;
 import oidc.AbstractTestIntegration;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,7 +27,23 @@ public class FederatedUserInfoTest {
   @Test
   public void testFromJson() throws IOException {
     JsonObject jsonObject = federatedUserInfo.toJson();
+    assertJsonObject(jsonObject);
+  }
 
+  @Test
+  public void testJson() throws JsonProcessingException {
+    ObjectMapper objectMapperSnakeCase = new ObjectMapper();
+    objectMapperSnakeCase.setPropertyNamingStrategy(
+        PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+    String json = objectMapperSnakeCase.writeValueAsString(federatedUserInfo);
+
+    Gson gson = new GsonBuilder().create();
+    JsonElement element = gson.fromJson(json, JsonElement.class);
+    JsonObject jsonObject = element.getAsJsonObject();
+    assertJsonObject(jsonObject);
+  }
+
+  private void assertJsonObject(JsonObject jsonObject) {
     assertEquals(AbstractTestIntegration.SUB, jsonObject.getAsJsonPrimitive("sub").getAsString());
     assertEquals("John Doe", jsonObject.getAsJsonPrimitive("name").getAsString());
     assertEquals("John Doe", jsonObject.getAsJsonPrimitive("preferred_username").getAsString());
@@ -41,26 +57,29 @@ public class FederatedUserInfoTest {
     assertEquals("fd9021b35ce0e2bb4fc28d1781e6cbb9eb720fed", jsonObject.getAsJsonPrimitive("edu_person_targeted_id").getAsString());
     assertCommaSeparatedStringEquality(
         new String[]{"student", "faculty"},
-        jsonObject.getAsJsonPrimitive("edu_person_affiliation").getAsString()
+        jsonObject.getAsJsonArray("edu_person_affiliations")
     );
     assertCommaSeparatedStringEquality(
         new String[]{"student", "faculty"},
-        jsonObject.getAsJsonPrimitive("edu_person_scoped_affiliation").getAsString()
+        jsonObject.getAsJsonArray("edu_person_scoped_affiliations")
     );
-    assertEquals("surfnet", jsonObject.getAsJsonPrimitive("is_member_of").getAsString());
+    assertEquals("surfnet", jsonObject.getAsJsonArray("is_member_ofs").getAsString());
     assertCommaSeparatedStringEquality(
         new String[]{"http://xstor.com/contracts/HEd123", "urn:mace:washington.edu:confocalMicroscope"},
-        jsonObject.getAsJsonPrimitive("edu_person_entitlement").getAsString()
+        jsonObject.getAsJsonArray("edu_person_entitlements")
     );
-    assertEquals("personal", jsonObject.getAsJsonPrimitive("schac_personal_unique_code").getAsString());
-    assertEquals("uid2, uid1", jsonObject.getAsJsonPrimitive("uid").getAsString());
-
+    assertEquals("personal", jsonObject.getAsJsonArray("schac_personal_unique_codes").getAsString());
+    assertCommaSeparatedStringEquality(new String[]{"uid2", "uid1"}, jsonObject.getAsJsonArray("uids"));
   }
 
   //The ordering is not constant
-  private void assertCommaSeparatedStringEquality(String[] expected, String actual) {
+  private void assertCommaSeparatedStringEquality(String[] expected, JsonArray actual) {
+    List<String> actuals = new ArrayList<>();
+    for (int i = 0; i < actual.size(); i++) {
+      actuals.add(actual.get(i).getAsJsonPrimitive().getAsString());
+    }
     Set<String> expectedSet = new HashSet<>(Arrays.asList(expected));
-    Set<String> actualSet = new HashSet<>(Arrays.asList(actual.split(", ")));
+    Set<String> actualSet = new HashSet<>(actuals);
     assertEquals(expectedSet, actualSet);
 
   }
