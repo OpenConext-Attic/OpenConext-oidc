@@ -41,7 +41,9 @@ or the shorthand:
 
 If you don't use the local profile then you need to login on the SURFconext federation.
 
-## Integration tests
+## Testing
+
+### Integration tests
 
 There are JUnit integration tests that will run against the locally started Jetty container. 
 
@@ -50,6 +52,134 @@ There are JUnit integration tests that will run against the locally started Jett
 You can also start the OIDC server (local mode !) and then run the tests from within your IDE (e.g. you can debug either the test or the OIDC server).
 
 The integration tests set the spring.active.profile property automatically to local too prevent having to do the SAML dance.
+
+### cUrl
+
+When you have the oidc server running locally with the local profile you can use cUrl to test the different endpoints.
+
+Note that this only works because of the `local` profile where there is pre-authenticated user provided by the `MockPreAuthenticatedProcessingFilter`.
+
+First obtain an authorization code:
+
+```
+curl -i  "http://localhost:8080/authorize?response_type=code&client_id=https@//oidc.localhost.surfconext.nl&scope=openid&redirect_uri=http://localhost:8889/callback"
+```
+
+This will output the following:
+
+```bash
+HTTP/1.1 302 Found
+Date: Mon, 07 Mar 2016 14:39:33 GMT
+Set-Cookie: JSESSIONID=15hhbacbubrc73iy6ioqj01rx;Path=/
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+X-Frame-Options: DENY
+Pragma: no-cache
+Cache-Control: no-cache
+Cache-Control: no-store
+Content-Language: en
+Location: http://localhost:8889/callback?code=s1JRqh
+Content-Length: 0
+Server: Jetty(9.3.5.v20151012)
+```
+
+Save the code in the query parameter of the location response header in a variable (use the code of your response and not this example code):
+
+`export code=s1JRqh`
+
+And then exchange the code for an access token:
+
+```
+curl -X POST -u https@//oidc.localhost.surfconext.nl:secret -d "grant_type=authorization_code&code=${code}&redirect_uri=http://localhost:8889/callback" http://localhost:8080/token | python -m json.tool
+```
+
+This will return the access_token and id_token.
+
+```json
+{
+    "access_token": "eyJraWQiOiJvaWRjIiwiYWxnIjoiUlMyNTYifQ.eyJhdWQiOiJodHRwc0BcL1wvb2lkYy5sb2NhbGhvc3Quc3VyZmNvbmV4dC5ubCIsImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDgwXC8iLCJleHAiOjE0NTc1MDgxMzAsImlhdCI6MTQ1NzQyMTczMCwianRpIjoiNTI3MTI0OGEtMGY3ZC00ODY3LTllZTUtMDgwMzMyYTYwOWZmIn0.SqdfoVVYIL-EXI0hmTRQzWCrtYL5rXz_Sgxvg0SfI3nn68dxCjxV9r00inJqXCm6lkD3uKdSfzpQ2EfGLhHCqpKZxNGQoDvEIghqrqZPGOxMu_vbfiKudCR8gxag_xIm-kkiLMkd_5iBFK3QlCmVHoJjnfxZkXYb3-bMKdYA1ourP4U4pvFWxHIcnk20QQO-NIawt3brU3nryErtGdEDepultN26qdgTubvmAQRaRF0OYyia1eOTVYwEKdted6E8INqRmR5WFWJIg_7HqE4c9JcHOMd8PCv558N0QU3G49Oqpn7xlBN7fvZq0RpCsGcTJAkqLjqRi-a0VHsvN7hJvw",
+    "expires_in": 86399,
+    "id_token": "eyJraWQiOiJvaWRjIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI3NTcyNmUzYS02MzZmLTZjNmMtNjE2Mi0zYTcwNjU3MjczNmYiLCJhdWQiOiJodHRwc0BcL1wvb2lkYy5sb2NhbGhvc3Quc3VyZmNvbmV4dC5ubCIsImtpZCI6Im9pZGMiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODA4MFwvIiwiZXhwIjoxNDU3NTA4MTMwLCJpYXQiOjE0NTc0MjE3MzAsImp0aSI6IjI1YjJhZmFmLWEwZWYtNGVjOS05NzQ1LTE1YWQyYjUyMWVmNiJ9.kMM8EjkvgvGgYlzOSJL11Qqzoq8M0av1HaFs7tnMO4E7kPsoT25WzXwreaW3GRk56C9HyHKtFVo7f836_yNocWFkARliSUv43onVV6ro7BL41EFROWmJBR2iBMmKH_Pn8SXO-kYvWg0r5S3zlpaiWL_xqgW6yoOe32vlcQbhteixT3OwVDMNe6XuVlOU2K7XtJmsZQml5py0mLVOyi068ag7uIJ1lA9mLkcw86i8Edzye2Wdxx1_DNF4D_d7MhRjJi5IxGdcADmNeAI8-iYS12v0joctCDKSFff8jee5OFlhC5DFZ6EzhoVIYuY0dLbgHFztG2Q3ScGFIq9BNKZHFw",
+    "scope": "openid",
+    "token_type": "Bearer"
+}
+```
+
+Save the access_token in a variable:
+
+```
+export access_token=eyJraWQiOiJvaWRjIiwiYWxnIjoiUlMyNTYifQ.eyJhdWQiOiJodHRwc0BcL1wvb2lkYy5sb2NhbGhvc3Quc3VyZmNvbmV4dC5ubCIsImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDgwXC8iLCJleHAiOjE0NTc1MDgxMzAsImlhdCI6MTQ1NzQyMTczMCwianRpIjoiNTI3MTI0OGEtMGY3ZC00ODY3LTllZTUtMDgwMzMyYTYwOWZmIn0.SqdfoVVYIL-EXI0hmTRQzWCrtYL5rXz_Sgxvg0SfI3nn68dxCjxV9r00inJqXCm6lkD3uKdSfzpQ2EfGLhHCqpKZxNGQoDvEIghqrqZPGOxMu_vbfiKudCR8gxag_xIm-kkiLMkd_5iBFK3QlCmVHoJjnfxZkXYb3-bMKdYA1ourP4U4pvFWxHIcnk20QQO-NIawt3brU3nryErtGdEDepultN26qdgTubvmAQRaRF0OYyia1eOTVYwEKdted6E8INqRmR5WFWJIg_7HqE4c9JcHOMd8PCv558N0QU3G49Oqpn7xlBN7fvZq0RpCsGcTJAkqLjqRi-a0VHsvN7hJvw
+```
+
+Now you can ask the server to return the information stored with this access_token by calling the introspect endpoint (note that this endpoint is only for resource servers):
+
+```
+curl -u https@//oidc.localhost.surfconext.nl:secret -H "Content-Type: application/x-www-form-urlencoded" "http://localhost:8080/introspect?token=${access_token}" | python -m json.tool
+```
+
+This will return:
+
+```json
+{
+    "active": true,
+    "authenticating_authority": "http://mock-idp",
+    "client_id": "https@//oidc.localhost.surfconext.nl",
+    "edu_person_principal_name": "principal_name",
+    "exp": 1457508131,
+    "expires_at": "2016-03-09T08:22:11+0100",
+    "schac_home": "surfnet.nl",
+    "scope": "openid",
+    "sub": "75726e3a-636f-6c6c-6162-3a706572736f",
+    "token_type": "Bearer",
+    "unspecified_id": "urn:collab:person:example.com:local",
+    "user_id": "75726e3a-636f-6c6c-6162-3a706572736f"
+}
+```
+
+Use the same access_token to call the user_info endpoint:
+
+```
+curl -H "Authorization: bearer ${access_token}" -H "Content-type: application/json" http://localhost:8080/userinfo | python -m json.tool
+```
+
+This will return all the information about the user. This endpoint is for ServiceProviders.
+
+```json
+{
+    "edu_person_affiliations": [
+        "student",
+        "faculty"
+    ],
+    "edu_person_entitlements": [
+        "http://xstor.com/contracts/HEd123",
+        "urn:mace:washington.edu:confocalMicroscope"
+    ],
+    "edu_person_principal_name": "principal_name",
+    "edu_person_scoped_affiliations": [
+        "student",
+        "faculty"
+    ],
+    "edu_person_targeted_id": "fd9021b35ce0e2bb4fc28d1781e6cbb9eb720fed",
+    "email": "john.doe@example.org",
+    "family_name": "Doe",
+    "given_name": "John",
+    "is_member_ofs": [
+        "surfnet"
+    ],
+    "locale": "NL",
+    "name": "John Doe",
+    "preferred_username": "John Doe",
+    "schac_home_organization": "surfnet.nl",
+    "schac_home_organization_type": "institution",
+    "schac_personal_unique_codes": [
+        "personal"
+    ],
+    "sub": "75726e3a-636f-6c6c-6162-3a706572736f",
+    "uids": [
+        "uid2",
+        "uid1"
+    ]
+}
+```
 
 ## JWK Keys
 
