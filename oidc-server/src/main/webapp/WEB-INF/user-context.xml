@@ -38,7 +38,7 @@
   <security:http security="none" pattern="/translate-sp-entity-id" create-session="never"/>
 
   <!-- Secured pages with SAML as entry point -->
-  <security:http entry-point-ref="samlEntryPoint" use-expressions="true">
+  <security:http entry-point-ref="samlEntryPoint" use-expressions="true" create-session="never">
     <security:intercept-url pattern="/authorize" access="hasRole('ROLE_USER')" />
     <security:intercept-url pattern="/**" access="permitAll" />
     <security:custom-filter before="FIRST" ref="metadataGeneratorFilter"/>

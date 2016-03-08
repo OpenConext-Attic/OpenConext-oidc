@@ -105,19 +105,19 @@
 	</security:http>
 	
 	<!-- OAuth-protect API and other endpoints -->
-	<security:http pattern="/#{T(org.mitre.openid.connect.web.DynamicClientRegistrationEndpoint).URL}/**" use-expressions="true" entry-point-ref="oauthAuthenticationEntryPoint" create-session="stateless">
-		<security:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
-		<security:custom-filter ref="corsFilter" after="SECURITY_CONTEXT_FILTER" />
-		<security:expression-handler ref="oauthWebExpressionHandler" />
-		<security:intercept-url pattern="/register/**" access="permitAll"/>
-	</security:http>
+	<!--<security:http pattern="/#{T(org.mitre.openid.connect.web.DynamicClientRegistrationEndpoint).URL}/**" use-expressions="true" entry-point-ref="oauthAuthenticationEntryPoint" create-session="stateless">-->
+		<!--<security:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />-->
+		<!--<security:custom-filter ref="corsFilter" after="SECURITY_CONTEXT_FILTER" />-->
+		<!--<security:expression-handler ref="oauthWebExpressionHandler" />-->
+		<!--<security:intercept-url pattern="/register/**" access="permitAll"/>-->
+	<!--</security:http>-->
 
-	<security:http pattern="/#{T(org.mitre.openid.connect.web.ProtectedResourceRegistrationEndpoint).URL}/**" use-expressions="true" entry-point-ref="oauthAuthenticationEntryPoint" create-session="stateless">
-		<security:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
-		<security:custom-filter ref="corsFilter" after="SECURITY_CONTEXT_FILTER" />
-		<security:expression-handler ref="oauthWebExpressionHandler" />
-		<security:intercept-url pattern="/resource/**" access="permitAll"/>
-	</security:http>
+	<!--<security:http pattern="/#{T(org.mitre.openid.connect.web.ProtectedResourceRegistrationEndpoint).URL}/**" use-expressions="true" entry-point-ref="oauthAuthenticationEntryPoint" create-session="stateless">-->
+		<!--<security:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />-->
+		<!--<security:custom-filter ref="corsFilter" after="SECURITY_CONTEXT_FILTER" />-->
+		<!--<security:expression-handler ref="oauthWebExpressionHandler" />-->
+		<!--<security:intercept-url pattern="/resource/**" access="permitAll"/>-->
+	<!--</security:http>-->
 
 	<security:http pattern="/#{T(org.mitre.openid.connect.web.UserInfoEndpoint).URL}**" use-expressions="true" entry-point-ref="oauthAuthenticationEntryPoint" create-session="stateless">
 		<security:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
