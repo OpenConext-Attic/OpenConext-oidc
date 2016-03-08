@@ -5,15 +5,15 @@
 
 OpenConext implementation of a OpenID Connect server based on the MITREid Connect server
 
-## Getting started
+## [Getting started](#getting-started)
 
-### System Requirements
+### [System Requirements](#system-requirements)
 
 - Java 7
 - Maven 3
 - MySQL 5.5+
 
-### Create database
+### [Create database](#create-database)
 
 Connect to your local mysql database: `mysql -uroot`
 
@@ -25,7 +25,7 @@ create user 'root'@'localhost';
 grant all on `oidcserver`.* to 'root'@'localhost';
 ```
 
-## Building and running
+## [Building and running](#building-running)
 
 The OpenConext-oidc is a maven overlay for OpenID-Connect-Java-Server. Issue a
  
@@ -41,9 +41,9 @@ or the shorthand:
 
 If you don't use the local profile then you need to login on the SURFconext federation.
 
-## Testing
+## [Testing](#testing)
 
-### Integration tests
+### [Integration tests](#integration-tests)
 
 There are JUnit integration tests that will run against the locally started Jetty container. 
 
@@ -53,7 +53,7 @@ You can also start the OIDC server (local mode !) and then run the tests from wi
 
 The integration tests set the spring.active.profile property automatically to local too prevent having to do the SAML dance.
 
-### cUrl
+### [cUrl](#curl-testing)
 
 When you have the oidc server running locally with the local profile you can use cUrl to test the different endpoints.
 
@@ -181,15 +181,17 @@ This will return all the information about the user. This endpoint is for Servic
 }
 ```
 
-## JWK Keys
+## [JWK Keys](#jwk-keys)
 
 The OIDC application uses a JWK Key Set to sign and optionally encrypt the JSON Web Tokens (JWT). Each environment can have its own unique
 JWK Key Set. In the ansible projects the `oidc_server_oidc_keystore_jwks_json secret` is used to set populate the file `oidc.keystore.jwks.json`
 with the key information. If you need a new JWK Key Set run [OidcKeystoreGenerator](oidc-server/src/main/java/oidc/security/OidcKeystoreGenerator.java):
  
-`cd oidc-server ; mvn compile ; mvn exec:java -Dexec.mainClass="oidc.security.OidcKeystoreGenerator" -Dexec.classpathScope=runtime` 
+```
+cd oidc-server ; mvn compile ; mvn exec:java -Dexec.mainClass="oidc.security.OidcKeystoreGenerator" -Dexec.classpathScope=runtime
+```
 
-## Private signing keys and public certificates
+## [Private signing keys and public certificates](#signing-keys)
 
 The SAML Spring Security library needs a private DSA key to sign the SAML request and the public certificates from EngineBlock. The
 public certificate can be copied from the metadata. The private / public key for the SP can be generated:
@@ -225,13 +227,13 @@ Add the EB certificate to the application.oidc.properties file:
 
 `idp.public.certificate=${copy & paste from the metadata}`
 
-## Trusted Proxy
+## [Trusted Proxy](#trusted-proxy)
 
 OpenConext-OIDC is a proxy for SP's that want to use OpenConnect ID instead of SAML to provide their Service to the federation members. 
 Therefore the WAYF and ARP must be scoped for the requesting SP (and not this OIDC SP). This works if OpenConext-OIDC is marked
 as a trusted proxy in SR and the signing certificate (e.g. sp.public.certificate) is added to the certData metadata field in SR.
 
-## Damn
+## [Damn](#damn)
 
 We link SPs and OIDC Clients by the SP entity-id and the client name. The authorization server MUST support the HTTP Basic
 authentication scheme for authenticating clients that were issued a client password and Basic authentication does not support
@@ -248,11 +250,11 @@ Example for localhost
 
 `http://localhost:8080/translate-sp-entity-id?spEntityId=https%3A//oidc.test.surfconext.nl`
 
-## SAML metadata
+## [SAML metadata](#saml-metadata)
 
 The metadata is generated on the fly and is displayed on http://localhost:8080/saml/metadata
 
-## Subject Identifier Types
+## [Subject Identifier Types](#subject-identifier-types)
 
 The OpenID Connect [specification](http://openid.net/specs/openid-connect-core-1_0.html#SubjectIDTypes) defines two Subject Identifier types. The OICD
 server is implemented to always use the pairwise type. For each client the 'sub' of the user is a unique combination of the client_id and user_id.
@@ -260,11 +262,11 @@ server is implemented to always use the pairwise type. For each client the 'sub'
 The [openid-configuration](http://localhost:8080/.well-known/openid-configuration) states we support both, but that is the default (hard-coded)
 behaviour we inherited from the initial codebase.
 
-## Dependencies
+## [Dependencies](#dependecies)
 
 Besides the 'normal' 3rd party libraries defined in the pom.xml, we also include two forked dependencies in the target war:
 
-* [spring-security-oauth](https://github.com/oharsta/spring-security-oauth/tree/feature/open-conext-build)
+* [spring-security-oauth](https://github.com/OpenConext/spring-security-oauth/tree/feature/open-conext-build)
   * Branch based on [pull-request to support other response types then code and token](https://github.com/spring-projects/spring-security-oauth/pull/627).
 
 * [spring-security-saml](https://github.com/OpenConext/spring-security-saml/tree/feature/open-connext)
@@ -272,14 +274,18 @@ Besides the 'normal' 3rd party libraries defined in the pom.xml, we also include
 
 Once the pull requests are accepted and merged into a release we can depend on the original repositories again.
 
-## Functional testing
+## [Functional testing](#functional-testing)
 
 Using the [authz-playground](https://authz-playground.test.surfconext.nl) you can test all implemented flows and endpoints of the OIDC server. If you want to test
 the (re)provisioning of the user it is sometimes useful to add/change the default attributes that Mujina-idp returns. These extra attributes show up in the
 the userinfo page - step 3 in the authz-playground wizard. To add an attribute use the Mujina API:
 
-`curl -v -H "Accept: application/json" -H "Content-type: application/json" -d '{"value": ["teacher","professor"]}' -X PUT https://mujina-idp.test.surfconext.nl/api/attributes/urn:mace:dir:attribute-def:eduPersonScopedAffiliation`
+```
+curl -v -H "Accept: application/json" -H "Content-type: application/json" -d '{"value": ["teacher","professor"]}' -X PUT https://mujina-idp.test.surfconext.nl/api/attributes/urn:mace:dir:attribute-def:eduPersonScopedAffiliation
+```
 
 To reset Mujina back to its default behaviour, issue:
  
-`curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST https://mujina-idp.test.surfconext.nl/api/reset`
+```
+curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST https://mujina-idp.test.surfconext.nl/api/reset
+```
