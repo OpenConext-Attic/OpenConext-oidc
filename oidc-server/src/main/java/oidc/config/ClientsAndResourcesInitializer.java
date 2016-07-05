@@ -1,27 +1,22 @@
 package oidc.config;
 
 import org.mitre.oauth2.model.ClientDetailsEntity;
-import org.mitre.oauth2.service.ClientDetailsEntityService;
+import org.mitre.oauth2.repository.OAuth2ClientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @PropertySource("classpath:application.oidc.properties")
@@ -33,13 +28,13 @@ public class ClientsAndResourcesInitializer {
 
   private final TransactionTemplate transactionTemplate;
 
-  private final ClientDetailsEntityService clientService;
+  private final OAuth2ClientRepository clientRepository;
 
   @Autowired
-  public ClientsAndResourcesInitializer(@Value("${client.conf.location}") Resource clientConfLocation, PlatformTransactionManager transactionManager, ClientDetailsEntityService clientService) {
+  public ClientsAndResourcesInitializer(@Value("${client.conf.location}") Resource clientConfLocation, PlatformTransactionManager transactionManager, OAuth2ClientRepository clientRepository) {
     this.clientConfLocation = clientConfLocation;
     this.transactionTemplate = new TransactionTemplate(transactionManager);
-    this.clientService = clientService;
+    this.clientRepository = clientRepository;
     try {
       applicationEvent();
     } catch (IOException e) {
@@ -49,25 +44,63 @@ public class ClientsAndResourcesInitializer {
 
   private void applicationEvent() throws IOException {
     Yaml yaml = new Yaml();
+    final List<ClientDetailsEntity> clientDetails = new ArrayList<>();
     Map<String, List<Map<String, Object>>> config = (Map<String, List<Map<String, Object>>>) yaml.load(clientConfLocation.getInputStream());
-    config.get("clients").stream().map();
-    clientService.loadClientByClientId(clientId);
-    clientService.saveNewClient(client)
-    //client_id, https@//authz-playground.test.surfconext.nl
-    //secret
-    //redirectUris
-    //scopes
-    //grantTypes
-    //
+    List<Map<String, Object>> clients = config.getOrDefault("clients", new ArrayList<Map<String, Object>>());
+    for (int i = 0; i < clients.size(); i++) {
+      clientDetails.add(client(clients.get(i)));
+    }
+    List<Map<String, Object>> resourceServers = config.getOrDefault("resourceServers", new ArrayList<Map<String, Object>>());
+    for (int i = 0; i < resourceServers.size(); i++) {
+      clientDetails.add(resourceServer(resourceServers.get(i)));
+    }
+    transactionTemplate.execute(new TransactionCallback<Object>() {
+      @Override
+      public Object doInTransaction(TransactionStatus transactionStatus) {
+        for (int i = 0; i < clientDetails.size(); i++) {
+          ClientDetailsEntity entity = clientDetails.get(i);
+          ClientDetailsEntity existing = clientRepository.getClientByClientId(entity.getClientId());
+          if (existing == null) {
+            clientRepository.saveClient(entity);
+          } else {
+            clientRepository.updateClient(existing.getId(), entity);
+          }
+        }
+        return null;
+      }
+    });
+  }
+
+  private ClientDetailsEntity resourceServer(Map<String, Object> data) {
+    ClientDetailsEntity resourceServer = doGetClientDetails(data);
+    resourceServer.setAllowIntrospection(true);
+    return resourceServer;
   }
 
   private ClientDetailsEntity client(Map<String, Object> data) {
-    ClientDetailsEntity client = new ClientDetailsEntity();
-    client.setClientId((String) data.get("client_id"));
-    client.setClientSecret((String) data.get("secret"));
-    List<String> redirectUris = data.get("redirectUris");
+    ClientDetailsEntity client = doGetClientDetails(data);
+    List<String> redirectUris = (List<String>) data.get("redirectUris");
+    if (redirectUris != null) {
+      client.setRedirectUris(new HashSet<>(redirectUris));
+    }
+    List<String> scopes = (List<String>) data.get("scopes");
+    if (scopes != null) {
+      client.setScope(new HashSet<>(scopes));
+    }
+    List<String> grantTypes = (List<String>) data.get("grantTypes");
+    if (grantTypes != null) {
+      client.setGrantTypes(new HashSet<>(grantTypes));
+    }
+    return client;
   }
 
+  private ClientDetailsEntity doGetClientDetails(Map<String, Object> data) {
+    ClientDetailsEntity clientDetailsEntity = new ClientDetailsEntity();
+    clientDetailsEntity.setClientId((String) data.get("client_id"));
+    clientDetailsEntity.setClientSecret((String) data.get("secret"));
+    clientDetailsEntity.setCreatedAt(new Date());
+    return clientDetailsEntity;
+  }
 
 //    transactionTemplate.execute(transactionStatus -> {
 //      resourceServersAndClientsToPersist.forEach(clientDetails -> {
