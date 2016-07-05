@@ -1,0 +1,30 @@
+clients:
+  - client_id: "https@//authz-playground.test.surfconext.nl"
+    secret: "secret"
+    redirectUris:
+      - "https://localhost:8080/redirect"
+      - "https://localhost:8080/redirect2"
+    scopes:
+      - "openid"
+    grantTypes:
+      - "authorization_code"
+      - "implicit"
+      - "client_credentials"
+      - "refresh_token"
+  - client_id: "https@//authz-playground.local.surfconext.nl"
+    secret: "secret"
+    redirectUris:
+      - "https://localhost:8080/redirect"
+      - "https://localhost:8080/redirect2"
+    scopes:
+      - "openid"
+    grantTypes:
+      - "authorization_code"
+      - "implicit"
+      - "client_credentials"
+      - "refresh_token"
+resourceServers:
+  - client_id: "https@//resource-server.test.surfconext.nl"
+    secret: "secret"
+  - client_id: "https@//resource-server2.test.surfconext.nl"
+    secret: "secret"
