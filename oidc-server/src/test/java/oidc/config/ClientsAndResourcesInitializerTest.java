@@ -30,9 +30,11 @@ public class ClientsAndResourcesInitializerTest {
 
     entity = byClientId(entities, "https@//default-client-2");
     assertTrue(entity.isAllowIntrospection());
+    assertEquals(entity.getScope().size(), 1);
 
     entity = byClientId(entities, "https@//default-resource-server2");
     assertTrue(entity.isAllowIntrospection());
+    assertEquals(entity.getScope().size(), 2);
   }
 
   private ClientDetailsEntity byClientId(List<ClientDetailsEntity> entities, String clientId) {

@@ -28,3 +28,7 @@ resourceServers:
     secret: "secret"
   - client_id: "https@//default-resource-server2"
     secret: "secret"
+    scopes:
+      - "openid"
+      - "groups"
+

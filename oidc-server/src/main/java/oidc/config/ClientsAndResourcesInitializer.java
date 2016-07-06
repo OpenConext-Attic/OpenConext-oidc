@@ -51,11 +51,11 @@ public class ClientsAndResourcesInitializer implements InitializingBean {
     Yaml yaml = new Yaml();
     final List<ClientDetailsEntity> clientDetails = new ArrayList<>();
     Map<String, List<Map<String, Object>>> config = (Map<String, List<Map<String, Object>>>) yaml.load(clientConfLocation.getInputStream());
-    List<Map<String, Object>> clients = config.getOrDefault("clients", new ArrayList<Map<String, Object>>());
+    List<Map<String, Object>> clients = config.get("clients");
     for (int i = 0; i < clients.size(); i++) {
       clientDetails.add(client(clients.get(i)));
     }
-    List<Map<String, Object>> resourceServers = config.getOrDefault("resourceServers", new ArrayList<Map<String, Object>>());
+    List<Map<String, Object>> resourceServers = config.get("resourceServers");
     for (int i = 0; i < resourceServers.size(); i++) {
       ClientDetailsEntity entity = resourceServer(resourceServers.get(i));
       ClientDetailsEntity clientDetailsEntity = configuredClient(entity, clientDetails);
@@ -106,10 +106,6 @@ public class ClientsAndResourcesInitializer implements InitializingBean {
     if (redirectUris != null) {
       client.setRedirectUris(new HashSet<>(redirectUris));
     }
-    List<String> scopes = (List<String>) data.get("scopes");
-    if (scopes != null) {
-      client.setScope(new HashSet<>(scopes));
-    }
     List<String> grantTypes = (List<String>) data.get("grantTypes");
     if (grantTypes != null) {
       client.setGrantTypes(new HashSet<>(grantTypes));
@@ -123,6 +119,11 @@ public class ClientsAndResourcesInitializer implements InitializingBean {
     clientDetailsEntity.setClientSecret((String) data.get("secret"));
     clientDetailsEntity.setCreatedAt(new Date());
     clientDetailsEntity.setAccessTokenValiditySeconds(86400);
+    List<String> scopes = (List<String>) data.get("scopes");
+    if (scopes != null) {
+      clientDetailsEntity.setScope(new HashSet<>(scopes));
+    }
+
     return clientDetailsEntity;
   }
 

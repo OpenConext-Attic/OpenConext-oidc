@@ -5,9 +5,15 @@ import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.Assert.assertEquals;
 
 public class OIDCTestIntegration extends AbstractTestIntegration {
 
@@ -40,5 +46,20 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
     doTestAuthorizationCode(scope + " bogus");
   }
 
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testClientCredentials() throws Exception {
+    String accessToken = doTestOAuthImplicitFlow("strange", "token", "https@//client.localhost.surfconext.nl");
+
+    // Call the Introspect endpoint (e.g. impersonating a Resource Server) using the accessCode
+    String introspectUri = UriComponentsBuilder.fromHttpUrl(serverUrl + "/introspect")
+        .queryParam("token", accessToken)
+        .build().toUriString();
+    Map<String, Object> introspect = template.exchange(introspectUri, HttpMethod.GET, new HttpEntity<>(headersForTokenFetch), Map.class).getBody();
+
+    assertEquals(true, introspect.get("active"));
+    String scope = (String) introspect.get("scope");
+    assertEquals("", scope);  
+  }
 
 }

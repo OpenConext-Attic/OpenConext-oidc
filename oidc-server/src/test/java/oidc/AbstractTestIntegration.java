@@ -234,9 +234,13 @@ public class AbstractTestIntegration {
   }
 
   protected String doTestOAuthImplicitFlow(String scope, String responseType) throws Exception {
+    return doTestOAuthImplicitFlow(scope, responseType, TEST_CLIENT);
+  }
+
+  protected String doTestOAuthImplicitFlow(String scope, String responseType, String clientId) throws Exception {
     String authorizeUri = UriComponentsBuilder.fromHttpUrl(serverUrl + "/authorize")
         .queryParam("response_type", responseType)
-        .queryParam("client_id", TEST_CLIENT)
+        .queryParam("client_id", clientId)
         .queryParam("scope", scope)
         .queryParam("redirect_uri", callback)
         .build().toUriString();
