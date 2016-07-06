@@ -1,5 +1,5 @@
 clients:
-  - client_id: "https@//authz-playground.test.surfconext.nl"
+  - client_id: "https@//default-client-1"
     secret: "secret"
     redirectUris:
       - "https://localhost:8080/redirect"
@@ -11,7 +11,7 @@ clients:
       - "implicit"
       - "client_credentials"
       - "refresh_token"
-  - client_id: "https@//authz-playground.local.surfconext.nl"
+  - client_id: "https@//default-client-2"
     secret: "secret"
     redirectUris:
       - "https://localhost:8080/redirect"
@@ -24,7 +24,7 @@ clients:
       - "client_credentials"
       - "refresh_token"
 resourceServers:
-  - client_id: "https@//resource-server.test.surfconext.nl"
+  - client_id: "https@//default-client-2"
     secret: "secret"
-  - client_id: "https@//resource-server2.test.surfconext.nl"
+  - client_id: "https@//default-resource-server2"
     secret: "secret"
