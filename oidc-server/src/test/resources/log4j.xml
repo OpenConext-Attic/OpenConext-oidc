@@ -18,48 +18,59 @@
 <!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
-	<!-- Appenders -->
-	<appender name="console" class="org.apache.log4j.ConsoleAppender">
-		<param name="Target" value="System.out" />
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d %-5p: %c - %m%n" />
-		</layout>
-	</appender>
+    <!-- Appenders -->
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p: %c - %m%n"/>
+        </layout>
+    </appender>
 
-	<!-- Application Loggers -->
-	<logger name="org.mitre">
-		<level value="debug" />
-	</logger>
+    <appender name="file" class="org.apache.log4j.FileAppender">
 
-	<logger name="com.zaxxer.hikari">
-		<level value="warn" />
-	</logger>
+        <param name="file" value="logs/oidc.log"/>
+        <param name="threshold" value="debug"/>
 
-  <logger name="org.flywaydb.core">
-    <level value="error" />
-  </logger>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p: %c - %m%n"/>
+        </layout>
+    </appender>
 
-  <logger name="org.mitre.openid.connect.config">
-    <level value="error" />
-  </logger>
+    <!-- Application Loggers -->
+    <logger name="org.mitre">
+        <level value="debug"/>
+    </logger>
 
-	<!-- 3rdparty Loggers -->
-	<logger name="org.springframework">
-		<level value="warn" />
-	</logger>
+    <logger name="com.zaxxer.hikari">
+        <level value="warn"/>
+    </logger>
 
-	<logger name="org.springframework.security">
-		<level value="warn" />
-	</logger>
+    <logger name="org.flywaydb.core">
+        <level value="debug"/>
+    </logger>
 
-	<logger name="oidc">
-		<level value="debug" />
-	</logger>
+    <logger name="org.mitre.openid.connect.config">
+        <level value="debug"/>
+    </logger>
 
-	<!-- Root Logger -->
-	<root>
-		<priority value="debug" />
-		<appender-ref ref="console" />
-	</root>
+    <!-- 3rdparty Loggers -->
+    <logger name="org.springframework">
+        <level value="warn"/>
+    </logger>
+
+    <logger name="org.springframework.security">
+        <level value="warn"/>
+    </logger>
+
+    <logger name="oidc">
+        <level value="debug"/>
+    </logger>
+
+    <!-- Root Logger -->
+    <root>
+        <priority value="debug"/>
+        <appender-ref ref="file"/>
+        <appender-ref ref="console"/>
+    </root>
 
 </log4j:configuration>
