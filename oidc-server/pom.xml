@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.openconext</groupId>
     <artifactId>oidc</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.3-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>oidc-server</artifactId>
@@ -32,6 +32,7 @@
               <excludes>
                 <!-- Conflicts with our version of oauth2 -->
                 <exclude>WEB-INF/lib/spring-security-oauth2-2.0.3.RELEASE.jar</exclude>
+                <exclude>WEB-INF/lib/log4j-1.2.15.jar</exclude>
               </excludes>
             </overlay>
           </overlays>
@@ -232,7 +233,12 @@
       <artifactId>spring-security-oauth2</artifactId>
       <version>${spring.oauth2.security.version}</version>
     </dependency>
-    <dependency>
+      <dependency>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+          <version>1.2.17</version>
+      </dependency>
+      <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>${mysql-jdbc-driver.version}</version>
