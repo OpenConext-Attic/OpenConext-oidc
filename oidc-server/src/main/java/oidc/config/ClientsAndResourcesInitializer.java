@@ -113,6 +113,7 @@ public class ClientsAndResourcesInitializer implements InitializingBean {
     return client;
   }
 
+  @SuppressWarnings("unchecked")
   private ClientDetailsEntity doGetClientDetails(Map<String, Object> data) {
     ClientDetailsEntity clientDetailsEntity = new ClientDetailsEntity();
     clientDetailsEntity.setClientId((String) data.get("client_id"));

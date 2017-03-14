@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.openconext</groupId>
     <artifactId>oidc</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.4</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>oidc-server</artifactId>
@@ -33,6 +33,7 @@
                 <!-- Conflicts with our version of oauth2 -->
                 <exclude>WEB-INF/lib/spring-security-oauth2-2.0.3.RELEASE.jar</exclude>
                 <exclude>WEB-INF/lib/log4j-1.2.15.jar</exclude>
+                <exclude>WEB-INF/lib/nimbus-jose-jwt-4.3.jar</exclude>
               </excludes>
             </overlay>
           </overlays>
@@ -233,6 +234,16 @@
       <artifactId>spring-security-oauth2</artifactId>
       <version>${spring.oauth2.security.version}</version>
     </dependency>
+      <dependency>
+          <groupId>com.nimbusds</groupId>
+          <artifactId>nimbus-jose-jwt</artifactId>
+          <version>4.34.2</version>
+      </dependency>
+      <dependency>
+          <groupId>commons-io</groupId>
+          <artifactId>commons-io</artifactId>
+          <version>2.5</version>
+      </dependency>
       <dependency>
           <groupId>log4j</groupId>
           <artifactId>log4j</artifactId>
