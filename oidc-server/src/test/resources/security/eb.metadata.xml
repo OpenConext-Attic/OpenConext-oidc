@@ -2,7 +2,7 @@
 <!--https://wiki.surfnet.nl/display/conextsupport/Terms+of+Service+%28EN%29-->
 <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
                      validUntil="2015-11-14T14:25:58Z"
-                     entityID="https://engine.test.surfconext.nl/authentication/idp/metadata"
+                     entityID="https://engine.test2.surfconext.nl/authentication/idp/metadata"
                      ID="CORTO690026d5c908818c4b5fcf99f29988c382b3193a">
   <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
     <ds:SignedInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
@@ -54,7 +54,7 @@
     <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</md:NameIDFormat>
     <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:unspecified</md:NameIDFormat>
     <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-                            Location="https://engine.test.surfconext.nl/authentication/idp/single-sign-on"/>
+                            Location="https://engine.test2.surfconext.nl/authentication/idp/single-sign-on"/>
   </md:IDPSSODescriptor>
   <md:ContactPerson contactType="technical">
     <md:GivenName>Support</md:GivenName>

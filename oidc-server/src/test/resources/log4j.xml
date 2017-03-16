@@ -36,36 +36,6 @@
         </layout>
     </appender>
 
-    <!-- Application Loggers -->
-    <logger name="org.mitre">
-        <level value="debug"/>
-    </logger>
-
-    <logger name="com.zaxxer.hikari">
-        <level value="warn"/>
-    </logger>
-
-    <logger name="org.flywaydb.core">
-        <level value="debug"/>
-    </logger>
-
-    <logger name="org.mitre.openid.connect.config">
-        <level value="debug"/>
-    </logger>
-
-    <!-- 3rdparty Loggers -->
-    <logger name="org.springframework">
-        <level value="warn"/>
-    </logger>
-
-    <logger name="org.springframework.security">
-        <level value="warn"/>
-    </logger>
-
-    <logger name="oidc">
-        <level value="debug"/>
-    </logger>
-
     <!-- Root Logger -->
     <root>
         <priority value="debug"/>
