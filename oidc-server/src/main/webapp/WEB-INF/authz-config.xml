@@ -43,7 +43,7 @@
 
 		<oauth:authorization-code
 				authorization-code-services-ref="defaultOAuth2AuthorizationCodeService"
-        custom-response-types-handler-ref="oidcCustomResponseTypesHandler"/>
+                custom-response-types-handler-ref="oidcCustomResponseTypesHandler"/>
 		<oauth:implicit />
 		<oauth:refresh-token/>
 		<oauth:client-credentials/>

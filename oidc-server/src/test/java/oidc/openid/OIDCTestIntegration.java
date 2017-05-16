@@ -56,7 +56,7 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
         .queryParam("token", accessToken)
         .build().toUriString();
     Map<String, Object> introspect = template.exchange(introspectUri, HttpMethod.GET, new HttpEntity<>(headersForTokenFetch), Map.class).getBody();
-
+      System.out.println(introspect);
     assertEquals(true, introspect.get("active"));
     String scope = (String) introspect.get("scope");
     assertEquals("", scope);  

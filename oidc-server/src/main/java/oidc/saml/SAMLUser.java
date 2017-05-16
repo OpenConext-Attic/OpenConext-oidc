@@ -7,7 +7,9 @@ import java.util.Arrays;
 
 public class SAMLUser extends User {
 
-  public SAMLUser(String sub, boolean isAdmin) {
+    private final String clientId;
+
+    public SAMLUser(String sub, boolean isAdmin, String clientId) {
     super(
         sub,
         "N/A",
@@ -15,6 +17,10 @@ public class SAMLUser extends User {
             Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN")) :
             Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))
     );
+    this.clientId = clientId;
   }
 
+    public String getClientId() {
+        return clientId;
+    }
 }

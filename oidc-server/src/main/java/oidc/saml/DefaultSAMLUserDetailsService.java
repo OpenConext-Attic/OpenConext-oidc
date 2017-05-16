@@ -28,7 +28,6 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
 
   private static final Logger LOG = LoggerFactory.getLogger(DefaultSAMLUserDetailsService.class);
 
-
   private final String localSpEntityId;
 
   @Autowired
@@ -71,7 +70,7 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
       extendedUserInfoService.saveUserInfo(userInfo);
     }
     //if the sp-entity-id equals the OIDC server (e.g. non-proxy mode to access the GUI) we grant admin rights
-    return new SAMLUser(sub, clientId.equals(this.localSpEntityId));
+    return new SAMLUser(sub, clientId.equals(this.localSpEntityId), clientId);
   }
 
   private Map<String, List<String>> getAttributes(SAMLCredential credential) {

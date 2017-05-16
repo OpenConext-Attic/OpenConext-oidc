@@ -42,6 +42,7 @@
     <security:intercept-url pattern="/authorize" access="hasRole('ROLE_USER')" />
     <security:intercept-url pattern="/**" access="permitAll" />
     <security:custom-filter before="FIRST" ref="metadataGeneratorFilter"/>
+    <security:custom-filter before="PRE_AUTH_FILTER" ref="clientIdFilter"/>
     <security:custom-filter ref="authRequestFilter" after="SECURITY_CONTEXT_FILTER" />
     <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
     <!--<security:anonymous />-->
@@ -51,6 +52,8 @@
     <security:csrf request-matcher-ref="apiCsrfProtectionMatcher"/>
   </security:http>
 
+    <!-- Logger for SAML messages and events -->
+    <bean id="clientIdFilter" class="oidc.security.ClientIdFilter"/>
 
   <!-- Filters for processing of SAML messages -->
   <bean id="samlFilter" class="org.springframework.security.web.FilterChainProxy">

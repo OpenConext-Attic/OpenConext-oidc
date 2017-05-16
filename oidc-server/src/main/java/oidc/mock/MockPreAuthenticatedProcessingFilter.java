@@ -29,7 +29,7 @@ public class MockPreAuthenticatedProcessingFilter extends AbstractPreAuthenticat
       extendedUserInfoService.saveUserInfo(federatedUserInfo);
     }
 
-    return new SAMLUser(federatedUserInfo.getSub(), true);
+    return new SAMLUser(federatedUserInfo.getSub(), true, CLIENT_ID);
   }
 
 
