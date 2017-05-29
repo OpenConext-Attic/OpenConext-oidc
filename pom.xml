@@ -4,7 +4,7 @@
     <groupId>org.openconext</groupId>
     <artifactId>oidc</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.6</version>
+    <version>1.0.7-SNAPSHOT</version>
     <name>oidc</name>
 
     <properties>
@@ -97,7 +97,7 @@
             <name>OpenConext public releases repository</name>
             <url>https://build.openconext.org/repository/public/releases</url>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
         <repository>
