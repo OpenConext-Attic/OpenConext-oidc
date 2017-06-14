@@ -114,7 +114,7 @@
                 <saml:AttributeValue xsi:type="xs:string">urn:mace:washington.edu:confocalMicroscope
                 </saml:AttributeValue>
             </saml:Attribute>
-            <saml:Attribute Name="urn:mace:dir:attribute-def:schacPersonalUniqueCode"
+            <saml:Attribute Name="urn:schac:attribute-def:schacPersonalUniqueCode"
                             NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
                 <saml:AttributeValue xsi:type="xs:string">personal</saml:AttributeValue>
             </saml:Attribute>
