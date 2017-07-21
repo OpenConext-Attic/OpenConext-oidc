@@ -39,7 +39,11 @@ or the shorthand:
 
 `./start.sh`
 
-If you don't use the local profile then you need to login on the SURFconext federation.
+And open the [homepage](http://localhost:8080/). You can also run:
+
+`./start-non-local.sh`
+
+But then you will need to login on the SURFconext federation using the test2 environment. 
 
 ## [Testing](#testing)
 
