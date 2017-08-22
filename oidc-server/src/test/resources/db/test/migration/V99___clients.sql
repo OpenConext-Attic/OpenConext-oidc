@@ -26,7 +26,7 @@ INSERT INTO client_redirect_uri (owner_id, redirect_uri) VALUES
 
 INSERT INTO client_redirect_uri (owner_id, redirect_uri) VALUES
 	(9999999999, 'http://authz-playground-local:8089/redirect'),
-	(9999999999, 'https://authz-playground.test.surfconext.nl/redirect'),
+	(9999999999, 'https://authz-playground.test2.surfconext.nl/redirect'),
 	(9999999999, 'https://authz-playground.acc.surfconext.nl/redirect'),
 	(9999999999, 'https://authz-playground.surfconext.nl/redirect'),
 	(9999999999, 'http://localhost:8889/callback');
