@@ -134,7 +134,7 @@
     "PS512"
   ],
   "op_tos_uri": "@configuration_end_point@about",
-  "require_request_uri_registration": false,
+  "require_request_uri_registration": true,
   "id_token_encryption_alg_values_supported": [
     "RSA-OAEP",
     "RSA-OAEP-256",
@@ -159,7 +159,6 @@
     "PS512",
     "none"
   ],
-  "registration_endpoint": "@configuration_end_point@register",
   "request_object_signing_alg_values_supported": [
     "HS256",
     "HS384",

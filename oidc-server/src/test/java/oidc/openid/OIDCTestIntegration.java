@@ -2,16 +2,20 @@ package oidc.openid;
 
 import oidc.AbstractTestIntegration;
 import org.junit.Test;
+import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class OIDCTestIntegration extends AbstractTestIntegration {
 
@@ -63,5 +67,26 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
         String scope = (String) introspect.get("scope");
         assertEquals("", scope);
     }
+
+    @Test
+    public void testOpenIdResponseModeFormPost() throws Exception {
+        String authorizeUri = UriComponentsBuilder.fromHttpUrl(serverUrl + "/authorize")
+            .queryParam("response_type", "id_token")
+            .queryParam("client_id", TEST_CLIENT)
+            .queryParam("scope", scope)
+            .queryParam("redirect_uri", callback)
+            .queryParam("state", "preserveState")
+            .queryParam("response_mode", "form_post")
+            .build().toUriString();
+        ResponseEntity<String> response = template.exchange(authorizeUri, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), String.class);
+        assertEquals(200, response.getStatusCode().value());
+        String html = response.getBody();
+
+        assertTrue(html.contains("<body onload=\"javascript:document.forms[0].submit()\">"));
+        assertTrue(html.contains("<form method=\"post\" action=\"http://localhost:8889/callback\">"));
+        assertTrue(html.contains("<input type=\"hidden\" name=\"id_token\" value=\""));
+        assertTrue(html.contains("<input type=\"hidden\" name=\"state\" value=\"preserveState\""));
+    }
+
 
 }

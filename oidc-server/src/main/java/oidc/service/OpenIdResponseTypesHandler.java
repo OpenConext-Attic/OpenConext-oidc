@@ -21,6 +21,8 @@ import org.springframework.web.util.UriUtils;
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
@@ -56,15 +58,35 @@ public class OpenIdResponseTypesHandler implements CustomResponseTypesHandler {
     OAuth2AccessTokenEntity accessToken = new OAuth2AccessTokenEntity();
     OAuth2AccessTokenEntity idToken = connectTokenService.createIdToken(client, request, new Date(), authentication.getName(), accessToken);
 
-    String redirect = fromHttpUrl(redirectUri).fragment("id_token=" + idToken.getValue()).build().toUriString();
-    String state = authorizationRequest.getRequestParameters().get("state");
-    if (StringUtils.hasText(state)) {
-      try {
-        redirect = redirect + "&state=" + UriUtils.encodeQueryParam(state, "UTF-8");
-      } catch (UnsupportedEncodingException e) {
-        throw new RuntimeException(e);
-      }
+    String responseMode = authorizationRequest.getRequestParameters().get("response_mode");
+    if (StringUtils.hasText(responseMode) && responseMode.equalsIgnoreCase("form_post")) {
+        return formPostView(authorizationRequest, redirectUri, idToken);
+    } else {
+        return fragmentRedirectView(authorizationRequest, redirectUri, idToken);
     }
-    return new ModelAndView(new RedirectView(redirect, false, true, false));
   }
+
+    private ModelAndView fragmentRedirectView(AuthorizationRequest authorizationRequest, String redirectUri, OAuth2AccessTokenEntity idToken) {
+        String redirect = fromHttpUrl(redirectUri).fragment("id_token=" + idToken.getValue()).build().toUriString();
+        String state = authorizationRequest.getRequestParameters().get("state");
+        if (StringUtils.hasText(state)) {
+            try {
+                redirect = redirect + "&state=" + UriUtils.encodeQueryParam(state, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return new ModelAndView(new RedirectView(redirect, false, true, false));
+    }
+
+    private ModelAndView formPostView(AuthorizationRequest authorizationRequest, String redirectUri, OAuth2AccessTokenEntity idToken) {
+        String state = authorizationRequest.getRequestParameters().get("state");
+
+        Map<String, String> model = new HashMap<>();
+        model.put("redirect_uri", redirectUri);
+        model.put("state", state);
+        model.put("id_token", idToken.getValue());
+
+        return new ModelAndView("form_post", model);
+    }
 }
