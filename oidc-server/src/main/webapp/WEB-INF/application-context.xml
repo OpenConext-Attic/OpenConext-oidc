@@ -44,6 +44,7 @@
 	</mvc:annotation-driven>
 
 	<mvc:interceptors>
+        <bean id="extendedDiscoveryEndpointInterceptor" class="oidc.service.ExtendedDiscoveryEndpointInterceptor" />
 		<!-- Inject the UserInfo into the response -->
 		<bean id="userInfoInterceptor" class="oidc.web.AdminUserInfoInterceptor" />
 		<!-- Inject the server configuration into the response -->

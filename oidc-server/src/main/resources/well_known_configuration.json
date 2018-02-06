@@ -1,0 +1,182 @@
+{
+  "request_parameter_supported": true,
+  "claims_parameter_supported": false,
+  "introspection_endpoint": "@configuration_end_point@introspect",
+  "scopes_supported": [
+    "openid",
+    "address",
+    "email",
+    "profile",
+    "phone"
+  ],
+  "issuer": "@configuration_end_point@",
+  "userinfo_encryption_enc_values_supported": [
+    "A256CBC+HS512",
+    "A256GCM",
+    "A192GCM",
+    "A128GCM",
+    "A128CBC-HS256",
+    "A192CBC-HS384",
+    "A256CBC-HS512",
+    "A128CBC+HS256"
+  ],
+  "id_token_encryption_enc_values_supported": [
+    "A256CBC+HS512",
+    "A256GCM",
+    "A192GCM",
+    "A128GCM",
+    "A128CBC-HS256",
+    "A192CBC-HS384",
+    "A256CBC-HS512",
+    "A128CBC+HS256"
+  ],
+  "authorization_endpoint": "@configuration_end_point@authorize",
+  "service_documentation": "@configuration_end_point@about",
+  "request_object_encryption_enc_values_supported": [
+    "A256CBC+HS512",
+    "A256GCM",
+    "A192GCM",
+    "A128GCM",
+    "A128CBC-HS256",
+    "A192CBC-HS384",
+    "A256CBC-HS512",
+    "A128CBC+HS256"
+  ],
+  "userinfo_signing_alg_values_supported": [
+    "HS256",
+    "HS384",
+    "HS512",
+    "RS256",
+    "RS384",
+    "RS512",
+    "ES256",
+    "ES384",
+    "ES512",
+    "PS256",
+    "PS384",
+    "PS512"
+  ],
+  "claims_supported": [
+    "sub",
+    "name",
+    "preferred_username",
+    "given_name",
+    "family_name",
+    "middle_name",
+    "nickname",
+    "profile",
+    "picture",
+    "website",
+    "gender",
+    "zoneinfo",
+    "locale",
+    "updated_at",
+    "birthdate",
+    "email",
+    "email_verified",
+    "phone_number",
+    "phone_number_verified",
+    "address",
+    "schac_home_organization",
+    "schac_home_organization_type",
+    "edu_person_scoped_affiliations",
+    "is_member_ofs",
+    "edu_person_affiliations",
+    "edu_person_entitlements",
+    "schac_personal_unique_codes",
+    "edu_person_principal_name",
+    "uids",
+    "edu_person_targeted_id"
+  ],
+  "claim_types_supported": [
+    "normal"
+  ],
+  "op_policy_uri": "@configuration_end_point@about",
+  "token_endpoint_auth_methods_supported": [
+    "client_secret_post",
+    "client_secret_basic",
+    "client_secret_jwt",
+    "private_key_jwt",
+    "none"
+  ],
+  "token_endpoint": "@configuration_end_point@token",
+  "response_types_supported": [
+    "code",
+    "token"
+  ],
+  "request_uri_parameter_supported": false,
+  "userinfo_encryption_alg_values_supported": [
+    "RSA-OAEP",
+    "RSA-OAEP-256",
+    "RSA1_5"
+  ],
+  "grant_types_supported": [
+    "authorization_code",
+    "implicit",
+    "urn:ietf:params:oauth:grant-type:jwt-bearer",
+    "client_credentials",
+    "urn:ietf:params:oauth:grant_type:redelegate"
+  ],
+  "revocation_endpoint": "@configuration_end_point@revoke",
+  "userinfo_endpoint": "@configuration_end_point@userinfo",
+  "token_endpoint_auth_signing_alg_values_supported": [
+    "HS256",
+    "HS384",
+    "HS512",
+    "RS256",
+    "RS384",
+    "RS512",
+    "ES256",
+    "ES384",
+    "ES512",
+    "PS256",
+    "PS384",
+    "PS512"
+  ],
+  "op_tos_uri": "@configuration_end_point@about",
+  "require_request_uri_registration": false,
+  "id_token_encryption_alg_values_supported": [
+    "RSA-OAEP",
+    "RSA-OAEP-256",
+    "RSA1_5"
+  ],
+  "jwks_uri": "@configuration_end_point@jwk",
+  "subject_types_supported": [
+    "pairwise"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "HS256",
+    "HS384",
+    "HS512",
+    "RS256",
+    "RS384",
+    "RS512",
+    "ES256",
+    "ES384",
+    "ES512",
+    "PS256",
+    "PS384",
+    "PS512",
+    "none"
+  ],
+  "registration_endpoint": "@configuration_end_point@register",
+  "request_object_signing_alg_values_supported": [
+    "HS256",
+    "HS384",
+    "HS512",
+    "RS256",
+    "RS384",
+    "RS512",
+    "ES256",
+    "ES384",
+    "ES512",
+    "PS256",
+    "PS384",
+    "PS512"
+  ],
+  "request_object_encryption_alg_values_supported": [
+    "RSA-OAEP",
+    "RSA-OAEP-256",
+    "RSA1_5"
+  ]
+}
