@@ -70,4 +70,8 @@ public class DefaultFederatedUserInfoRepository implements FederatedUserInfoRepo
     FederatedUserInfo merged = manager.merge(federatedUserInfo);
     manager.remove(merged);
   }
+
+    public EntityManager getManager() {
+        return manager;
+    }
 }

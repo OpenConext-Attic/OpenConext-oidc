@@ -7,6 +7,7 @@ import org.mitre.openid.connect.model.UserInfo;
 import org.mitre.openid.connect.repository.UserInfoRepository;
 import org.mitre.util.jpa.JpaUtil;
 
+import javax.persistence.EntityManager;
 import java.util.Set;
 
 public interface FederatedUserInfoRepository extends UserInfoRepository {
@@ -17,4 +18,5 @@ public interface FederatedUserInfoRepository extends UserInfoRepository {
 
   void removeFederatedUserInfo(FederatedUserInfo federatedUserInfo);
 
+  EntityManager getManager();
 }
