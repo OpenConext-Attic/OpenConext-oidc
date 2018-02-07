@@ -24,8 +24,8 @@ public class ExtendedIntrospectionResultAssembler extends DefaultIntrospectionRe
             result.put("unspecified_id", federatedUserInfo.getUnspecifiedNameId());
             result.put("authenticating_authority", federatedUserInfo.getAuthenticatingAuthority());
             result.put("edu_person_principal_name", federatedUserInfo.getEduPersonPrincipalName());
-            result.put("entitlements", federatedUserInfo.getEduPersonEntitlements());
-            result.put("memberships", federatedUserInfo.getIsMemberOfs());
+            result.put("edu_person_entitlements", federatedUserInfo.getEduPersonEntitlements());
+            result.put("is_member_ofs", federatedUserInfo.getIsMemberOfs());
         }
         return result;
     }

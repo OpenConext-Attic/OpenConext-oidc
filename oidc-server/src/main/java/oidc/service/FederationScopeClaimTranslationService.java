@@ -1,9 +1,6 @@
 package oidc.service;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
 import org.mitre.openid.connect.service.ScopeClaimTranslationService;
-import org.mitre.openid.connect.service.impl.DefaultScopeClaimTranslationService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -14,62 +11,62 @@ import java.util.Set;
 @Service("federationScopeClaimTranslationService")
 public class FederationScopeClaimTranslationService implements ScopeClaimTranslationService {
 
-  private final Set<String> claims = new HashSet<>();
-  private final Set<String> noClaims = new HashSet<>();
+    private final Set<String> claims = new HashSet<>();
+    private final Set<String> noClaims = new HashSet<>();
 
-  public FederationScopeClaimTranslationService() {
-    claims.add("sub");
+    public FederationScopeClaimTranslationService() {
+        claims.add("sub");
 
-    claims.add("name");
-    claims.add("preferred_username");
-    claims.add("given_name");
-    claims.add("family_name");
-    claims.add("middle_name");
-    claims.add("nickname");
-    claims.add("profile");
-    claims.add("picture");
-    claims.add("website");
-    claims.add("gender");
-    claims.add("zoneinfo");
-    claims.add("locale");
-    claims.add("updated_at");
-    claims.add("birthdate");
+        claims.add("name");
+        claims.add("preferred_username");
+        claims.add("given_name");
+        claims.add("family_name");
+        claims.add("middle_name");
+        claims.add("nickname");
+        claims.add("profile");
+        claims.add("picture");
+        claims.add("website");
+        claims.add("gender");
+        claims.add("zoneinfo");
+        claims.add("locale");
+        claims.add("updated_at");
+        claims.add("birthdate");
 
-    claims.add("email");
-    claims.add("email_verified");
+        claims.add("email");
+        claims.add("email_verified");
 
-    claims.add("phone_number");
-    claims.add("phone_number_verified");
+        claims.add("phone_number");
+        claims.add("phone_number_verified");
 
-    claims.add("address");    
+        claims.add("address");
 
-    claims.add("schac_home_organization");
-    claims.add("schac_home_organization_type");
-    claims.add("edu_person_scoped_affiliations");
-    claims.add("is_member_ofs");
+        claims.add("schac_home_organization");
+        claims.add("schac_home_organization_type");
+        claims.add("edu_person_scoped_affiliations");
+        claims.add("is_member_ofs");
 
-    claims.add( "edu_person_affiliations");
-    claims.add( "edu_person_entitlements");
+        claims.add("edu_person_affiliations");
+        claims.add("edu_person_entitlements");
 
-    claims.add("schac_personal_unique_codes");
-    claims.add("edu_person_principal_name");
-    claims.add("uids");
-    claims.add("edu_person_targeted_id");
+        claims.add("schac_personal_unique_codes");
+        claims.add("edu_person_principal_name");
+        claims.add("uids");
+        claims.add("edu_person_targeted_id");
 
-  }
+    }
 
-  @Override
-  public Set<String> getClaimsForScope(String scope) {
-    return "openid".equals(scope) ? claims : noClaims;
-  }
+    @Override
+    public Set<String> getClaimsForScope(String scope) {
+        return "openid".equals(scope) ? claims : noClaims;
+    }
 
-  @Override
-  public Set<String> getClaimsForScopeSet(Set<String> scopes) {
-    return scopes.contains("openid") ? claims : noClaims;
-  }
+    @Override
+    public Set<String> getClaimsForScopeSet(Set<String> scopes) {
+        return scopes.contains("openid") ? claims : noClaims;
+    }
 
-  protected Set<String> allClaims() {
-    return claims;
-  }
+    protected Set<String> allClaims() {
+        return claims;
+    }
 
 }

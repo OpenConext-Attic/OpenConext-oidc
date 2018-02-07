@@ -62,8 +62,8 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
             (headersForTokenFetch), Map.class).getBody();
         System.out.println(introspect);
         assertEquals(true, introspect.get("active"));
-        assertEquals(1, List.class.cast(introspect.get("memberships")).size());
-        assertEquals(2, List.class.cast(introspect.get("entitlements")).size());
+        assertEquals(1, List.class.cast(introspect.get("is_member_ofs")).size());
+        assertEquals(2, List.class.cast(introspect.get("edu_person_entitlements")).size());
         String scope = (String) introspect.get("scope");
         assertEquals("", scope);
     }
