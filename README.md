@@ -189,11 +189,17 @@ This will return all the information about the user. This endpoint is for Servic
 
 The OIDC application uses a JWK Key Set to sign and optionally encrypt the JSON Web Tokens (JWT). Each environment can have its own unique
 JWK Key Set. In the ansible projects the `oidc_server_oidc_keystore_jwks_json secret` is used to set populate the file `oidc.keystore.jwks.json`
-with the key information. If you need a new JWK Key Set run [OidcKeystoreGenerator](oidc-server/src/main/java/oidc/security/OidcKeystoreGenerator.java):
+with the key information. If you need a new JWK Key Set curl the [OidcKeystoreGeneratorController](oidc-server/src/main/java/oidc/control/OidcKeystoreGeneratorController.java):
  
 ```
-cd oidc-server ; mvn compile ; mvn exec:java -Dexec.mainClass="oidc.security.OidcKeystoreGenerator" -Dexec.classpathScope=runtime
+curl http://oidc.${env}.surfconext.nl/generate-oidc-keystore | python -m json.tool`
 ```
+Example for localhost
+```
+curl http://localhost:8080/generate-oidc-keystore | python -m json.tool
+```
+Copy the json returned by the endpoint to the secrets file for the target environment under the key oidc_server_oidc_keystore_jwks_json. 
+This will ensure it ends up on the classpath in a file name oidc.keystore.jwks.json
 
 ## [Private signing keys and public certificates](#signing-keys)
 

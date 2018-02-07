@@ -37,6 +37,7 @@
   <!-- Unsecured pages -->
   <security:http security="none" pattern="/translate-sp-entity-id" create-session="never"/>
   <security:http security="none" pattern="/health" create-session="never"/>
+    <security:http security="none" pattern="/generate-oidc-keystore" create-session="never"/>
 
   <!-- Secured pages with SAML as entry point -->
   <security:http entry-point-ref="samlEntryPoint" use-expressions="true" create-session="never">
