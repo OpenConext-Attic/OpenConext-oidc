@@ -192,7 +192,7 @@ JWK Key Set. In the ansible projects the `oidc_server_oidc_keystore_jwks_json se
 with the key information. If you need a new JWK Key Set curl the [OidcKeystoreGeneratorController](oidc-server/src/main/java/oidc/control/OidcKeystoreGeneratorController.java):
  
 ```
-curl http://oidc.${env}.surfconext.nl/generate-oidc-keystore | python -m json.tool`
+curl https://oidc.${env}.surfconext.nl/generate-oidc-keystore | python -m json.tool
 ```
 Example for localhost
 ```
