@@ -162,8 +162,23 @@
             </bean>
           </constructor-arg>
         </bean>
+        <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+            <constructor-arg>
+                <bean class="org.opensaml.saml2.metadata.provider.HTTPMetadataProvider">
+                    <constructor-arg>
+                        <value type="java.lang.String">${idp.metadata.proxies.url}</value>
+                    </constructor-arg>
+                    <constructor-arg>
+                        <value type="int">30000</value>
+                    </constructor-arg>
+                    <property name="parserPool" ref="parserPool"/>
+                    <property name="requireValidMetadata" value="false"/>
+              </bean>
+          </constructor-arg>
+      </bean>
       </list>
     </constructor-arg>
+    <property name="defaultIDP" value="${idp.entity.id}"/>
   </bean>
 
   <!-- IDP Metadata configuration - paths to metadata of IDPs in circle of trust is here -->
@@ -225,7 +240,7 @@
   <bean id="hokWebSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerHoKImpl"/>
 
   <!-- SAML 2.0 Web SSO profile -->
-  <bean id="webSSOprofile" class="org.springframework.security.saml.websso.WebSSOProfileImpl"/>
+  <bean id="webSSOprofile" class="oidc.saml.SingleSignOnWebSSOProfile"/>
 
   <!-- SAML 2.0 Holder-of-Key Web SSO profile -->
   <bean id="hokWebSSOProfile" class="org.springframework.security.saml.websso.WebSSOProfileConsumerHoKImpl"/>

@@ -6,9 +6,9 @@ import org.springframework.util.Assert;
 
 public class FederatedSAMLAuthenticationProvider extends SAMLAuthenticationProvider {
 
-  @Override
-  protected Object getPrincipal(SAMLCredential credential, Object userDetail) {
-    Assert.isInstanceOf(SAMLUser.class, userDetail);
-    return ((SAMLUser)userDetail).getUsername();
-  }
+    @Override
+    protected Object getPrincipal(SAMLCredential credential, Object userDetail) {
+        Assert.isInstanceOf(SAMLUser.class, userDetail);
+        return ((SAMLUser) userDetail).getUsername();
+    }
 }
