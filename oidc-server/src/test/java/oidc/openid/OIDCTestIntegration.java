@@ -43,6 +43,23 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
         assertTokenId(fragment);
     }
 
+    @Test
+    public void testOpenIdImplicitIdTokenFlowWithIdToken() throws Exception {
+        String authorizeUri = UriComponentsBuilder.fromHttpUrl(serverUrl + "/authorize")
+            .queryParam("response_type", "token")
+            .queryParam("client_id", TEST_CLIENT)
+            .queryParam("scope", scope)
+            .queryParam("redirect_uri", callback)
+            .build().toUriString();
+        //we don't want follow redirects so we use the TestRestTemplate
+        ResponseEntity<String> response = new TestRestTemplate().exchange(authorizeUri, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), String.class);
+        assertEquals(302, response.getStatusCode().value());
+
+        String fragment = response.getHeaders().getLocation().getFragment();
+        assertTrue(fragment.contains("id_token="));
+        assertTrue(fragment.contains("access_token="));
+    }
+
     @Test(expected = HttpClientErrorException.class)
     @SuppressWarnings("unchecked")
     public void testOpenIdCodeFlowWithUnknownScope() throws Exception {
@@ -62,8 +79,8 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
             (headersForTokenFetch), Map.class).getBody();
         System.out.println(introspect);
         assertEquals(true, introspect.get("active"));
-        assertEquals(1, List.class.cast(introspect.get("is_member_ofs")).size());
-        assertEquals(2, List.class.cast(introspect.get("edu_person_entitlements")).size());
+        assertEquals(1, List.class.cast(introspect.get("edumember_is_member_of")).size());
+        assertEquals(2, List.class.cast(introspect.get("eduperson_entitlement")).size());
         String scope = (String) introspect.get("scope");
         assertEquals("", scope);
     }

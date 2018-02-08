@@ -63,10 +63,10 @@ public class FederatedUserInfoTest {
         new String[]{"student", "faculty"},
         jsonObject.getAsJsonArray("edu_person_scoped_affiliations")
     );
-    assertEquals("surfnet", jsonObject.getAsJsonArray("is_member_ofs").getAsString());
+    assertEquals("surfnet", jsonObject.getAsJsonArray("edumember_is_member_of").getAsString());
     assertCommaSeparatedStringEquality(
         new String[]{"http://xstor.com/contracts/HEd123", "urn:mace:washington.edu:confocalMicroscope"},
-        jsonObject.getAsJsonArray("edu_person_entitlements")
+        jsonObject.getAsJsonArray("eduperson_entitlement")
     );
     assertEquals("personal", jsonObject.getAsJsonArray("schac_personal_unique_codes").getAsString());
     assertCommaSeparatedStringEquality(new String[]{"uid2", "uid1"}, jsonObject.getAsJsonArray("uids"));

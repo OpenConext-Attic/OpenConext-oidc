@@ -153,7 +153,7 @@ This will return all the information about the user. This endpoint is for Servic
         "student",
         "faculty"
     ],
-    "edu_person_entitlements": [
+    "eduperson_entitlement": [
         "http://xstor.com/contracts/HEd123",
         "urn:mace:washington.edu:confocalMicroscope"
     ],
@@ -166,7 +166,7 @@ This will return all the information about the user. This endpoint is for Servic
     "email": "john.doe@example.org",
     "family_name": "Doe",
     "given_name": "John",
-    "is_member_ofs": [
+    "edumember_is_member_of": [
         "surfnet"
     ],
     "locale": "NL",

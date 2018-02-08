@@ -1,5 +1,6 @@
 package oidc.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -125,6 +126,7 @@ public class FederatedUserInfo extends DefaultUserInfo {
       joinColumns = @JoinColumn(name = "user_id")
   )
   @Column(name = "is_member_of")
+  @JsonProperty("edumember_is_member_of")
   public Set<String> getIsMemberOfs() {
     return isMemberOfs;
   }
@@ -139,6 +141,7 @@ public class FederatedUserInfo extends DefaultUserInfo {
       joinColumns = @JoinColumn(name = "user_id")
   )
   @Column(name = "edu_person_entitlement")
+  @JsonProperty("eduperson_entitlement")
   public Set<String> getEduPersonEntitlements() {
     return eduPersonEntitlements;
   }
@@ -185,8 +188,8 @@ public class FederatedUserInfo extends DefaultUserInfo {
 
     addListProperty(obj, this.eduPersonAffiliations, "edu_person_affiliations");
     addListProperty(obj, this.eduPersonScopedAffiliations, "edu_person_scoped_affiliations");
-    addListProperty(obj, this.isMemberOfs, "is_member_ofs");
-    addListProperty(obj, this.eduPersonEntitlements, "edu_person_entitlements");
+    addListProperty(obj, this.isMemberOfs, "edumember_is_member_of");
+    addListProperty(obj, this.eduPersonEntitlements, "eduperson_entitlement");
     addListProperty(obj, this.schacPersonalUniqueCodes, "schac_personal_unique_codes");
     addListProperty(obj, this.uids, "uids");
     return obj;

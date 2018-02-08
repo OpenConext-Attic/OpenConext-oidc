@@ -20,10 +20,10 @@
         "student",
         "faculty"
     ],
-    "isMemberOfs": [
+    "edumember_is_member_of": [
         "surfnet"
     ],
-    "eduPersonEntitlements": [
+    "eduperson_entitlement": [
         "http://xstor.com/contracts/HEd123",
         "urn:mace:washington.edu:confocalMicroscope"
     ],

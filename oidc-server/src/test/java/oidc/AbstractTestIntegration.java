@@ -187,7 +187,7 @@ public class AbstractTestIntegration {
     assertEquals("fd9021b35ce0e2bb4fc28d1781e6cbb9eb720fed", userInfo.get("edu_person_targeted_id"));
     assertEquals(asList("student", "faculty"), userInfo.get("edu_person_affiliations"));
     assertEquals(asList("student", "faculty"), userInfo.get("edu_person_scoped_affiliations"));
-    assertEquals(singletonList("surfnet"), userInfo.get("is_member_ofs"));
+    assertEquals(singletonList("surfnet"), userInfo.get("edumember_is_member_of"));
     assertEquals(singletonList("personal"), userInfo.get("schac_personal_unique_codes"));
     assertEquals(asList("uid2", "uid1"), userInfo.get("uids"));
   }

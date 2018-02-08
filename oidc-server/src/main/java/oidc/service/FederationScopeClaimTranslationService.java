@@ -43,10 +43,10 @@ public class FederationScopeClaimTranslationService implements ScopeClaimTransla
         claims.add("schac_home_organization");
         claims.add("schac_home_organization_type");
         claims.add("edu_person_scoped_affiliations");
-        claims.add("is_member_ofs");
+        claims.add("edumember_is_member_of");
 
         claims.add("edu_person_affiliations");
-        claims.add("edu_person_entitlements");
+        claims.add("eduperson_entitlement");
 
         claims.add("schac_personal_unique_codes");
         claims.add("edu_person_principal_name");
