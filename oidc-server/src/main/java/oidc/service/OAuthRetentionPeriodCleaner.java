@@ -44,16 +44,23 @@ public class OAuthRetentionPeriodCleaner {
   }
 
   private void clean() {
-    LOG.info("Starting to clean up all expired access tokens and associated user info...");
-    oAuth2ProviderTokenService.clearExpiredTokens();
-    approvedSiteService.clearExpiredSites();
-    oAuth2AuthorizationCodeService.clearExpiredAuthorizationCodes();
-    Set<FederatedUserInfo> users = federatedUserInfoRepository.findOrphanedFederatedUserInfos();
-    for (FederatedUserInfo user : users) {
-      LOG.info("removing FederatedUserInfo {} which has no access_tokens or refresh_tokens", user.getUnspecifiedNameId());
-      federatedUserInfoRepository.removeFederatedUserInfo(user);
-    }
-    LOG.info("Finished cleaning up all expired access tokens and associated user info...");
+      try {
+          long start = System.currentTimeMillis();
+          LOG.info("Starting to clean up all expired access tokens and associated user info.");
+          oAuth2ProviderTokenService.clearExpiredTokens();
+          approvedSiteService.clearExpiredSites();
+          oAuth2AuthorizationCodeService.clearExpiredAuthorizationCodes();
+          Set<FederatedUserInfo> users = federatedUserInfoRepository.findOrphanedFederatedUserInfos();
+          for (FederatedUserInfo user : users) {
+              LOG.info("removing FederatedUserInfo {} which has no access_tokens or refresh_tokens", user.getUnspecifiedNameId());
+              federatedUserInfoRepository.removeFederatedUserInfo(user);
+          }
+          long took = System.currentTimeMillis() - start;
+          LOG.info("Finished cleaning up all expired access tokens and associated user info in {} ms.", took);
+      } catch (Throwable t) {
+          // Deliberate catch-all to prevent the scheduling to stop
+          LOG.error("Exception in cleaning up all expired access tokens and associated user info.", t);
+      }
   }
 
 }
