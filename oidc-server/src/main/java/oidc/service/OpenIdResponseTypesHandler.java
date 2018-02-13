@@ -68,10 +68,7 @@ public class OpenIdResponseTypesHandler extends DefaultResponseTypesHandler {
         ClientDetailsEntity client = clientService.loadClientByClientId(clientId);
         String redirectUri = authorizationRequest.getRedirectUri();
         OAuth2Request request = authorizationRequest.createOAuth2Request();
-        //if token in responseTypes we need a proper OAuth2AccessTokenEntity. Can call super?
 
-
-        //this is a flaw in the OIDCTokenService as there will be no access token for the id_token flow
         OAuth2AccessTokenEntity accessToken = responseTypes.contains("token") ?
             (OAuth2AccessTokenEntity) super.getOAuth2AccessToken(authorizationRequest) : new OAuth2AccessTokenEntity();
         OAuth2AccessTokenEntity idToken = connectTokenService.createIdToken(client, request, new Date(),
