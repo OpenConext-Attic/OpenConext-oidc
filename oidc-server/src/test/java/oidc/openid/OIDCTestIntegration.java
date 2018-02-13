@@ -39,8 +39,21 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
 
     @Test
     public void testOpenIdImplicitIdTokenFlow() throws Exception {
-        String fragment = doTestOAuthImplicitFlow(scope, "id_token");
-        assertTokenId(fragment);
+        URI uri = doTestOAuthImplicitFlow(scope, "id_token");
+        String tokenId = super.parseTokenFromString(uri.getFragment(), "id_token");
+        assertTokenId(tokenId);
+    }
+
+    @Test
+    public void testOpenIdImplicitIdTokenFlowWithAccessToken() throws Exception {
+        URI uri = doTestOAuthImplicitFlow(scope, "token id_token");
+        String accessToken = super.parseTokenFromString(uri.getFragment(), "access_token");
+
+        //Call the userinfo endpoint which is allowed because of openid spec
+        HttpHeaders headers = getAuthorizationHeadersForUserInfo(accessToken);
+        Map<String, Object> userinfo = template.exchange(serverUrl + "/userinfo", HttpMethod.GET, new HttpEntity<>
+            (headers), Map.class).getBody();
+        assertUserInfoResult(userinfo);
     }
 
     @Test
@@ -69,7 +82,8 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
     @Test
     @SuppressWarnings("unchecked")
     public void testClientCredentials() throws Exception {
-        String accessToken = doTestOAuthImplicitFlow("strange", "token", "https@//client.localhost.surfconext.nl");
+        URI uri = doTestOAuthImplicitFlow("strange", "token", "https@//client.localhost.surfconext.nl");
+        String accessToken = super.parseTokenFromString(uri.getFragment(), "access_token");
 
         // Call the Introspect endpoint (e.g. impersonating a Resource Server) using the accessCode
         String introspectUri = UriComponentsBuilder.fromHttpUrl(serverUrl + "/introspect")
@@ -87,13 +101,26 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
 
     @Test
     public void testOpenIdResponseModeFormPost() throws Exception {
-        String authorizeUri = UriComponentsBuilder.fromHttpUrl(serverUrl + "/authorize")
-            .queryParam("response_type", "id_token")
+        doTestOpenIdResponseModeFormPost("id_token");
+    }
+
+    @Test
+    public void testOpenIdResponseModeFormPostWithToken() throws Exception {
+        String html = doTestOpenIdResponseModeFormPost("token id_token");
+        assertTrue(html.contains("<input type=\"hidden\" name=\"access_token\" value=\""));
+    }
+
+    private String doTestOpenIdResponseModeFormPost(String responseTypes) {
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(serverUrl + "/authorize")
+            .queryParam("response_type", responseTypes)
             .queryParam("client_id", TEST_CLIENT)
             .queryParam("scope", scope)
             .queryParam("redirect_uri", callback)
             .queryParam("state", "preserveState")
-            .queryParam("response_mode", "form_post")
+            .queryParam("response_mode", "form_post");
+
+
+        String authorizeUri = uriComponentsBuilder
             .build().toUriString();
         ResponseEntity<String> response = template.exchange(authorizeUri, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), String.class);
         assertEquals(200, response.getStatusCode().value());
@@ -103,6 +130,8 @@ public class OIDCTestIntegration extends AbstractTestIntegration {
         assertTrue(html.contains("<form method=\"post\" action=\"http://localhost:8889/callback\">"));
         assertTrue(html.contains("<input type=\"hidden\" name=\"id_token\" value=\""));
         assertTrue(html.contains("<input type=\"hidden\" name=\"state\" value=\"preserveState\""));
+
+        return html;
     }
 
 

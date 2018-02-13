@@ -47,6 +47,7 @@ public class ClientsAndResourcesInitializer implements InitializingBean {
     }
   }
 
+  @SuppressWarnings("unchecked")
   protected List<ClientDetailsEntity> applicationEvent() throws IOException {
     Yaml yaml = new Yaml();
     final List<ClientDetailsEntity> clientDetails = new ArrayList<>();

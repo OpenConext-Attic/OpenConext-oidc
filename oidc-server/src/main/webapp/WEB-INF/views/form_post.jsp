@@ -6,7 +6,9 @@
     <c:if test="${not empty state}">
         <input type="hidden" name="state" value="${state}"/>
     </c:if>
-
+    <c:if test="${not empty access_token}">
+        <input type="hidden" name="access_token" value="${access_token}"/>
+    </c:if>
     <input type="hidden" name="id_token" value="${id_token}"/>
 </form>
 </body>
