@@ -70,7 +70,7 @@ public class OpenIdResponseTypesHandler extends DefaultResponseTypesHandler {
         OAuth2Request request = authorizationRequest.createOAuth2Request();
 
         OAuth2AccessTokenEntity accessToken = responseTypes.contains("token") ?
-            (OAuth2AccessTokenEntity) super.getOAuth2AccessToken(authorizationRequest) : new OAuth2AccessTokenEntity();
+            (OAuth2AccessTokenEntity) super.createOAuth2AccessToken(authorizationRequest) : new OAuth2AccessTokenEntity();
         OAuth2AccessTokenEntity idToken = connectTokenService.createIdToken(client, request, new Date(),
             authentication.getName(), accessToken);
 
