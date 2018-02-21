@@ -73,7 +73,7 @@
 
 	<oauth:resource-server id="resourceServerFilter" token-services-ref="defaultOAuth2ProviderTokenService" stateless="false" />
 
-	<security:http pattern="/token" 
+	<security:http pattern="/token"
 		create-session="stateless"
 		authentication-manager-ref="clientAuthenticationManager"
 		entry-point-ref="oauthAuthenticationEntryPoint"

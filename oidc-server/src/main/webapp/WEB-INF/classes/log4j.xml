@@ -38,7 +38,7 @@
 
     <!-- Application Loggers -->
     <logger name="org.mitre">
-        <level value="debug"/>
+        <level value="warn"/>
     </logger>
 
     <logger name="com.zaxxer.hikari">
@@ -50,7 +50,7 @@
     </logger>
 
     <logger name="org.mitre.openid.connect.config">
-        <level value="debug"/>
+        <level value="warn"/>
     </logger>
 
     <!-- 3rdparty Loggers -->
@@ -59,7 +59,7 @@
     </logger>
 
     <logger name="org.springframework.security">
-        <level value="debug"/>
+        <level value="warn"/>
     </logger>
 
     <logger name="oidc">

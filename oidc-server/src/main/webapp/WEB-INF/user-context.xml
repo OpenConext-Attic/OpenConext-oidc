@@ -252,7 +252,7 @@
   <bean id="logoutprofile" class="org.springframework.security.saml.websso.SingleLogoutProfileImpl"/>
 
   <!-- Bindings, encoders and decoders used for creating and parsing messages -->
-  <bean id="postBinding" class="org.springframework.security.saml.processor.HTTPPostBinding">
+  <bean id="postBinding" class="oidc.saml.CustomHTTPPostBinding">
     <constructor-arg ref="parserPool"/>
     <constructor-arg ref="velocityEngine"/>
   </bean>

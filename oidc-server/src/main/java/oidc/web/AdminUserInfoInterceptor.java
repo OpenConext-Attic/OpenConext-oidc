@@ -12,20 +12,23 @@ import java.util.Collection;
 
 public class AdminUserInfoInterceptor extends UserInfoInterceptor {
 
-  @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    response.setCharacterEncoding("UTF-8");
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    if (auth != null) {
-      Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-      if (!CollectionUtils.isEmpty(authorities)) {
-        for (GrantedAuthority authority : authorities) {
-          if ("ROLE_ADMIN".equals(authority.getAuthority())) {
-            return super.preHandle(request, response, handler);
-          }
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
+        Exception {
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+            if (!CollectionUtils.isEmpty(authorities)) {
+                for (GrantedAuthority authority : authorities) {
+                    if ("ROLE_ADMIN".equals(authority.getAuthority())) {
+                        return super.preHandle(request, response, handler);
+                    }
+                }
+            }
         }
-      }
+        return true;
     }
-    return true;
-  }
 }
