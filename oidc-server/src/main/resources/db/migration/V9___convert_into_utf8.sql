@@ -1,3 +1,8 @@
+ALTER TABLE token_scope DROP INDEX ts_oi_idx;
+ALTER TABLE refresh_token DROP INDEX rf_ahi_idx;
+ALTER TABLE client_details DROP INDEX cd_ci_idx;
+ALTER TABLE client_details DROP INDEX client_id;
+
 ALTER TABLE client_details
   MODIFY jwks TEXT;
 ALTER TABLE access_token
