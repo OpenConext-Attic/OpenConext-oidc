@@ -45,7 +45,7 @@ public class FederatedUserInfoTest {
 
   private void assertJsonObject(JsonObject jsonObject) {
     assertEquals(AbstractTestIntegration.SUB, jsonObject.getAsJsonPrimitive("sub").getAsString());
-    assertEquals("John Doe", jsonObject.getAsJsonPrimitive("name").getAsString());
+    assertEquals("Daisuke Takahashi, 髙橋 大輔", jsonObject.getAsJsonPrimitive("name").getAsString());
     assertEquals("John Doe", jsonObject.getAsJsonPrimitive("preferred_username").getAsString());
     assertEquals("John", jsonObject.getAsJsonPrimitive("given_name").getAsString());
     assertEquals("Doe", jsonObject.getAsJsonPrimitive("family_name").getAsString());

@@ -14,6 +14,7 @@ public class AdminUserInfoInterceptor extends UserInfoInterceptor {
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    response.setCharacterEncoding("UTF-8");
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     if (auth != null) {
       Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();

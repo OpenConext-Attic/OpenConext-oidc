@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +28,7 @@ public class AdminUserInfoInterceptorTest {
   @Mock
   private UserInfoService userInfoService;
 
+  private MockHttpServletResponse response = new MockHttpServletResponse();
   @Test
   public void testPreHandleWithAdminUser() throws Exception {
     String role = "ROLE_ADMIN";
@@ -35,7 +37,7 @@ public class AdminUserInfoInterceptorTest {
     DefaultUserInfo defaultUserInfo = new DefaultUserInfo();
     when(userInfoService.getByUsername(NAME)).thenReturn(defaultUserInfo);
 
-    subject.preHandle(request, null, null);
+    subject.preHandle(request, response, null);
 
     DefaultUserInfo userInfo = (DefaultUserInfo) request.getAttribute("userInfo");
     assertEquals(defaultUserInfo, userInfo);
@@ -45,7 +47,7 @@ public class AdminUserInfoInterceptorTest {
   public void testPreHandleWithOAuthUser() throws Exception {
     MockHttpServletRequest request = getMockHttpServletRequest("ROLE_USER");
 
-    subject.preHandle(request, null, null);
+    subject.preHandle(request, response, null);
 
     DefaultUserInfo userInfo = (DefaultUserInfo) request.getAttribute("userInfo");
     assertNull(userInfo);
@@ -55,7 +57,7 @@ public class AdminUserInfoInterceptorTest {
   public void testPreHandleWithNoUser() throws Exception {
     MockHttpServletRequest request = new MockHttpServletRequest();
 
-    subject.preHandle(request, null, null);
+    subject.preHandle(request, response, null);
 
     DefaultUserInfo userInfo = (DefaultUserInfo) request.getAttribute("userInfo");
     assertNull(userInfo);

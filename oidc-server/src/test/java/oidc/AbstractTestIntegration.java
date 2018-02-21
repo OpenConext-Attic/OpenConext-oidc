@@ -188,7 +188,7 @@ public class AbstractTestIntegration {
 
     protected void assertUserInfoResult(Map<String, Object> userInfo) {
         assertEquals(SUB, userInfo.get("sub"));
-        assertEquals("John Doe", userInfo.get("name"));
+        assertEquals("Daisuke Takahashi, 髙橋 大輔", userInfo.get("name"));
         assertEquals("John Doe", userInfo.get("preferred_username"));
         assertEquals("John", userInfo.get("given_name"));
         assertEquals("Doe", userInfo.get("family_name"));
