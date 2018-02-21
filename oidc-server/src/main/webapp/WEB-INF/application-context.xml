@@ -231,7 +231,7 @@
 	</bean>
 
 	<!-- Resolve views based on string names -->
-	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+	<bean class="oidc.view.CustomBeanNameViewResolver">
 		<property name="order" value="1" />
 	</bean>
 
