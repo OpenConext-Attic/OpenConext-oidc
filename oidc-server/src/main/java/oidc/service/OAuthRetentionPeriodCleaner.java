@@ -8,6 +8,7 @@ import org.mitre.openid.connect.service.impl.DefaultApprovedSiteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -17,30 +18,34 @@ import java.util.concurrent.TimeUnit;
 import static java.util.concurrent.Executors.newScheduledThreadPool;
 
 @Component("oauthRetentionPeriodCleaner")
-@Profile({"!local"})
 public class OAuthRetentionPeriodCleaner {
 
   private static final Logger LOG = LoggerFactory.getLogger(OAuthRetentionPeriodCleaner.class);
 
-  @Autowired
   private DefaultOAuth2ProviderTokenService oAuth2ProviderTokenService;
 
-  @Autowired
   private DefaultApprovedSiteService approvedSiteService;
 
-  @Autowired
   private DefaultOAuth2AuthorizationCodeService oAuth2AuthorizationCodeService;
 
-  @Autowired
   private FederatedUserInfoRepository federatedUserInfoRepository;
 
-  public OAuthRetentionPeriodCleaner() {
+  @Autowired
+  public OAuthRetentionPeriodCleaner(@Value("${resource.cleaner.period}") int delay,
+                                     DefaultOAuth2ProviderTokenService oAuth2ProviderTokenService,
+                                     DefaultApprovedSiteService approvedSiteService,
+                                     DefaultOAuth2AuthorizationCodeService oAuth2AuthorizationCodeService,
+                                     FederatedUserInfoRepository federatedUserInfoRepository) {
+      this.oAuth2ProviderTokenService = oAuth2ProviderTokenService;
+      this.oAuth2AuthorizationCodeService = oAuth2AuthorizationCodeService;
+      this.approvedSiteService = approvedSiteService;
+      this.federatedUserInfoRepository = federatedUserInfoRepository;
     newScheduledThreadPool(1).scheduleWithFixedDelay(new Runnable() {
       @Override
       public void run() {
         clean();
       }
-    }, 15, 15, TimeUnit.MINUTES);
+    }, delay, delay, TimeUnit.MINUTES);
   }
 
   private void clean() {

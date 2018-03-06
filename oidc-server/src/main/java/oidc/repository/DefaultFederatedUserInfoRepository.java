@@ -55,14 +55,9 @@ public class DefaultFederatedUserInfoRepository implements FederatedUserInfoRepo
 
   @Override
   public Set<FederatedUserInfo> findOrphanedFederatedUserInfos() {
-    //need to do this because of http://stackoverflow.com/questions/1557085/setting-a-parameter-as-a-list-for-an-in-expression
-    Query nativeQuery = manager.createNativeQuery("select sua.name from saved_user_auth sua");
-    List namesList = nativeQuery.getResultList();
-    String names = StringUtils.join(namesList, ",");
-    TypedQuery<FederatedUserInfo> query = manager.createQuery("select u from FederatedUserInfo u where u.sub not in (:names)", FederatedUserInfo.class);
-    query.setParameter("names", names);
-    List<FederatedUserInfo> resultList = query.getResultList();
-    return new HashSet<>(resultList);
+    TypedQuery<FederatedUserInfo> query = manager.createQuery("select u from FederatedUserInfo u " +
+        "where u.sub not in (select sua.name from SavedUserAuthentication sua)", FederatedUserInfo.class);
+    return new HashSet<>(query.getResultList());
   }
 
   @Override

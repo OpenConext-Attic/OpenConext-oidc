@@ -71,6 +71,7 @@ public class ClientsAndResourcesInitializer implements InitializingBean {
       public List<ClientDetailsEntity> doInTransaction(TransactionStatus transactionStatus) {
         for (int i = 0; i < clientDetails.size(); i++) {
           ClientDetailsEntity entity = clientDetails.get(i);
+          entity.setSubjectType(ClientDetailsEntity.SubjectType.PAIRWISE);
           ClientDetailsEntity existing = clientRepository.getClientByClientId(entity.getClientId());
           if (existing == null) {
             LOG.debug("Inserting new default client {}", entity.getClientId());
