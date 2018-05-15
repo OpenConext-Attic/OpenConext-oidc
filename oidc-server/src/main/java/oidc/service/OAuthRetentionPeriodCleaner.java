@@ -32,6 +32,7 @@ public class OAuthRetentionPeriodCleaner {
 
   @Autowired
   public OAuthRetentionPeriodCleaner(@Value("${resource.cleaner.period}") int delay,
+                                     @Value("${resource.cleaner.cronJobResponsible}") boolean cronJobResponsible,
                                      DefaultOAuth2ProviderTokenService oAuth2ProviderTokenService,
                                      DefaultApprovedSiteService approvedSiteService,
                                      DefaultOAuth2AuthorizationCodeService oAuth2AuthorizationCodeService,
@@ -40,12 +41,14 @@ public class OAuthRetentionPeriodCleaner {
       this.oAuth2AuthorizationCodeService = oAuth2AuthorizationCodeService;
       this.approvedSiteService = approvedSiteService;
       this.federatedUserInfoRepository = federatedUserInfoRepository;
-    newScheduledThreadPool(1).scheduleWithFixedDelay(new Runnable() {
-      @Override
-      public void run() {
-        clean();
+      if (cronJobResponsible) {
+          newScheduledThreadPool(1).scheduleWithFixedDelay(new Runnable() {
+              @Override
+              public void run() {
+                  clean();
+              }
+          }, delay, delay, TimeUnit.MINUTES);
       }
-    }, delay, delay, TimeUnit.MINUTES);
   }
 
   private void clean() {
