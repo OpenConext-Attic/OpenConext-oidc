@@ -465,7 +465,8 @@
     "error": {
         "title": "Error",
         "header": "Error:",
-        "message": "There was an error processing your request. The server''s message was:"
+        "message": "There was an error processing your request. The server''s message was:",
+        "logDetails": "See the logs for details."
     },
     "login": {
         "login_with_username_and_password": "Login with Username and Password",
