@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +43,10 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getClientDetailsEntity(@RequestParam("clientId") String clientId, HttpServletRequest request) throws UnsupportedEncodingException {
-        checkCredentials(request);
+        Optional<ResponseEntity> responseEntity = checkCredentials(request);
+        if (responseEntity.isPresent()) {
+            return responseEntity.get();
+        }
         Optional<ClientDetailsEntity> entityOptional = getClientDetailsEntity(clientId);
         //can not use map as of Type restrictions
         if (entityOptional.isPresent()) {
@@ -56,7 +58,10 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createClientDetailsEntity(@RequestBody ClientDetailsEntity clientDetailsEntity, HttpServletRequest request) throws UnsupportedEncodingException {
-        checkCredentials(request);
+        Optional<ResponseEntity> responseEntity = checkCredentials(request);
+        if (responseEntity.isPresent()) {
+            return responseEntity.get();
+        }
         ClientDetailsEntity entry = clientRepository.getClientByClientId(clientDetailsEntity.getClientId());
         if (entry != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("error", "ClientId is already used"));
@@ -68,7 +73,10 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateClientDetailsEntity(@RequestBody ClientDetailsEntity clientDetailsEntity, HttpServletRequest request) throws UnsupportedEncodingException {
-        checkCredentials(request);
+        Optional<ResponseEntity> responseEntity = checkCredentials(request);
+        if (responseEntity.isPresent()) {
+            return responseEntity.get();
+        }
         Optional<ClientDetailsEntity> entityOptional = getClientDetailsEntity(clientDetailsEntity.getClientId());
         if (!entityOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -80,7 +88,10 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.DELETE)
     public ResponseEntity deleteClientDetailsEntity(@RequestParam("clientId") String clientId, HttpServletRequest request) throws UnsupportedEncodingException {
-        checkCredentials(request);
+        Optional<ResponseEntity> responseEntity = checkCredentials(request);
+        if (responseEntity.isPresent()) {
+            return responseEntity.get();
+        }
         Optional<ClientDetailsEntity> entity = getClientDetailsEntity(clientId);
         if (!entity.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -95,11 +106,11 @@ public class ClientController {
         return Optional.ofNullable(existing);
     }
 
-    private void checkCredentials(HttpServletRequest request) throws UnsupportedEncodingException {
+    private Optional<ResponseEntity> checkCredentials(HttpServletRequest request) throws UnsupportedEncodingException {
         String header = request.getHeader("Authorization");
 
         if (header == null || !header.startsWith("Basic ")) {
-            throw new BadCredentialsException("No authorization header present.");
+            return unauthorized();
         }
 
         byte[] base64Token = header.substring(6).getBytes(Charset.defaultCharset());
@@ -107,19 +118,24 @@ public class ClientController {
         try {
             decoded = Base64.decode(base64Token);
         } catch (IllegalArgumentException e) {
-            throw new BadCredentialsException("Failed to decode basic authentication token");
+            return unauthorized();
         }
 
         String token = new String(decoded, Charset.defaultCharset());
         int delimiter = token.indexOf(":");
 
         if (delimiter == -1) {
-            throw new BadCredentialsException("Invalid basic authentication token");
+            return unauthorized();
         }
         String user = token.substring(0, delimiter);
         String password = token.substring(delimiter + 1);
         if (!this.user.equals(user) || !this.password.equals(password)) {
-            throw new BadCredentialsException("Invalid user or password");
+            return unauthorized();
         }
+        return Optional.empty();
+    }
+
+    private Optional<ResponseEntity> unauthorized() {
+        return Optional.of(ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("WWW-Authenticate", "Basic realm=\"OIDC\"").build());
     }
 }
