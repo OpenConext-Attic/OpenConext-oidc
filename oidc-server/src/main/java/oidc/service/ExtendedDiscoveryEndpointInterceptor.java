@@ -5,6 +5,8 @@ import org.mitre.discovery.web.DiscoveryEndpoint;
 import org.mitre.openid.connect.config.ConfigurationPropertiesBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -27,6 +29,7 @@ public class ExtendedDiscoveryEndpointInterceptor extends HandlerInterceptorAdap
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
         Exception {
         if (request.getRequestURI().endsWith(DiscoveryEndpoint.OPENID_CONFIGURATION_URL)) {
+            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.getType());
             PrintWriter writer = response.getWriter();
             writer.write(getWellKnownConfiguration());
             writer.flush();

@@ -1,0 +1,34 @@
+{
+  "clientId": "http@//test-unique-name-2",
+  "clientSecret": "12345678",
+  "redirectUris": [
+    "http://localhost"
+  ],
+  "clientName": "new-sp",
+  "contacts": [
+    "j.doe@example.com"
+  ],
+  "tokenEndpointAuthMethod": "SECRET_BASIC",
+  "scope": [
+    "openid",
+    "address",
+    "email",
+    "profile",
+    "phone"
+  ],
+  "grantTypes": [
+    "authorization_code"
+  ],
+  "responseTypes": [
+    "code"
+  ],
+  "jwksType": "URI",
+  "subjectType": "PUBLIC",
+  "defaultMaxAge": 60000,
+  "requireAuthTime": true,
+  "accessTokenValiditySeconds": 3600,
+  "clientDescription": "description",
+  "reuseRefreshToken": true,
+  "clearAccessTokensOnRefresh": true,
+  "idTokenValiditySeconds": 600
+}

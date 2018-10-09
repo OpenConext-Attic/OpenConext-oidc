@@ -94,7 +94,7 @@ public class AbstractTestIntegration {
 
     }
 
-    private static BasicDataSource getBasicDataSource() throws IOException {
+    protected static BasicDataSource getBasicDataSource() throws IOException {
         Properties props = getProperties();
         BasicDataSource ds = new BasicDataSource();
         ds.setDriverClassName(props.getProperty("jdbc.driverClassName"));
@@ -111,7 +111,7 @@ public class AbstractTestIntegration {
     }
 
     @Before
-    public void before() {
+    public void before() throws Exception{
         this.headersForTokenFetch = getAuthorizationHeadersForTokenFetch();
 
     }

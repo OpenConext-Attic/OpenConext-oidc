@@ -1,51 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:security="http://www.springframework.org/schema/security"
-	xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
-	xsi:schemaLocation="http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+       xsi:schemaLocation="http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd"
 
-    profile="local">
+       profile="local">
 
 
     <bean id="http403EntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint">
     </bean>
 
+    <bean id="csrfSecurityRequestMatcher" class="oidc.mock.NoOpSecurityRequestMatcher"></bean>
+
     <security:http disable-url-rewriting="true" use-expressions="true" entry-point-ref="http403EntryPoint">
-      <security:intercept-url pattern="/authorize" access="hasRole('ROLE_USER')"/>
-      <security:intercept-url pattern="/**" access="permitAll"/>
-      <security:custom-filter ref="mockFilter" position="PRE_AUTH_FILTER"/>
-      <security:custom-filter ref="authRequestFilter" after="SECURITY_CONTEXT_FILTER"/>
-      <security:anonymous/>
-      <security:expression-handler ref="oauthWebExpressionHandler"/>
-      <security:headers>
-        <security:frame-options policy="DENY"/>
-      </security:headers>
-      <security:csrf/>
+        <security:intercept-url pattern="/authorize" access="hasRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/**" access="permitAll"/>
+        <security:custom-filter ref="mockFilter" position="PRE_AUTH_FILTER"/>
+        <security:custom-filter ref="authRequestFilter" after="SECURITY_CONTEXT_FILTER"/>
+        <security:anonymous/>
+        <security:expression-handler ref="oauthWebExpressionHandler"/>
+        <security:headers>
+            <security:frame-options policy="DENY"/>
+        </security:headers>
+        <security:csrf request-matcher-ref="csrfSecurityRequestMatcher"/>
     </security:http>
 
     <security:authentication-manager alias="authenticationManager">
-      <security:authentication-provider ref="preauthAuthProvider"/>
+        <security:authentication-provider ref="preauthAuthProvider"/>
     </security:authentication-manager>
 
     <bean id="mockFilter" class=
-        "oidc.mock.MockPreAuthenticatedProcessingFilter">
-      <property name="authenticationManager" ref="authenticationManager"/>
+            "oidc.mock.MockPreAuthenticatedProcessingFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
     </bean>
 
     <bean id="preauthAuthProvider"
           class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
-      <property name="preAuthenticatedUserDetailsService">
-        <bean class="oidc.mock.MockAuthenticationUserDetailsService"/>
-      </property>
+        <property name="preAuthenticatedUserDetailsService">
+            <bean class="oidc.mock.MockAuthenticationUserDetailsService"/>
+        </property>
     </bean>
 
 </beans>
