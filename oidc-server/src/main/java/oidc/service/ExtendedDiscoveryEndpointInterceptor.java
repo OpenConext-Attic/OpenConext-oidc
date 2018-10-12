@@ -29,7 +29,7 @@ public class ExtendedDiscoveryEndpointInterceptor extends HandlerInterceptorAdap
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
         Exception {
         if (request.getRequestURI().endsWith(DiscoveryEndpoint.OPENID_CONFIGURATION_URL)) {
-            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.getType());
+            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
             PrintWriter writer = response.getWriter();
             writer.write(getWellKnownConfiguration());
             writer.flush();
