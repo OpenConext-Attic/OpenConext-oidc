@@ -67,8 +67,8 @@ public class ClientController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("error", "ClientId is already used"));
         }
         LOG.info("Creating ClientID {}", clientDetailsEntity.getClientId());
-        clientService.saveNewClient(clientDetailsEntity);
-        return ResponseEntity.ok(clientDetailsEntity);
+        ClientDetailsEntity result = clientService.saveNewClient(clientDetailsEntity);
+        return ResponseEntity.ok(result);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
