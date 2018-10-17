@@ -81,8 +81,12 @@ public class ClientController {
         if (!entityOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
         LOG.info("Updating ClientID {}", clientDetailsEntity.getClientId());
-        ClientDetailsEntity result = clientService.updateClient(entityOptional.get(), clientDetailsEntity);
+
+        //Only set the attributes that may be changed
+        ClientDetailsEntity oldClient = entityOptional.get();
+        ClientDetailsEntity result = clientService.updateClient(oldClient, clientDetailsEntity);
         return ResponseEntity.ok(result);
     }
 
