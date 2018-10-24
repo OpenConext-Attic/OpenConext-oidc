@@ -11,12 +11,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.codec.Base64;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -86,7 +90,15 @@ public class ClientController {
 
         //Only set the attributes that may be changed
         ClientDetailsEntity oldClient = entityOptional.get();
-        ClientDetailsEntity result = clientService.updateClient(oldClient, clientDetailsEntity);
+        oldClient.setClientName(clientDetailsEntity.getClientName());
+        oldClient.setRedirectUris(clientDetailsEntity.getRedirectUris());
+        oldClient.setGrantTypes(clientDetailsEntity.getGrantTypes());
+        String clientSecret = clientDetailsEntity.getClientSecret();
+        if (StringUtils.hasText(clientSecret)) {
+            oldClient.setClientSecret(clientSecret);
+        }
+
+        ClientDetailsEntity result = clientService.updateClient(oldClient, oldClient);
         return ResponseEntity.ok(result);
     }
 
