@@ -46,7 +46,8 @@
         <security:intercept-url pattern="/**" access="permitAll"/>
         <security:custom-filter before="FIRST" ref="metadataGeneratorFilter"/>
         <security:custom-filter before="PRE_AUTH_FILTER" ref="clientIdFilter"/>
-        <security:custom-filter ref="authRequestFilter" after="SECURITY_CONTEXT_FILTER"/>
+        <!-- Screws up the prompt login login in EB -->
+        <!--<security:custom-filter ref="authRequestFilter" after="SECURITY_CONTEXT_FILTER"/>-->
         <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
         <!--<security:anonymous />-->
         <security:headers>
