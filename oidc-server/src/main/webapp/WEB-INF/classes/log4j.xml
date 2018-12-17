@@ -66,6 +66,11 @@
         <level value="debug"/>
     </logger>
 
+    <logger name="org.mitre.openid.connect.service.impl.DefaultOIDCTokenService">
+        <level value="error"/>
+    </logger>
+
+
     <!-- Root Logger -->
     <root>
         <priority value="warn"/>
