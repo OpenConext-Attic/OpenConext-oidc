@@ -26,7 +26,7 @@ public class KeyStoreLocatorTest extends KeyStoreTest {
 
     X509Certificate certificate = jksKeyManager.getCertificate(properties.getProperty("idp.entity.id"));
     String name = certificate.getSubjectDN().getName();
-    assertEquals("CN=test2 saml cert, O=SURFnet, L=Utrecht, ST=Utrecht, C=NL", name);
+    assertEquals("O=Internet Widgits Pty Ltd, ST=Some-State, C=AU", name);
   }
 
 }
