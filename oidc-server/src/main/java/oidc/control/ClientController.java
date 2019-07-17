@@ -91,6 +91,7 @@ public class ClientController {
         //Only set the attributes that may be changed
         ClientDetailsEntity oldClient = entityOptional.get();
         oldClient.setClientName(clientDetailsEntity.getClientName());
+        oldClient.setClientDescription(clientDetailsEntity.getClientDescription());
         oldClient.setRedirectUris(clientDetailsEntity.getRedirectUris());
         oldClient.setGrantTypes(clientDetailsEntity.getGrantTypes());
         String clientSecret = clientDetailsEntity.getClientSecret();
