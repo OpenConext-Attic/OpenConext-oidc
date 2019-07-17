@@ -38,7 +38,7 @@
 
     <!-- Application Loggers -->
     <logger name="org.mitre">
-        <level value="debug"/>
+        <level value="warn"/>
     </logger>
 
     <logger name="com.zaxxer.hikari">
@@ -50,12 +50,16 @@
     </logger>
 
     <logger name="org.mitre.openid.connect.config">
-        <level value="debug"/>
+        <level value="warn"/>
     </logger>
 
     <!-- 3rdparty Loggers -->
     <logger name="org.springframework">
-        <level value="debug"/>
+        <level value="warn"/>
+    </logger>
+
+    <logger name="org.springframework.security">
+        <level value="warn"/>
     </logger>
 
     <logger name="oidc">
@@ -63,9 +67,8 @@
     </logger>
 
     <logger name="org.mitre.openid.connect.service.impl.DefaultOIDCTokenService">
-        <level value="debug"/>
+        <level value="error"/>
     </logger>
-
 
     <!-- Root Logger -->
     <root>
