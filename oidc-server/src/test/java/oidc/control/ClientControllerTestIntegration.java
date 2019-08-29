@@ -38,7 +38,7 @@ public class ClientControllerTestIntegration extends AbstractTestIntegration {
         ClientDetailsEntity entity = template.getForEntity(serverUrl + "/oidc/api/clients?clientId=" + clientId, ClientDetailsEntity.class).getBody();
 
         assertEquals(clientId, entity.getClientId());
-        assertEquals(5, entity.getRedirectUris().size());
+        assertTrue(entity.getRedirectUris().size() > 0);
     }
 
     @Test
