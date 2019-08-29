@@ -7,6 +7,8 @@
 
 <%
 
+request.setAttribute("className", "");
+
 if (request.getAttribute("error") != null && request.getAttribute("error") instanceof OAuth2Exception) {
 	request.setAttribute("errorCode", ((OAuth2Exception)request.getAttribute("error")).getOAuth2ErrorCode());
 	request.setAttribute("message", ((OAuth2Exception)request.getAttribute("error")).getClass().getSimpleName());
@@ -15,21 +17,25 @@ if (request.getAttribute("error") != null && request.getAttribute("error") insta
 	request.setAttribute("errorCode",  t.getClass().getSimpleName() + " (" + request.getAttribute("javax.servlet.error.status_code") + ")");
 } else if (request.getAttribute("javax.servlet.error.status_code") != null) {
 	Integer code = (Integer)request.getAttribute("javax.servlet.error.status_code");
-	HttpStatus status = HttpStatus.valueOf(code);
-	request.setAttribute("errorCode", status.toString() + " " + status.getReasonPhrase());
+	if (code.equals(404)) {
+	    request.setAttribute("errorCode", "Session conflict. Please close your browser and try again");
+	    request.setAttribute("className", "session-conflict");
+    } else {
+    	HttpStatus status = HttpStatus.valueOf(code);
+	    request.setAttribute("errorCode", status.toString() + " - " + status.getReasonPhrase());
+    }
 } else {
 	request.setAttribute("errorCode", "Server error");
 }
 
 %>
-
 <spring:message code="error.title" var="title"/>
 <o:header title="${title}" />
 <o:topbar pageName="Home" />
 <div class="container-fluid main">
 	<div class="row-fluid">
 		<div class="span12">
-			<div class="hero-unit">
+			<div class="hero-unit ${className}">
                 <spring:message code="error.message" var="headerMessage"/>
                 <p>${headerMessage}</p>
                 <pre><c:out value="${ errorCode }" /><c:if test="${not empty message}"><c:out value=" : ${ message }" /></c:if></pre>
