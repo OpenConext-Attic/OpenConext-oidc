@@ -71,9 +71,10 @@
 
     <!-- Handler deciding where to redirect user after successful login -->
     <bean id="successRedirectHandler"
-          class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+          class="oidc.security.DetailedSavedRequestAwareAuthenticationSuccessHandler">
         <property name="defaultTargetUrl" value="/"/>
     </bean>
+
     <!--
     Use the following for interpreting RelayState coming from unsolicited response as redirect URL:
     <bean id="successRedirectHandler" class="org.springframework.security.saml.SAMLRelayStateSuccessHandler">
@@ -198,7 +199,7 @@
     </bean>
 
     <!-- Provider of default SAML Context -->
-    <bean id="contextProvider" class="org.springframework.security.saml.context.SAMLContextProviderImpl"/>
+    <bean id="contextProvider" class="oidc.saml.CustomSAMLContextProviderImpl"/>
 
     <!-- Processing filter for WebSSO profile messages -->
     <bean id="samlWebSSOProcessingFilter" class="org.springframework.security.saml.SAMLProcessingFilter">

@@ -30,20 +30,20 @@ public class CustomHTTPPostDecoder extends HTTPPostDecoder {
 
     @Override
     protected InputStream getBase64DecodedMessage(HTTPInTransport transport) throws MessageDecodingException {
-        if (transport instanceof HttpServletRequestAdapter) {
-            HttpServletRequestAdapter adapter = (HttpServletRequestAdapter) transport;
-            String encodedMessage = adapter.getParameterValue("SAMLResponse");
-            if (encodedMessage != null) {
-                byte[] decodedBytes = Base64.decode(encodedMessage);
-                LOG.info("Request encoding {}", adapter.getCharacterEncoding());
-                LOG.info("Decoded SAML message:\n{}", new String(decodedBytes));
-                try {
-                    LOG.info("Decoded SAML message UTF8:\n{}", new String(decodedBytes, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+//        if (transport instanceof HttpServletRequestAdapter) {
+//            HttpServletRequestAdapter adapter = (HttpServletRequestAdapter) transport;
+//            String encodedMessage = adapter.getParameterValue("SAMLResponse");
+//            if (encodedMessage != null) {
+//                byte[] decodedBytes = Base64.decode(encodedMessage);
+//                LOG.debug("Request encoding {}", adapter.getCharacterEncoding());
+//                LOG.debug("Decoded SAML message:\n{}", new String(decodedBytes));
+//                try {
+//                    LOG.debug("Decoded SAML message UTF8:\n{}", new String(decodedBytes, "UTF-8"));
+//                } catch (UnsupportedEncodingException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        }
         return super.getBase64DecodedMessage(transport);
 //        try {
 //            String s = new String(IOUtils.toString(inputStream, "ISO8859-1").getBytes(), "UTF-8");

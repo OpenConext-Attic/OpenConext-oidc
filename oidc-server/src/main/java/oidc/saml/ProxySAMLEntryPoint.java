@@ -3,6 +3,8 @@ package oidc.saml;
 import org.mitre.oauth2.model.ClientDetailsEntity;
 import org.mitre.oauth2.service.ClientDetailsEntityService;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.saml.SAMLEntryPoint;
@@ -11,13 +13,21 @@ import org.springframework.security.saml.websso.WebSSOProfileOptions;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static oidc.security.DetailedSavedRequestAwareAuthenticationSuccessHandler.cookieToString;
 
 public class ProxySAMLEntryPoint extends SAMLEntryPoint {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ProxySAMLEntryPoint.class);
 
     protected static final String CLIENT_DETAILS = ProxySAMLEntryPoint.class.getName() + "_CLIENT_DETAILS";
     protected static final String FORCE_AUTHN = ProxySAMLEntryPoint.class.getName() + "_FORCE_AUTHN";
@@ -31,6 +41,16 @@ public class ProxySAMLEntryPoint extends SAMLEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws
         IOException, ServletException {
+        HttpSession session = request.getSession();
+
+        LOG.info("Starting SAML redirect with session: " + (session != null ? session.getId() : "no session"));
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            LOG.info("Starting SAML redirect: there are no cookies");
+        } else {
+            LOG.info("Cookies: " +
+                    Stream.of(cookies).map(c -> cookieToString(c)).collect(Collectors.joining(",")));
+        }
         String clientId = request.getParameter("client_id");
         if (StringUtils.hasText(clientId)) {
             ClientDetailsEntity clientDetails = clientDetailsEntityService.loadClientByClientId(clientId);

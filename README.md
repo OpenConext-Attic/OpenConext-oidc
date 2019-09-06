@@ -20,6 +20,7 @@ Connect to your local mysql database: `mysql -uroot`
 Execute the following to create a local datbase compliant with travis:
 
 ```sql
+DROP DATABASE IF EXISTS oidcserver;
 CREATE DATABASE `oidcserver` DEFAULT CHARACTER SET latin1;
 create user 'root'@'localhost';
 grant all on `oidcserver`.* to 'root'@'localhost';
