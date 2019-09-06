@@ -72,7 +72,7 @@
     <!-- Handler deciding where to redirect user after successful login -->
     <bean id="successRedirectHandler"
           class="oidc.security.DetailedSavedRequestAwareAuthenticationSuccessHandler">
-        <property name="defaultTargetUrl" value="/"/>
+        <property name="defaultTargetUrl" value="/SSO/login-failed"/>
     </bean>
 
     <!--
