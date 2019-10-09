@@ -40,7 +40,7 @@ public class ProxySAMLEntryPoint extends SAMLEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws
-        IOException, ServletException {
+            IOException, ServletException {
         HttpSession session = request.getSession();
 
         LOG.info("Starting SAML redirect with session: " + (session != null ? session.getId() : "no session"));
@@ -71,14 +71,14 @@ public class ProxySAMLEntryPoint extends SAMLEntryPoint {
 
     //only here for test override
     protected void doCommence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
-        throws IOException, ServletException {
+            throws IOException, ServletException {
         super.commence(request, response, e);
     }
 
 
     @Override
     protected WebSSOProfileOptions getProfileOptions(SAMLMessageContext context, AuthenticationException exception)
-        throws MetadataProviderException {
+            throws MetadataProviderException {
         WebSSOProfileOptions profileOptions = super.getProfileOptions(context, exception);
         String clientId = (String) context.getInboundMessageTransport().getAttribute(CLIENT_DETAILS);
         boolean clientIdCall = StringUtils.hasText(clientId);
@@ -105,7 +105,7 @@ public class ProxySAMLEntryPoint extends SAMLEntryPoint {
     }
 
     public void setServiceProviderTranslationService(ServiceProviderTranslationService
-                                                         serviceProviderTranslationService) {
+                                                             serviceProviderTranslationService) {
         this.serviceProviderTranslationService = serviceProviderTranslationService;
     }
 

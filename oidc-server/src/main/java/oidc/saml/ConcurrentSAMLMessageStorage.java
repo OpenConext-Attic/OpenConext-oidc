@@ -18,7 +18,8 @@ import java.util.Set;
  * in the same session
  */
 public class ConcurrentSAMLMessageStorage implements SAMLMessageStorage {
-    private static final Logger LOG = LoggerFactory.getLogger(ProxySAMLEntryPoint.class);
+
+    private static final Logger LOG = LoggerFactory.getLogger(ConcurrentSAMLMessageStorage.class);
 
     private final HttpSession session;
 
@@ -65,7 +66,7 @@ public class ConcurrentSAMLMessageStorage implements SAMLMessageStorage {
             synchronized (session) {
                 messages = (Hashtable<String, SAMLObject<XMLObject>>) session.getAttribute(SAML_STORAGE_KEY);
                 if (messages == null) {
-                    messages = new Hashtable<String, SAMLObject<XMLObject>>();
+                    messages = new Hashtable<>();
                     updateSession(messages);
                 }
             }
