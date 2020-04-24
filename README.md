@@ -29,10 +29,10 @@ grant all on `oidcserver`.* to 'root'@'localhost';
 ## [Building and running](#building-running)
 
 The OpenConext-oidc is a maven overlay for OpenID-Connect-Java-Server. Issue a
- 
-`git submodule update --init --recursive` 
 
-command to set up the git submodules, then you can run 
+`git submodule update --init --recursive`
+
+command to set up the git submodules, then you can run
 
 `cd ./oidc-server && mvn clean package jetty:run -Dspring.profiles.active="local"`
 
@@ -44,13 +44,13 @@ And open the [homepage](http://localhost:8080/). You can also run:
 
 `./start-non-local.sh`
 
-But then you will need to login on the SURFconext federation using the test2 environment. 
+But then you will need to login on the SURFconext federation using the test2 environment.
 
 ## [Testing](#testing)
 
 ### [Integration tests](#integration-tests)
 
-There are JUnit integration tests that will run against the locally started Jetty container. 
+There are JUnit integration tests that will run against the locally started Jetty container.
 
 `mvn verify`
 
@@ -94,7 +94,7 @@ Save the code in the query parameter of the location response header in a variab
 And then exchange the code for an access token:
 
 ```
-curl -X POST -u https@//oidc.localhost.surfconext.nl:secret -d "grant_type=authorization_code&code=${code}&redirect_uri=http://localhost:8889/callback" http://localhost:8080/token | python -m json.tool
+curl -X POST -u https@//oidc.localhost.surfconext.nl:secret -d "grant_type=authorization_code&code=${code}&redirect_uri=http://localhost:8889/callback" http://localhost:8080/token | jq .
 ```
 
 This will return the access_token and id_token.
@@ -118,7 +118,7 @@ export access_token=eyJraWQiOiJvaWRjIiwiYWxnIjoiUlMyNTYifQ.eyJhdWQiOiJodHRwc0BcL
 Now you can ask the server to return the information stored with this access_token by calling the introspect endpoint (note that this endpoint is only for resource servers):
 
 ```
-curl -u https@//oidc.localhost.surfconext.nl:secret -H "Content-Type: application/x-www-form-urlencoded" "http://localhost:8080/introspect?token=${access_token}" | python -m json.tool
+curl -u https@//oidc.localhost.surfconext.nl:secret -H "Content-Type: application/x-www-form-urlencoded" "http://localhost:8080/introspect?token=${access_token}" | jq .
 ```
 
 This will return:
@@ -185,13 +185,26 @@ This will return all the information about the user. This endpoint is for Servic
     ]
 }
 ```
+You can also obtain a client-credentials token where no user is involved. It is used in Server-to-Server communication.
+```
+curl -u https@//oidc.localhost.surfconext.nl:secret -X POST -d "grant_type=client_credentials" http://localhost:8080/token | jq .
+```
+Which will return you an access_token without having to exchange a code:
+```
+{
+  "access_token": "eyJraWQiOiJvaWRjIiwiYWxnIjoiUlMyNTYifQ.eyJhdWQiOiJodHRwc0BcL1wvb2lkYy5sb2NhbGhvc3Quc3VyZmNvbmV4dC5ubCIsImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDgwXC8iLCJleHAiOjE1ODc4MDc0MzIsImlhdCI6MTU4NzcyMTAzMiwianRpIjoiMDFlYjI1ZGYtOGZlYS00MWYwLWE5MWItNDY0ZmUwYWJiNzdlIn0.D8WBxsK_MOLFkg4L2j-3sht7jYNTMENSYlh-D6e7LxZsxDneZVr94BacPIAbZ5FP79m9QOZrqSp6oL3N6A8owcVlwdO3dPaQEcuuAWk5IV1YX-NbOfAa4d_q4w4oEAUC2uEXPCw-WyhOc7QuFA3m6UwLjZR7bQebIEUmJyq6jkEx_pWJBWQZGjVcJShBkHkF136bqpREE5aFdv9k7xir7Z9q70_oC2yikzsS-WFWfRgQkiC6eL2QVIIBw6gS6sxOr0nmfjewhTJKGazX4FGJyNAESuIzBUTMHBoIq43iDsOMvHV6y1WohcNAYhEP5i_GdM7IQgnJTyk8RA2mnRi5nQ",
+  "token_type": "Bearer",
+  "expires_in": 86399,
+  "scope": "read address phone openid userids profile organization offline_access groups entitlement email"
+}
+```
 
 ## [JWK Keys](#jwk-keys)
 
 The OIDC application uses a JWK Key Set to sign and optionally encrypt the JSON Web Tokens (JWT). Each environment can have its own unique
 JWK Key Set. In the ansible projects the `oidc_server_oidc_keystore_jwks_json secret` is used to set populate the file `oidc.keystore.jwks.json`
 with the key information. If you need a new JWK Key Set curl the [OidcKeystoreGeneratorController](oidc-server/src/main/java/oidc/control/OidcKeystoreGeneratorController.java):
- 
+
 ```
 curl https://oidc.${env}.surfconext.nl/generate-oidc-keystore | python -m json.tool
 ```
@@ -199,20 +212,20 @@ Example for localhost
 ```
 curl http://localhost:8080/generate-oidc-keystore | python -m json.tool
 ```
-Copy the json returned by the endpoint to the secrets file for the target environment under the key oidc_server_oidc_keystore_jwks_json. 
+Copy the json returned by the endpoint to the secrets file for the target environment under the key oidc_server_oidc_keystore_jwks_json.
 This will ensure it ends up on the classpath in a file name oidc.keystore.jwks.json
 
 ## [Private signing keys and public certificates](#signing-keys)
 
 The SAML Spring Security library needs a private DSA key to sign the SAML request and the public certificates from EngineBlock. The
 public certificate can be copied from the metadata. The private / public key for the SP can be generated:
- 
+
 `openssl req -subj '/O=Organization, CN=OIDC/' -newkey rsa:2048 -new -x509 -days 3652 -nodes -out oidc.crt -keyout oidc.pem`
 
 The Java KeyStore expects a pkcs8 DER format for RSA private keys so we have to re-format that key:
 
-`openssl pkcs8 -nocrypt  -in oidc.pem -topk8 -out oidc.der` 
- 
+`openssl pkcs8 -nocrypt  -in oidc.pem -topk8 -out oidc.der`
+
 Remove the whitespace, heading and footer from the oidc.crt and oidc.der:
 
 `cat oidc.der |head -n -1 |tail -n +2 | tr -d '\n'; echo`
@@ -240,7 +253,7 @@ Add the EB certificate to the application.oidc.properties file:
 
 ## [Trusted Proxy](#trusted-proxy)
 
-OpenConext-OIDC is a proxy for SP's that want to use OpenConnect ID instead of SAML to provide their Service to the federation members. 
+OpenConext-OIDC is a proxy for SP's that want to use OpenConnect ID instead of SAML to provide their Service to the federation members.
 Therefore the WAYF and ARP must be scoped for the requesting SP (and not this OIDC SP). This works if OpenConext-OIDC is marked
 as a trusted proxy in SR and the signing certificate (e.g. sp.public.certificate) is added to the certData metadata field in SR.
 
@@ -296,7 +309,7 @@ curl -v -H "Accept: application/json" -H "Content-type: application/json" -d '{"
 ```
 
 To reset Mujina back to its default behaviour, issue:
- 
+
 ```
 curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST https://mujina-idp.test.surfconext.nl/api/reset
 ```
